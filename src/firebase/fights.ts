@@ -85,9 +85,9 @@ export function listenForRows(
       return
     }
 
-    // Convert Firebase object → array of { skillName, ...data }
+    // Convert Firebase object → array of { timer, ...data }
     const rows = Object.entries(data).map(([timer, values]: any) => ({
-      id: timer, // use skill name as row id
+      id: timer, // use timer as row id
       timer: timer,
       skill: values.skill ?? '',
       damagetotal: values.damagetotal ?? '',

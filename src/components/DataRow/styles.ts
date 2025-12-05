@@ -6,6 +6,7 @@ export const TextArea = styled.textarea`
   width: 120px;
   text-align: center;
   padding: 12px 4px;
+  background: white;
 `
 
 export const Job = styled.div`
