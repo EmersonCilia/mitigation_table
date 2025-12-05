@@ -1,0 +1,63 @@
+import { updateCheckbox } from '../../firebase/fights'
+import { jobSkills } from '../Data/JobSkills'
+import { Row, Scrolable, Sticky } from '../Spreadsheet/Styles'
+import { Checkbox, Job, TextArea } from './styles'
+
+// types.ts
+export type RowData = {
+  id: string
+  timer: number
+  skill: string
+  damagetotal: string
+  checkbox?: Record<string, boolean>
+}
+
+const DataRow = ({ row }: { row: RowData }) => {
+  const fightId = 'your-fight-id-here'
+  const timerKey = row.timer.toString()
+
+  const handleCheckboxChange = async (checkboxKey: string, value: boolean) => {
+    await updateCheckbox(fightId, timerKey, checkboxKey, value)
+  }
+
+  return (
+    <Row>
+      <Sticky>
+        <TextArea value={row.timer} readOnly />
+        <TextArea value={row.skill} readOnly />
+      </Sticky>
+
+      <Scrolable>
+        <TextArea value={row.damagetotal} readOnly />
+
+        <TextArea placeholder="damage taken" />
+        <select style={{ width: '120px' }}>
+          <option value="magical">Magical</option>
+          <option value="physical">Physical</option>
+        </select>
+
+        {Object.values(jobSkills).map((skills, jobIndex) => (
+          <Job key={jobIndex} style={{ display: 'flex' }}>
+            {skills.map((skill) => {
+              const checkboxKey = `${row.timer}-${jobIndex}-${skill.alt}`
+
+              return (
+                <Checkbox
+                  key={checkboxKey}
+                  id={checkboxKey}
+                  type="checkbox"
+                  checked={row.checkbox?.[checkboxKey] || false}
+                  onChange={(e) =>
+                    handleCheckboxChange(checkboxKey, e.target.checked)
+                  }
+                />
+              )
+            })}
+          </Job>
+        ))}
+      </Scrolable>
+    </Row>
+  )
+}
+
+export default DataRow
