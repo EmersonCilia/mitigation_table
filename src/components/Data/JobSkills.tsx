@@ -37,8 +37,8 @@ import darkMissionary from '../../assets/dark_knight/Dark_Missionary.png'
 
 export const jobSkills = {
   GNB: [
-    { src: { reprisal }, alt: 'Reprisal_GNB' },
-    { src: { rampart }, alt: 'Rampart_GNB' },
+    { src: { reprisal }, alt: 'Reprisal-GNB' },
+    { src: { rampart }, alt: 'Rampart-GNB' },
     { src: { heartOfCorundum }, alt: 'Heart_of_Corundum' },
     { src: { greatNebula }, alt: 'Great_Nebula' },
     { src: { camouflage }, alt: 'Camouflage' },
@@ -46,8 +46,8 @@ export const jobSkills = {
     { src: { heartOfLight }, alt: 'Heart_of_Light' }
   ],
   DRK: [
-    { src: { reprisal }, alt: 'Reprisal_DRK' },
-    { src: { rampart }, alt: 'Rampart_DRK' },
+    { src: { reprisal }, alt: 'Reprisal-DRK' },
+    { src: { rampart }, alt: 'Rampart-DRK' },
     { src: { oblation }, alt: 'Oblation' },
     { src: { darkMind }, alt: 'Dark_Mind' },
     { src: { shadowedVigil }, alt: 'Shadowed_Vigil' },
@@ -76,8 +76,8 @@ export const jobSkills = {
     { src: { lotb }, alt: 'Liturgy_of_the_Bell' },
     { src: { divineCaress }, alt: 'Divine_Caress' }
   ],
-  VPR: [{ src: { feint }, alt: 'feint' }],
-  SAM: [{ src: { feint }, alt: 'feint' }],
+  VPR: [{ src: { feint }, alt: 'Feint-VPR' }],
+  SAM: [{ src: { feint }, alt: 'Feint-SAM' }],
 
   PCM: [
     { src: { addle }, alt: 'Addle' },

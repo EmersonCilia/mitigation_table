@@ -2,6 +2,7 @@ import { updateCheckbox } from '../../firebase/fights'
 import { jobSkills } from '../Data/JobSkills'
 import { Row, Scrolable, Sticky } from '../Spreadsheet/Styles'
 import { Checkbox, Job, TextArea } from './styles'
+import calculateMitigation from '../utils/mitigationCalculator'
 
 // types.ts
 export type RowData = {
@@ -9,6 +10,7 @@ export type RowData = {
   timer: number
   skill: string
   damagetotal: string
+  type: 'magical' | 'physical'
   checkbox?: Record<string, boolean>
 }
 
@@ -26,6 +28,23 @@ const DataRow = ({
     await updateCheckbox(fightId, timerKey, checkboxKey, value)
   }
 
+  // Example: row.checkbox = { "0-0-Reprisal": true, "0-1-Rampart": false, ... }
+  const playerMitigations: Record<string, Record<string, boolean>> = {}
+
+  // You can define jobs and match them with checkbox keys
+  const jobs = ['GNB', 'DRK', 'SCH', 'WHM', 'VPR', 'SAM', 'PCM', 'DNC']
+
+  Object.entries(row.checkbox || {}).forEach(([key, value]) => {
+    // key = `${timer}-${jobIndex}-${mitName}`
+    const parts = key.split('-')
+    const jobIndex = Number(parts[1])
+    const mitName = parts[2] // the mitigation name
+    const playerName = jobs[jobIndex] || `Player${jobIndex}` // map jobIndex to player
+
+    if (!playerMitigations[playerName]) playerMitigations[playerName] = {}
+    playerMitigations[playerName][mitName] = value
+  })
+
   return (
     <Row style={{ width: contentWidth }}>
       <Sticky>
@@ -36,7 +55,14 @@ const DataRow = ({
       <Scrolable>
         <TextArea value={row.damagetotal} readOnly />
 
-        <TextArea placeholder="damage taken" />
+        <TextArea
+          value={calculateMitigation(
+            Number(row.damagetotal),
+            row.type,
+            playerMitigations
+          )}
+          readOnly
+        />
         <select style={{ width: '120px' }}>
           <option value="magical">Magical</option>
           <option value="physical">Physical</option>
