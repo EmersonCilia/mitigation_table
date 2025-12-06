@@ -11,8 +11,7 @@ import {
   Row,
   Scrolable,
   Table,
-  Sticky,
-  MarginMobile
+  Sticky
 } from './Styles'
 
 import Dancer from '../Jobs/Dancer/Dancer'
@@ -92,7 +91,6 @@ const Spreadsheet = () => {
       <Table>
         <Row ref={headerRowRef}>
           <Sticky>
-            <MarginMobile />
             <HeaderTitle style={{ width: '40px' }}>timer</HeaderTitle>
             <HeaderTitle>skill</HeaderTitle>
           </Sticky>

@@ -29,27 +29,12 @@ export const Sticky = styled.div`
   z-index: 10;
   height: 60px;
 `
-export const MarginMobile = styled.div`
-  width: 8px;
-  height: 60px;
-  background: white;
-  display: none;
-  z-index: 10;
-
-  @media (max-width: 1024px) {
-    display: flex;
-  }
-`
 
 export const Scrolable = styled.div`
   display: flex;
   height: 60px;
   position: absolute;
-  left: 168px;
-
-  @media (min-width: 1024px) {
-    left: 160px;
-  }
+  left: 160px;
 `
 
 export const Row = styled.div`

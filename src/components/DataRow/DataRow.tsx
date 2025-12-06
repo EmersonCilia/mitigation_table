@@ -1,6 +1,6 @@
 import { updateCheckbox } from '../../firebase/fights'
 import { jobSkills } from '../Data/JobSkills'
-import { MarginMobile, Row, Scrolable, Sticky } from '../Spreadsheet/Styles'
+import { Row, Scrolable, Sticky } from '../Spreadsheet/Styles'
 import { Checkbox, Job, TextArea } from './styles'
 
 // types.ts
@@ -29,7 +29,6 @@ const DataRow = ({
   return (
     <Row style={{ width: contentWidth }}>
       <Sticky>
-        <MarginMobile />
         <TextArea style={{ width: '40px' }} value={row.timer} readOnly />
         <TextArea value={row.skill} readOnly />
       </Sticky>
