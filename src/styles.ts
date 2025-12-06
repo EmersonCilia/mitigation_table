@@ -8,7 +8,9 @@ export const GlobalCss = createGlobalStyle`
     font-family: Roboto, sans-serif;
     list-style: none;
   }
+
 `
+
 export const JobSkills = styled.img`
   width: 40px;
   height: 40px;

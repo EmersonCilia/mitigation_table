@@ -1,21 +1,17 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-  max-width: 1400px;
+  max-width: 80vw;
   width: 100%;
   margin: 0 auto;
   padding: 40px 0;
-`
-
-export const Sticky = styled.div`
-  display: flex;
-  position: sticky;
-  left: 0;
-  z-index: 10;
-  height: 60px;
 
   @media (max-width: 768px) {
-    position: absolute;
+    max-width: 95vw;
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    max-width: 90vw;
   }
 `
 
@@ -24,21 +20,44 @@ export const HeaderTitle = styled.h3`
   width: 120px;
   flex: 0 0 auto;
   text-align: center;
+  border: 1px solid black;
+`
+export const Sticky = styled.div`
+  display: flex;
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  height: 60px;
+`
+export const MarginMobile = styled.div`
+  width: 8px;
+  height: 60px;
+  background: white;
+  display: none;
+  z-index: 10;
+
+  @media (max-width: 1024px) {
+    display: flex;
+  }
 `
 
 export const Scrolable = styled.div`
   display: flex;
   height: 60px;
+  position: absolute;
+  left: 168px;
 
-  @media (max-width: 768px) {
-    margin-left: 240px;
+  @media (min-width: 1024px) {
+    left: 160px;
   }
 `
 
 export const Row = styled.div`
   display: flex;
   align-items: stretch;
+  position: relative;
 `
+
 export const ButtonGroup = styled.div`
   display: flex;
   margin-top: 20px;

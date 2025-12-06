@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import { listenForRows, saveRow } from '../../firebase/fights'
 
@@ -11,7 +11,8 @@ import {
   Row,
   Scrolable,
   Table,
-  Sticky
+  Sticky,
+  MarginMobile
 } from './Styles'
 
 import Dancer from '../Jobs/Dancer/Dancer'
@@ -30,25 +31,49 @@ const Spreadsheet = () => {
   const [timer, setTimer] = useState<number>(0)
   const [skill, setSkill] = useState('')
   const [damageTotal, setDamageTotal] = useState<number>(0)
+  const [contentWidth, setContentWidth] = useState<number>(0)
 
-  const fightId = 'your-fight-id-here' // you will replace this later
+  const fightId = 'your-fight-id-here'
+
+  // Refs for measuring width
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const headerRowRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     listenForRows(fightId, (rowsFromDB) => {
       setRows(rowsFromDB)
     })
-
-    return () => {
-      // optional cleanup
-    }
   }, [])
 
-  // in your Spreadsheet component
+  useEffect(() => {
+    const updateWidth = () => {
+      if (!scrollRef.current) return
+      const w = scrollRef.current.scrollWidth
+      setContentWidth(w)
+    }
+
+    updateWidth()
+    window.addEventListener('resize', updateWidth)
+    return () => window.removeEventListener('resize', updateWidth)
+  }, [rows])
+
+  // EFFECT: Sync row width to scrollable content width
+  useEffect(() => {
+    const updateWidth = () => {
+      if (!scrollRef.current || !headerRowRef.current) return
+      const fullWidth = scrollRef.current.scrollWidth
+      headerRowRef.current.style.width = fullWidth + 'px'
+    }
+
+    updateWidth()
+    window.addEventListener('resize', updateWidth)
+
+    return () => window.removeEventListener('resize', updateWidth)
+  }, [rows])
 
   const handleAdd = async () => {
     if (!timer || !skill || !damageTotal) return
 
-    // push to firebase, uses timerSeconds internally
     await saveRow(fightId, timer, {
       skill,
       damagetotal: damageTotal,
@@ -57,7 +82,6 @@ const Spreadsheet = () => {
       checkbox: {}
     })
 
-    // local state will update automatically if you use listenForRowsSortedByTimer
     setTimer(0)
     setSkill('')
     setDamageTotal(0)
@@ -66,12 +90,15 @@ const Spreadsheet = () => {
   return (
     <Container>
       <Table>
-        <Row>
+        <Row ref={headerRowRef}>
           <Sticky>
-            <HeaderTitle>timer</HeaderTitle>
+            <MarginMobile />
+            <HeaderTitle style={{ width: '40px' }}>timer</HeaderTitle>
             <HeaderTitle>skill</HeaderTitle>
           </Sticky>
-          <Scrolable>
+
+          {/* ⭐ this is what we measure */}
+          <Scrolable ref={scrollRef} style={{ marginRight: '40px' }}>
             <HeaderTitle>Damage Total</HeaderTitle>
             <HeaderTitle>Damage Taken</HeaderTitle>
             <HeaderTitle>Type</HeaderTitle>
@@ -85,8 +112,9 @@ const Spreadsheet = () => {
             <Dancer />
           </Scrolable>
         </Row>
+
         {rows.map((row) => (
-          <DataRow key={row.id} row={row} />
+          <DataRow key={row.id} row={row} contentWidth={contentWidth} />
         ))}
       </Table>
 
@@ -108,6 +136,7 @@ const Spreadsheet = () => {
             onChange={(e) => setSkill(e.target.value)}
           />
         </LabelGroups>
+
         <LabelGroups>
           <label>damage total</label>
           <input

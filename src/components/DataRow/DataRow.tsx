@@ -1,6 +1,6 @@
 import { updateCheckbox } from '../../firebase/fights'
 import { jobSkills } from '../Data/JobSkills'
-import { Row, Scrolable, Sticky } from '../Spreadsheet/Styles'
+import { MarginMobile, Row, Scrolable, Sticky } from '../Spreadsheet/Styles'
 import { Checkbox, Job, TextArea } from './styles'
 
 // types.ts
@@ -12,7 +12,13 @@ export type RowData = {
   checkbox?: Record<string, boolean>
 }
 
-const DataRow = ({ row }: { row: RowData }) => {
+const DataRow = ({
+  row,
+  contentWidth
+}: {
+  row: RowData
+  contentWidth: number
+}) => {
   const fightId = 'your-fight-id-here'
   const timerKey = row.timer.toString()
 
@@ -21,9 +27,10 @@ const DataRow = ({ row }: { row: RowData }) => {
   }
 
   return (
-    <Row>
+    <Row style={{ width: contentWidth }}>
       <Sticky>
-        <TextArea value={row.timer} readOnly />
+        <MarginMobile />
+        <TextArea style={{ width: '40px' }} value={row.timer} readOnly />
         <TextArea value={row.skill} readOnly />
       </Sticky>
 
