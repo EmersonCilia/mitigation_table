@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
-import { getAllFights, createFight } from '../../firebase/fights'
+import { getAllFights, createFight, deleteFight } from '../../firebase/fights'
 import { Link } from 'react-router-dom'
-import { Container, Fights, List, Title } from './styles'
+import { Container, FightContainer, Fights, List, Title } from './styles'
+import { TrashCan } from '../DataRow/styles'
+import trashCan from '../../assets/trash_can.svg'
 
 const Home = () => {
   const [fights, setFights] = useState<any>({})
@@ -29,9 +31,21 @@ const Home = () => {
 
       <List>
         {Object.values(fights).map((fight: any) => (
-          <Link key={fight.name} to={`/fight/${fight.name}`}>
-            <Fights>{fight.name}</Fights>
-          </Link>
+          <FightContainer key={fight.name}>
+            <TrashCan
+              src={trashCan}
+              alt="trashCan"
+              onClick={() => {
+                if (window.confirm('Delete this row?')) {
+                  deleteFight(fight.name)
+                  loadFights()
+                }
+              }}
+            />
+            <Link to={`/fight/${fight.name}`} style={{ width: '100%' }}>
+              <Fights>{fight.name}</Fights>
+            </Link>
+          </FightContainer>
         ))}
       </List>
       {/* Input + button */}

@@ -26,3 +26,7 @@ export const Fights = styled.li`
   padding: 10px;
   text-decoration: none;
 `
+export const FightContainer = styled.div`
+  display: flex;
+  width: 100%;
+`

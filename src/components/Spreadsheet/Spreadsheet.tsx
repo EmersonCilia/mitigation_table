@@ -78,7 +78,6 @@ const Spreadsheet = () => {
     await saveRow(fightId, timer, {
       skill,
       damagetotal: damageTotal,
-      damagetaken: 0,
       type: 'magical',
       checkbox: {}
     })
@@ -92,6 +91,7 @@ const Spreadsheet = () => {
 
   return (
     <Container>
+      <h1 style={{ textAlign: 'center', marginBottom: '40px' }}>{fightId}</h1>
       <Table>
         <Row ref={headerRowRef}>
           <Sticky>

@@ -8,7 +8,6 @@ export type CheckboxMap = {
 export type FightSkill = {
   skill: string
   damagetotal: number
-  damagetaken: number
   type: string
   checkbox: CheckboxMap
 }
@@ -89,7 +88,6 @@ export function listenForRows(fightId: any, callback: (rows: any[]) => void) {
       timer: timer,
       skill: values.skill ?? '',
       damagetotal: values.damagetotal ?? '',
-      damagetaken: values.damagetaken ?? '',
       type: values.type ?? 'magical',
       checkbox: values.checkbox ?? {}
     }))
@@ -109,5 +107,10 @@ export async function updateDamageType(
 
 export async function deleteRow(fightId: any, timerKey: string) {
   const rowRef = ref(db, `fights/${fightId}/skills/${timerKey}`)
+  await remove(rowRef)
+}
+
+export async function deleteFight(fightId: any) {
+  const rowRef = ref(db, `fights/${fightId}`)
   await remove(rowRef)
 }
