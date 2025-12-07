@@ -26,7 +26,7 @@ const DataRow = ({
   row: RowData
   contentWidth: number
 }) => {
-  const fightId = 'your-fight-id-here'
+  const { name: fightId } = useParams()
   const timerKey = row.timer.toString()
 
   const handleCheckboxChange = async (checkboxKey: string, value: boolean) => {
