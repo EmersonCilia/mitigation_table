@@ -6,7 +6,7 @@ import {
 import { jobSkills } from '../Data/JobSkills'
 import { Row, Scrolable, Sticky } from '../Spreadsheet/Styles'
 import { Checkbox, Job, TextArea, TrashCan } from './styles'
-import calculateMitigation from '../utils/mitigationCalculator'
+import calculateMitigation from '../../Utils/mitigationCalculator'
 import trashCan from '../../assets/trash_can.svg'
 
 // types.ts

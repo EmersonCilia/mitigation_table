@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
+import { useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import { listenForRows, saveRow } from '../../firebase/fights'
 
@@ -32,7 +34,7 @@ const Spreadsheet = () => {
   const [damageTotal, setDamageTotal] = useState<number>(0)
   const [contentWidth, setContentWidth] = useState<number>(0)
 
-  const fightId = 'your-fight-id-here'
+  const { name: fightId } = useParams()
 
   // Refs for measuring width
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -42,7 +44,7 @@ const Spreadsheet = () => {
     listenForRows(fightId, (rowsFromDB) => {
       setRows(rowsFromDB)
     })
-  }, [])
+  }, [fightId])
 
   useEffect(() => {
     const updateWidth = () => {
@@ -80,6 +82,8 @@ const Spreadsheet = () => {
       type: 'magical',
       checkbox: {}
     })
+
+    console.log(fightId)
 
     setTimer('')
     setSkill('')
@@ -124,6 +128,11 @@ const Spreadsheet = () => {
       </Table>
 
       <ButtonGroup>
+        <Link to="/">
+          <Button style={{ marginRight: '20px', height: '40px' }}>
+            Back to Home
+          </Button>
+        </Link>
         <LabelGroups>
           <label>timer</label>
           <input

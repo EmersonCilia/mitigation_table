@@ -22,25 +22,26 @@ export type Fight = {
 }
 
 export async function createFight(name: string) {
-  const fightsRef = ref(db, 'fights')
-  const newFightRef = push(fightsRef)
+  const key = name.replace(/[.#$[\]]/g, '_')
+
+  // Create a unique ID just like push() normally does
+  const idRef = push(ref(db, 'ids'))
+  const generatedId = idRef.key
+
+  const fightRef = ref(db, `fights/${key}`)
 
   const fight = {
-    id: newFightRef.key!,
+    id: generatedId,
     name,
     skills: {}
   }
 
-  await set(newFightRef, fight)
+  await set(fightRef, fight)
 
   return fight
 }
 
-export async function saveRow(
-  fightId: string,
-  timer: string,
-  data: FightSkill
-) {
+export async function saveRow(fightId: any, timer: string, data: FightSkill) {
   const skillRef = ref(db, `fights/${fightId}/skills/${timer}`)
   await set(skillRef, data)
 }
@@ -71,10 +72,7 @@ export async function updateCheckbox(
   await set(refCheckbox, value)
 }
 
-export function listenForRows(
-  fightId: string,
-  callback: (rows: any[]) => void
-) {
+export function listenForRows(fightId: any, callback: (rows: any[]) => void) {
   const rowsRef = ref(db, `fights/${fightId}/skills`)
 
   onValue(rowsRef, (snapshot) => {
