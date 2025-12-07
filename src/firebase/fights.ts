@@ -1,5 +1,5 @@
 import { db } from './index'
-import { ref, set, get, update, push, onValue } from 'firebase/database'
+import { ref, set, get, push, onValue, remove } from 'firebase/database'
 
 export type CheckboxMap = {
   [key: string]: boolean
@@ -38,7 +38,7 @@ export async function createFight(name: string) {
 
 export async function saveRow(
   fightId: string,
-  timer: number,
+  timer: string,
   data: FightSkill
 ) {
   const skillRef = ref(db, `fights/${fightId}/skills/${timer}`)
@@ -98,4 +98,18 @@ export function listenForRows(
 
     callback(rows)
   })
+}
+
+export async function updateDamageType(
+  fightId: string,
+  timer: string,
+  type: 'magical' | 'physical'
+) {
+  const typeRef = ref(db, `fights/${fightId}/skills/${timer}/type`)
+  await set(typeRef, type)
+}
+
+export async function deleteRow(fightId: string, timerKey: string) {
+  const rowRef = ref(db, `fights/${fightId}/skills/${timerKey}`)
+  await remove(rowRef)
 }

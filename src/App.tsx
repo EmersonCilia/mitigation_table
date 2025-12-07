@@ -1,11 +1,16 @@
-import Spreadsheet from './components/Spreadsheet/Spreadsheet'
+import { BrowserRouter } from 'react-router-dom'
+
 import { GlobalCss } from './styles'
+
+import Router from './Routes'
 
 function App() {
   return (
     <>
-      <GlobalCss />
-      <Spreadsheet />
+      <BrowserRouter>
+        <GlobalCss />
+        <Router />
+      </BrowserRouter>
     </>
   )
 }

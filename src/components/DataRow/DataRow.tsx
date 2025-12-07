@@ -1,13 +1,18 @@
-import { updateCheckbox } from '../../firebase/fights'
+import {
+  deleteRow,
+  updateCheckbox,
+  updateDamageType
+} from '../../firebase/fights'
 import { jobSkills } from '../Data/JobSkills'
 import { Row, Scrolable, Sticky } from '../Spreadsheet/Styles'
-import { Checkbox, Job, TextArea } from './styles'
+import { Checkbox, Job, TextArea, TrashCan } from './styles'
 import calculateMitigation from '../utils/mitigationCalculator'
+import trashCan from '../../assets/trash_can.svg'
 
 // types.ts
 export type RowData = {
   id: string
-  timer: number
+  timer: string
   skill: string
   damagetotal: string
   type: 'magical' | 'physical'
@@ -48,6 +53,15 @@ const DataRow = ({
   return (
     <Row style={{ width: contentWidth }}>
       <Sticky>
+        <TrashCan
+          src={trashCan}
+          alt="trashCan"
+          onClick={() => {
+            if (window.confirm('Delete this row?')) {
+              deleteRow(fightId, row.timer)
+            }
+          }}
+        />
         <TextArea style={{ width: '40px' }} value={row.timer} readOnly />
         <TextArea value={row.skill} readOnly />
       </Sticky>
@@ -58,12 +72,18 @@ const DataRow = ({
         <TextArea
           value={calculateMitigation(
             Number(row.damagetotal),
-            row.type,
+            row.type || 'magical',
             playerMitigations
           )}
           readOnly
         />
-        <select style={{ width: '120px' }}>
+        <select
+          style={{ width: '120px' }}
+          value={row.type}
+          onChange={(e) =>
+            updateDamageType(fightId, row.timer, e.target.value as any)
+          }
+        >
           <option value="magical">Magical</option>
           <option value="physical">Physical</option>
         </select>

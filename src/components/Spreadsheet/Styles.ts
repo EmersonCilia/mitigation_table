@@ -34,7 +34,7 @@ export const Scrolable = styled.div`
   display: flex;
   height: 60px;
   position: absolute;
-  left: 160px;
+  left: 180px;
 `
 
 export const Row = styled.div`

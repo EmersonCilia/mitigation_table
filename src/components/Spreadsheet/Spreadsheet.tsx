@@ -27,7 +27,7 @@ import DataRow, { RowData } from '../DataRow/DataRow'
 
 const Spreadsheet = () => {
   const [rows, setRows] = useState<RowData[]>([])
-  const [timer, setTimer] = useState<number>(0)
+  const [timer, setTimer] = useState('')
   const [skill, setSkill] = useState('')
   const [damageTotal, setDamageTotal] = useState<number>(0)
   const [contentWidth, setContentWidth] = useState<number>(0)
@@ -81,7 +81,7 @@ const Spreadsheet = () => {
       checkbox: {}
     })
 
-    setTimer(0)
+    setTimer('')
     setSkill('')
     setDamageTotal(0)
   }
@@ -91,11 +91,18 @@ const Spreadsheet = () => {
       <Table>
         <Row ref={headerRowRef}>
           <Sticky>
+            <HeaderTitle
+              style={{
+                width: '20px',
+                backgroundColor: 'white',
+                border: 'none'
+              }}
+            />
             <HeaderTitle style={{ width: '40px' }}>timer</HeaderTitle>
             <HeaderTitle>skill</HeaderTitle>
           </Sticky>
 
-          {/* ⭐ this is what we measure */}
+          {/* this is what we measure */}
           <Scrolable ref={scrollRef} style={{ marginRight: '40px' }}>
             <HeaderTitle>Damage Total</HeaderTitle>
             <HeaderTitle>Damage Taken</HeaderTitle>
@@ -122,7 +129,7 @@ const Spreadsheet = () => {
           <input
             type="text"
             value={timer}
-            onChange={(e) => setTimer(Number(e.target.value))}
+            onChange={(e) => setTimer(e.target.value)}
           />
         </LabelGroups>
 
