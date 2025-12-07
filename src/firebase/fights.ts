@@ -59,7 +59,7 @@ export async function getOneFight(fightId: string) {
 }
 
 export async function updateCheckbox(
-  fightId: string,
+  fightId: any,
   skillName: string,
   checkboxKey: string,
   value: boolean
@@ -99,7 +99,7 @@ export function listenForRows(fightId: any, callback: (rows: any[]) => void) {
 }
 
 export async function updateDamageType(
-  fightId: string,
+  fightId: any,
   timer: string,
   type: 'magical' | 'physical'
 ) {
@@ -107,7 +107,7 @@ export async function updateDamageType(
   await set(typeRef, type)
 }
 
-export async function deleteRow(fightId: string, timerKey: string) {
+export async function deleteRow(fightId: any, timerKey: string) {
   const rowRef = ref(db, `fights/${fightId}/skills/${timerKey}`)
   await remove(rowRef)
 }

@@ -8,6 +8,7 @@ import { Row, Scrolable, Sticky } from '../Spreadsheet/Styles'
 import { Checkbox, Job, TextArea, TrashCan } from './styles'
 import calculateMitigation from '../../Utils/mitigationCalculator'
 import trashCan from '../../assets/trash_can.svg'
+import { useParams } from 'react-router-dom'
 
 // types.ts
 export type RowData = {
