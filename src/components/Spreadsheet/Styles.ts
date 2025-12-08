@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 
-export const Container = styled.div`
-  max-width: calc(80vw - 40px);
+export const Container = styled.div<{ open: boolean }>`
+  max-width: ${(props) => (props.open ? '75vw' : '80vw')};
   width: 100%;
-  margin: 0 auto;
+  margin: ${(props) => (props.open ? '0 100px' : '0 auto')};
   padding: 40px 0;
 
   @media (max-width: 768px) {
@@ -13,6 +13,29 @@ export const Container = styled.div`
   @media (min-width: 769px) and (max-width: 1024px) {
     max-width: 90vw;
   }
+`
+export const AsideContainer = styled.aside<{ open: boolean }>`
+  width: ${(props) => (props.open ? 'auto' : '40px')};
+  position: relative;
+  display: flex;
+`
+
+export const AsideDiv = styled.div<{ open: boolean }>`
+  width: 280px;
+  height: 100vh;
+  padding: 20px;
+  border-right: 1px solid #ccc;
+  transform: translateX(${(props) => (props.open ? '0' : '-100%')});
+  transition: transform 0.3s ease-in-out;
+  position: relative;
+  z-index: 10;
+`
+export const AsideButton = styled.button<{ open: boolean }>`
+  position: absolute;
+  left: ${(props) => (props.open ? '210px' : '0')};
+  transition: left 0.3s ease-in-out;
+  z-index: 10;
+  cursor: pointer;
 `
 
 export const HeaderTitle = styled.h3`
@@ -42,6 +65,7 @@ export const Row = styled.div`
   display: flex;
   align-items: stretch;
   position: relative;
+  transition: transform 0.3s ease-in-out;
 `
 
 export const ButtonGroup = styled.div`

@@ -34,6 +34,7 @@ const Spreadsheet = () => {
   const [damageTotal, setDamageTotal] = useState<number>(0)
   const [contentWidth, setContentWidth] = useState<number>(0)
   const [activeJobs, setActiveJobs] = useState<string[]>([])
+  const [asideOpen, setAsideOpen] = useState(true)
 
   const allJobs = [
     { id: '0', job: 'GNB', component: Gunbreaker },
@@ -125,8 +126,20 @@ const Spreadsheet = () => {
 
   return (
     <S.SpreadSheet>
-      <Aside jobs={allJobs} activeJobs={activeJobs} toggleJob={toggleJob} />
-      <S.Container>
+      <S.AsideContainer open={asideOpen}>
+        <S.AsideDiv open={asideOpen}>
+          <Aside jobs={allJobs} activeJobs={activeJobs} toggleJob={toggleJob} />
+        </S.AsideDiv>
+
+        <S.AsideButton
+          open={asideOpen}
+          onClick={() => setAsideOpen((prev) => !prev)}
+        >
+          {asideOpen ? 'Close Jobs' : 'Open Jobs'}
+        </S.AsideButton>
+      </S.AsideContainer>
+
+      <S.Container open={asideOpen}>
         <h1 style={{ textAlign: 'center', marginBottom: '40px' }}>{fightId}</h1>
         <S.Table>
           <S.Row ref={headerRowRef}>
@@ -171,8 +184,10 @@ const Spreadsheet = () => {
             </S.Button>
           </Link>
           <S.LabelGroups>
-            <label>timer</label>
+            <label htmlFor="timer">timer</label>
             <input
+              id="timer"
+              name="timer"
               type="text"
               value={timer}
               onChange={(e) => setTimer(e.target.value)}
@@ -180,8 +195,10 @@ const Spreadsheet = () => {
           </S.LabelGroups>
 
           <S.LabelGroups>
-            <label>skill name</label>
+            <label htmlFor="skillName">skill name</label>
             <input
+              id="skillName"
+              name="skillName"
               type="text"
               value={skill}
               onChange={(e) => setSkill(e.target.value)}
@@ -189,8 +206,10 @@ const Spreadsheet = () => {
           </S.LabelGroups>
 
           <S.LabelGroups>
-            <label>damage total</label>
+            <label htmlFor="damageTotal">damage total</label>
             <input
+              id="damageTotal"
+              name="damageTotal"
               type="text"
               value={damageTotal}
               onChange={(e) => setDamageTotal(Number(e.target.value))}

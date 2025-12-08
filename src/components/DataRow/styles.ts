@@ -20,6 +20,7 @@ export const Checkbox = styled.input`
   margin: 4px;
   height: 20px;
   width: 20px;
+  cursor: pointer;
 `
 export const TrashCan = styled.img`
   background: white;
