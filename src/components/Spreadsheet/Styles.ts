@@ -17,7 +17,8 @@ export const Container = styled.div`
 
 export const HeaderTitle = styled.h3`
   background-color: #aaa;
-  width: 120px;
+  height: 48px;
+  width: 100px;
   flex: 0 0 auto;
   text-align: center;
   border: 1px solid black;
@@ -27,12 +28,12 @@ export const Sticky = styled.div`
   position: sticky;
   left: 0;
   z-index: 10;
-  height: 60px;
+  height: 48px;
 `
 
 export const Scrolable = styled.div`
   display: flex;
-  height: 60px;
+  height: 48px;
   position: absolute;
   left: 180px;
 `

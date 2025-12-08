@@ -12,8 +12,8 @@ export const GlobalCss = createGlobalStyle`
 `
 
 export const JobSkills = styled.img`
-  width: 40px;
-  height: 40px;
+  width: 28px;
+  height: 28px;
   object-fit: contain;
   padding: 0 4px;
   border: solid 1px #000;
@@ -24,6 +24,7 @@ export const Jobs = styled.div`
   align-items: center;
   flex-direction: column;
   border: solid 2px #000;
+  min-width: 40px;
 `
 export const SkillsRow = styled.div`
   display: flex;

@@ -64,7 +64,7 @@ const DataRow = ({
           }}
         />
         <TextArea style={{ width: '40px' }} value={row.timer} readOnly />
-        <TextArea value={row.skill} readOnly />
+        <TextArea value={row.skill} style={{ width: '120px' }} readOnly />
       </Sticky>
 
       <Scrolable>
@@ -81,7 +81,7 @@ const DataRow = ({
         />
 
         <select
-          style={{ width: '120px' }}
+          style={{ width: '80px' }}
           value={row.type}
           onChange={(e) =>
             updateDamageType(fightId, row.timer, e.target.value as any)

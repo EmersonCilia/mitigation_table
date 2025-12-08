@@ -139,12 +139,12 @@ const Spreadsheet = () => {
                 }}
               />
               <S.HeaderTitle style={{ width: '40px' }}>timer</S.HeaderTitle>
-              <S.HeaderTitle>skill</S.HeaderTitle>
+              <S.HeaderTitle style={{ width: '120px' }}>skill</S.HeaderTitle>
             </S.Sticky>
             <S.Scrolable ref={scrollRef} style={{ marginRight: '40px' }}>
               <S.HeaderTitle>Damage Total</S.HeaderTitle>
               <S.HeaderTitle>Damage Taken</S.HeaderTitle>
-              <S.HeaderTitle>Type</S.HeaderTitle>
+              <S.HeaderTitle style={{ width: '80px' }}>Type</S.HeaderTitle>
               {allJobs
                 .filter((j) => activeJobs.includes(j.job))
                 .map((job) => {

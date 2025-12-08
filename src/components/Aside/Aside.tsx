@@ -1,3 +1,5 @@
+import { JobsAside } from './styles'
+
 type Job = {
   job: string
 }
@@ -17,7 +19,7 @@ const Aside = ({ jobs, activeJobs, toggleJob }: Props) => {
       }}
     >
       <h3>Select jobs:</h3>
-      <div style={{ display: 'flex' }}>
+      <JobsAside>
         {jobs.map((job) => (
           <label
             key={job.job}
@@ -31,7 +33,7 @@ const Aside = ({ jobs, activeJobs, toggleJob }: Props) => {
             {job.job}
           </label>
         ))}
-      </div>
+      </JobsAside>
     </aside>
   )
 }
