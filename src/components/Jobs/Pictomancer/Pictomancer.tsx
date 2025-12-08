@@ -1,16 +1,14 @@
-import addle from '../../../assets/Addle.png'
-import temperaCoat from '../../../assets/picto/Tempera_Coat.png'
-import temperaGrassa from '../../../assets/picto/Tempera_Grassa.png'
 import { Jobs, JobSkills, SkillsRow } from '../../../styles'
+import { jobSkills } from '../../Data/JobSkills'
 
 const Pictomancer = () => {
   return (
     <Jobs>
       <p>PCM</p>
       <SkillsRow>
-        <JobSkills src={addle} alt="Addle" />
-        <JobSkills src={temperaCoat} alt="Tempera_Coat" />
-        <JobSkills src={temperaGrassa} alt="Tempera_Grassa" />
+        {jobSkills.PCM.map((skill) => (
+          <JobSkills key={skill.alt} src={skill.src} alt={skill.alt} />
+        ))}
       </SkillsRow>
     </Jobs>
   )

@@ -11,6 +11,7 @@ export const Container = styled.div`
 export const Title = styled.h1`
   font-size: 40px;
   text-align: center;
+  margin-bottom: 40px;
 `
 
 export const List = styled.ul`
@@ -18,7 +19,7 @@ export const List = styled.ul`
 `
 
 export const Fights = styled.li`
-  margin: 20px 0;
+  margin: 10px 0;
   width: 100%;
   border: 2px solid black;
   height: 40px;
@@ -29,4 +30,5 @@ export const Fights = styled.li`
 export const FightContainer = styled.div`
   display: flex;
   width: 100%;
+  gap: 8px;
 `

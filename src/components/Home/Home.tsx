@@ -36,7 +36,7 @@ const Home = () => {
               src={trashCan}
               alt="trashCan"
               onClick={() => {
-                if (window.confirm('Delete this row?')) {
+                if (window.confirm('Delete this fight?')) {
                   deleteFight(fight.name)
                   loadFights()
                 }
@@ -48,8 +48,7 @@ const Home = () => {
           </FightContainer>
         ))}
       </List>
-      {/* Input + button */}
-      <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
+      <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
         <input
           type="text"
           placeholder="New fight name..."

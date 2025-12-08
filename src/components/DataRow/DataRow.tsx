@@ -22,10 +22,12 @@ export type RowData = {
 
 const DataRow = ({
   row,
-  contentWidth
+  contentWidth,
+  selectedJobs
 }: {
   row: RowData
   contentWidth: number
+  selectedJobs: string[]
 }) => {
   const { name: fightId } = useParams()
   const timerKey = row.timer.toString()
@@ -34,18 +36,16 @@ const DataRow = ({
     await updateCheckbox(fightId, timerKey, checkboxKey, value)
   }
 
-  // Example: row.checkbox = { "0-0-Reprisal": true, "0-1-Rampart": false, ... }
+  const jobs = Object.keys(jobSkills)
+
+  // Parse checkbox keys into a structure for mitigation
   const playerMitigations: Record<string, Record<string, boolean>> = {}
 
-  // You can define jobs and match them with checkbox keys
-  const jobs = ['GNB', 'DRK', 'SCH', 'WHM', 'VPR', 'SAM', 'PCM', 'DNC']
-
   Object.entries(row.checkbox || {}).forEach(([key, value]) => {
-    // key = `${timer}-${jobIndex}-${mitName}`
     const parts = key.split('-')
     const jobIndex = Number(parts[1])
-    const mitName = parts[2] // the mitigation name
-    const playerName = jobs[jobIndex] || `Player${jobIndex}` // map jobIndex to player
+    const mitName = parts[2]
+    const playerName = jobs[jobIndex] || `Player${jobIndex}`
 
     if (!playerMitigations[playerName]) playerMitigations[playerName] = {}
     playerMitigations[playerName][mitName] = value
@@ -74,10 +74,12 @@ const DataRow = ({
           value={calculateMitigation(
             Number(row.damagetotal),
             row.type || 'magical',
-            playerMitigations
+            playerMitigations,
+            selectedJobs
           )}
           readOnly
         />
+
         <select
           style={{ width: '120px' }}
           value={row.type}
@@ -89,25 +91,30 @@ const DataRow = ({
           <option value="physical">Physical</option>
         </select>
 
-        {Object.values(jobSkills).map((skills, jobIndex) => (
-          <Job key={jobIndex} style={{ display: 'flex' }}>
-            {skills.map((skill) => {
-              const checkboxKey = `${row.timer}-${jobIndex}-${skill.alt}`
+        {/* Only render the jobs selected for this fight */}
+        {Object.entries(jobSkills).map(([jobName, skills], jobIndex) => {
+          if (!selectedJobs.includes(jobName)) return null // skip hidden jobs
 
-              return (
-                <Checkbox
-                  key={checkboxKey}
-                  id={checkboxKey}
-                  type="checkbox"
-                  checked={row.checkbox?.[checkboxKey] || false}
-                  onChange={(e) =>
-                    handleCheckboxChange(checkboxKey, e.target.checked)
-                  }
-                />
-              )
-            })}
-          </Job>
-        ))}
+          return (
+            <Job key={jobName} style={{ display: 'flex' }}>
+              {skills.map((skill) => {
+                const checkboxKey = `${row.timer}-${jobIndex}-${skill.alt}`
+
+                return (
+                  <Checkbox
+                    key={checkboxKey}
+                    id={checkboxKey}
+                    type="checkbox"
+                    checked={row.checkbox?.[checkboxKey] || false}
+                    onChange={(e) =>
+                      handleCheckboxChange(checkboxKey, e.target.checked)
+                    }
+                  />
+                )
+              })}
+            </Job>
+          )
+        })}
       </Scrolable>
     </Row>
   )

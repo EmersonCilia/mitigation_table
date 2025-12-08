@@ -34,55 +34,134 @@ import shadowedVigil from '../../assets/dark_knight/Shadowed_Vigil.png'
 import tbn from '../../assets/dark_knight/The_Blackest_Night.png'
 import livingDead from '../../assets/dark_knight/Living_Dead.png'
 import darkMissionary from '../../assets/dark_knight/Dark_Missionary.png'
+import bloodwhetting from '../../assets/warrior/Bloodwhetting.png'
+import damnation from '../../assets/warrior/Damnation.png'
+import equilibrium from '../../assets/warrior/Equilibrium.png'
+import holmgang from '../../assets/warrior/Holmgang.png'
+import shakeItOff from '../../assets/warrior/Shake_It_Off.png'
+import thrillOfBattle from '../../assets/warrior/Thrill_of_Battle.png'
+import nascentFlash from '../../assets/warrior/Nascent_Flash.png'
+import kerachole from '../../assets/sage/Kerachole.png'
+import zoe from '../../assets/sage/Zoe.png'
+import phisisII from '../../assets/sage/Physis_II.png'
+import eukrasianPrognosis from '../../assets/sage/Eukrasian_Prognosis_II.png'
+import philosophia from '../../assets/sage/Philosophia.png'
+import panhaima from '../../assets/sage/Panhaima.png'
+import haima from '../../assets/sage/Haima.png'
+import pneuma from '../../assets/sage/Pneuma.png'
+import holos from '../../assets/sage/Holos.png'
+import taurochole from '../../assets/sage/Taurochole.png'
+import celestialIntersection from '../../assets/astrologian/Celestial_Intersection.png'
+import celestialOpposition from '../../assets/astrologian/Celestial_Opposition.png'
+import collectiveUnconscious from '../../assets/astrologian/Collective_Unconscious.png'
+import earthlyStar from '../../assets/astrologian/Earthly_Star.png'
+import exaltation from '../../assets/astrologian/Exaltation.png'
+import horoscope from '../../assets/astrologian/Horoscope.png'
+import macrocosmos from '../../assets/astrologian/Macrocosmos.png'
+import neutralSect from '../../assets/astrologian/Neutral_Sect.png'
+import sunSign from '../../assets/astrologian/Sun_Sign.png'
+import cover from '../../assets/paladin/Cover.png'
+import bulwark from '../../assets/paladin/Bulwark.png'
+import divineVeil from '../../assets/paladin/Divine_Veil.png'
+import guardian from '../../assets/paladin/Guardian_action.png'
+import hallowedGround from '../../assets/paladin/Hallowed_Ground.png'
+import holySheltron from '../../assets/paladin/Holy_Sheltron.png'
+import intervention from '../../assets/paladin/Intervention.png'
+import passageOfArms from '../../assets/paladin/Passage_of_Arms.png'
 
 export const jobSkills = {
   GNB: [
-    { src: { reprisal }, alt: 'Reprisal-GNB' },
-    { src: { rampart }, alt: 'Rampart-GNB' },
-    { src: { heartOfCorundum }, alt: 'Heart_of_Corundum' },
-    { src: { greatNebula }, alt: 'Great_Nebula' },
-    { src: { camouflage }, alt: 'Camouflage' },
-    { src: { superbolide }, alt: 'Superbolide' },
-    { src: { heartOfLight }, alt: 'Heart_of_Light' }
+    { src: reprisal, alt: 'Reprisal-GNB' },
+    { src: rampart, alt: 'Rampart-GNB' },
+    { src: greatNebula, alt: 'Great_Nebula' },
+    { src: camouflage, alt: 'Camouflage' },
+    { src: heartOfCorundum, alt: 'Heart_of_Corundum' },
+    { src: superbolide, alt: 'Superbolide' },
+    { src: heartOfLight, alt: 'Heart_of_Light' }
   ],
   DRK: [
-    { src: { reprisal }, alt: 'Reprisal-DRK' },
-    { src: { rampart }, alt: 'Rampart-DRK' },
-    { src: { oblation }, alt: 'Oblation' },
-    { src: { darkMind }, alt: 'Dark_Mind' },
-    { src: { shadowedVigil }, alt: 'Shadowed_Vigil' },
-    { src: { tbn }, alt: 'The_Blackest_Night' },
-    { src: { livingDead }, alt: 'Living_Dead' },
-    { src: { darkMissionary }, alt: 'Dark_Missionary' }
+    { src: reprisal, alt: 'Reprisal-DRK' },
+    { src: rampart, alt: 'Rampart-DRK' },
+    { src: shadowedVigil, alt: 'Shadowed_Vigil' },
+    { src: darkMind, alt: 'Dark_Mind' },
+    { src: oblation, alt: 'Oblation' },
+    { src: tbn, alt: 'The_Blackest_Night' },
+    { src: livingDead, alt: 'Living_Dead' },
+    { src: darkMissionary, alt: 'Dark_Missionary' }
   ],
-
+  PLD: [
+    { src: reprisal, alt: 'Reprisal-PLD' },
+    { src: rampart, alt: 'Rampart-PLD' },
+    { src: guardian, alt: 'Guardian' },
+    { src: bulwark, alt: 'Bulwark' },
+    { src: holySheltron, alt: 'Holy_Sheltron' },
+    { src: intervention, alt: 'Intervention' },
+    { src: cover, alt: 'Cover' },
+    { src: hallowedGround, alt: 'Hallowed_Ground' },
+    { src: passageOfArms, alt: 'Passage_of_Arms' },
+    { src: divineVeil, alt: 'Divine_Veil' }
+  ],
+  WAR: [
+    { src: reprisal, alt: 'Reprisal-WAR' },
+    { src: rampart, alt: 'Rampart-WAR' },
+    { src: damnation, alt: 'Damnation' },
+    { src: equilibrium, alt: 'Equilibrium' },
+    { src: thrillOfBattle, alt: 'Thrill_of_Battle' },
+    { src: bloodwhetting, alt: 'Bloodwhetting' },
+    { src: nascentFlash, alt: 'Nascent_Flash' },
+    { src: holmgang, alt: 'Holmgang' },
+    { src: shakeItOff, alt: 'Shake_It_Off' }
+  ],
+  SGE: [
+    { src: taurochole, alt: 'Taurochole' },
+    { src: haima, alt: 'Haima' },
+    { src: kerachole, alt: 'Kerachole' },
+    { src: holos, alt: 'Holos' },
+    { src: phisisII, alt: 'Phisis_II' },
+    { src: panhaima, alt: 'Panhaima' },
+    { src: philosophia, alt: 'Philosophia' },
+    { src: zoe, alt: 'Zoe' },
+    { src: pneuma, alt: 'Pneuma' },
+    { src: eukrasianPrognosis, alt: 'Eukrasian_Prognosis_II' }
+  ],
   SCH: [
-    { src: { protraction }, alt: 'Protraction' },
-    { src: { consolation }, alt: 'Consolation' },
-    { src: { deploymentTactics }, alt: 'Deployment_Tactics' },
-    { src: { dissipation }, alt: 'Dissipation' },
-    { src: { expedient }, alt: 'Expedient' },
-    { src: { feyIllumination }, alt: 'Fey_Illumination_sch' },
-    { src: { sacredSoil }, alt: 'Sacred_Soil' },
-    { src: { seraphism }, alt: 'Seraphism' },
-    { src: { succor }, alt: 'Succor' },
-    { src: { summonSeraph }, alt: 'Summon_Seraph' }
+    { src: protraction, alt: 'Protraction' },
+    { src: sacredSoil, alt: 'Sacred_Soil' },
+    { src: expedient, alt: 'Expedient' },
+    { src: feyIllumination, alt: 'Fey_Illumination_sch' },
+    { src: deploymentTactics, alt: 'Deployment_Tactics' },
+    { src: seraphism, alt: 'Seraphism' },
+    { src: dissipation, alt: 'Dissipation' },
+    { src: consolation, alt: 'Consolation' },
+    { src: summonSeraph, alt: 'Summon_Seraph' },
+    { src: succor, alt: 'Succor' }
+  ],
+  AST: [
+    { src: celestialIntersection, alt: 'Celestial_Intersection' },
+    { src: exaltation, alt: 'Exaltation' },
+    { src: celestialOpposition, alt: 'Celestial_Opposition' },
+    { src: collectiveUnconscious, alt: 'Collective_Unconscious' },
+    { src: earthlyStar, alt: 'Earthly_Star' },
+    { src: horoscope, alt: 'Horoscope' },
+    { src: macrocosmos, alt: 'Macrocosmos' },
+    { src: neutralSect, alt: 'Neutral_Sect' },
+    { src: sunSign, alt: 'Sun_Sign' }
   ],
   WHM: [
-    { src: { aquaveil }, alt: 'Aquaveil' },
-    { src: { divineBenison }, alt: 'Divine_Benison' },
-    { src: { asylum }, alt: 'Asylum' },
-    { src: { temperance }, alt: 'Temperance' },
-    { src: { lotb }, alt: 'Liturgy_of_the_Bell' },
-    { src: { divineCaress }, alt: 'Divine_Caress' }
+    { src: aquaveil, alt: 'Aquaveil' },
+    { src: divineBenison, alt: 'Divine_Benison' },
+    { src: asylum, alt: 'Asylum' },
+    { src: temperance, alt: 'Temperance' },
+    { src: lotb, alt: 'Liturgy_of_the_Bell' },
+    { src: divineCaress, alt: 'Divine_Caress' }
   ],
-  VPR: [{ src: { feint }, alt: 'Feint-VPR' }],
-  SAM: [{ src: { feint }, alt: 'Feint-SAM' }],
+  VPR: [{ src: feint, alt: 'Feint-VPR' }],
+  SAM: [{ src: feint, alt: 'Feint-SAM' }],
 
   PCM: [
-    { src: { addle }, alt: 'Addle' },
-    { src: { temperaCoat }, alt: 'Tempera_Coat' },
-    { src: { temperaGrassa }, alt: 'Tempera_Grassa' }
+    { src: addle, alt: 'Addle' },
+    { src: temperaCoat, alt: 'Tempera_Coat' },
+    { src: temperaGrassa, alt: 'Tempera_Grassa' }
   ],
 
   DNC: [

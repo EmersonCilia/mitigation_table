@@ -18,21 +18,35 @@ type MitigationKey =
   | 'Aquaveil'
   | 'Temperance'
   | 'Oblation'
+  | 'Kerachole'
+  | 'Holos'
+  | 'Taurochole'
+  | 'Bloodwhetting'
+  | 'Damnation'
+  | 'Nascent_Flash'
+  | 'Collective_Unconscious'
+  | 'Exaltation'
+  | 'Sun_Sign'
+  | 'Bulwark'
+  | 'Guardian'
+  | 'Holy_Sheltron'
+  | 'Intervention'
+  | 'Passage_of_Arms'
 
 type PlayerMitigations = {
   [key in MitigationKey]?: boolean
 }
-type MitigationMap = {
+export type MitigationMap = {
   [playerName: string]: PlayerMitigations
 }
 
 export default function calculateMitigation(
   baseDamage: number,
   damageType: DamageType,
-  mitigations: MitigationMap
+  mitigations: MitigationMap,
+  activeJobs: string[]
 ): number {
   let adjusted = baseDamage
-
   const values: Record<MitigationKey, number> = {
     // commom mitigation
     Reprisal: 0.9,
@@ -57,17 +71,38 @@ export default function calculateMitigation(
     Expedient: 0.9,
     //WHM
     Aquaveil: 0.9,
-    Temperance: 0.9
+    Temperance: 0.9,
+    //SGE
+    Kerachole: 0.9,
+    Holos: 0.9,
+    Taurochole: 0.9,
+    //WAR
+    Bloodwhetting: 0.9,
+    Damnation: 0.6,
+    Nascent_Flash: 0.9,
+    //AST
+    Collective_Unconscious: 0.9,
+    Exaltation: 0.9,
+    Sun_Sign: 0.9,
+    //PLD
+    Bulwark: 0.85,
+    Guardian: 0.6,
+    Holy_Sheltron: 0.9,
+    Intervention: 0.9,
+    Passage_of_Arms: 0.85
   }
 
   const applied: Partial<Record<MitigationKey, boolean>> = {}
 
   // loop per player
-  Object.values(mitigations).forEach((playerMits) => {
+  Object.entries(mitigations).forEach(([jobName, playerMits]) => {
+    //  Skip if this job is not active
+    if (!activeJobs.includes(jobName)) return
+
+    //  Only process mitigations for visible/active jobs
     Object.entries(playerMits).forEach(([mitName, active]) => {
       if (active && mitName in values) {
-        const key = mitName as MitigationKey
-        applied[key] = true
+        applied[mitName as MitigationKey] = true
       }
     })
   })

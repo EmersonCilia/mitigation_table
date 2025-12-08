@@ -1,12 +1,12 @@
-import { Jobs, JobSkills, SkillsRow } from '../../../styles'
 import { jobSkills } from '../../Data/JobSkills'
+import { Jobs, JobSkills, SkillsRow } from '../../../styles'
 
-const Scholar = () => {
+const Astrologian = () => {
   return (
     <Jobs>
-      <p>SCH</p>
+      <p>AST</p>
       <SkillsRow>
-        {jobSkills.SCH.map((skill) => (
+        {jobSkills.AST.map((skill) => (
           <JobSkills key={skill.alt} src={skill.src} alt={skill.alt} />
         ))}
       </SkillsRow>
@@ -14,4 +14,4 @@ const Scholar = () => {
   )
 }
 
-export default Scholar
+export default Astrologian

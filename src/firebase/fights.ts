@@ -1,5 +1,5 @@
 import { db } from './index'
-import { ref, set, get, push, onValue, remove } from 'firebase/database'
+import { ref, set, get, push, onValue, remove, update } from 'firebase/database'
 
 export type CheckboxMap = {
   [key: string]: boolean
@@ -113,4 +113,21 @@ export async function deleteRow(fightId: any, timerKey: string) {
 export async function deleteFight(fightId: any) {
   const rowRef = ref(db, `fights/${fightId}`)
   await remove(rowRef)
+}
+
+export async function updateActiveJobs(fightId: any, activeJobs: string[]) {
+  await update(ref(db, `fights/${fightId}`), {
+    activeJobs
+  })
+}
+
+export function listenForActiveJobs(
+  fightId: any,
+  callback: (jobs: string[]) => void
+) {
+  const activeRef = ref(db, `fights/${fightId}/activeJobs`)
+
+  onValue(activeRef, (snap) => {
+    callback(snap.exists() ? snap.val() : [])
+  })
 }

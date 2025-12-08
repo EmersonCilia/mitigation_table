@@ -2,19 +2,14 @@ import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
-import { listenForRows, saveRow } from '../../firebase/fights'
-
 import {
-  Button,
-  ButtonGroup,
-  Container,
-  HeaderTitle,
-  LabelGroups,
-  Row,
-  Scrolable,
-  Table,
-  Sticky
-} from './Styles'
+  listenForActiveJobs,
+  listenForRows,
+  saveRow,
+  updateActiveJobs
+} from '../../firebase/fights'
+
+import * as S from './Styles'
 
 import Dancer from '../Jobs/Dancer/Dancer'
 import DarkKnight from '../Jobs/DarkKnight/DarkKnight'
@@ -24,8 +19,13 @@ import Samurai from '../Jobs/Samurai/Samurai'
 import Scholar from '../Jobs/Scholar/Scholar'
 import Viper from '../Jobs/Viper/Viper'
 import WhiteMage from '../Jobs/WhiteMage/WhiteMage'
+import Warrior from '../Jobs/Warrior/Warrior'
+import Sage from '../Jobs/Sage/Sage'
+import Astrologian from '../Jobs/Astrologian/Astrologian'
+import Paladin from '../Jobs/Paladin/Paladin'
 
 import DataRow, { RowData } from '../DataRow/DataRow'
+import Aside from '../Aside/Aside'
 
 const Spreadsheet = () => {
   const [rows, setRows] = useState<RowData[]>([])
@@ -33,6 +33,22 @@ const Spreadsheet = () => {
   const [skill, setSkill] = useState('')
   const [damageTotal, setDamageTotal] = useState<number>(0)
   const [contentWidth, setContentWidth] = useState<number>(0)
+  const [activeJobs, setActiveJobs] = useState<string[]>([])
+
+  const allJobs = [
+    { id: '0', job: 'GNB', component: Gunbreaker },
+    { id: '1', job: 'DRK', component: DarkKnight },
+    { id: '2', job: 'PLD', component: Paladin },
+    { id: '3', job: 'WAR', component: Warrior },
+    { id: '4', job: 'SGE', component: Sage },
+    { id: '5', job: 'SCH', component: Scholar },
+    { id: '6', job: 'AST', component: Astrologian },
+    { id: '7', job: 'WHM', component: WhiteMage },
+    { id: '8', job: 'SAM', component: Samurai },
+    { id: '9', job: 'VPR', component: Viper },
+    { id: '10', job: 'PCM', component: Pictomancer },
+    { id: '11', job: 'DNC', component: Dancer }
+  ]
 
   const { name: fightId } = useParams()
 
@@ -41,8 +57,8 @@ const Spreadsheet = () => {
   const headerRowRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    listenForRows(fightId, (rowsFromDB) => {
-      setRows(rowsFromDB)
+    listenForActiveJobs(fightId, (jobsFromDB) => {
+      setActiveJobs(jobsFromDB || [])
     })
   }, [fightId])
 
@@ -72,7 +88,13 @@ const Spreadsheet = () => {
     return () => window.removeEventListener('resize', updateWidth)
   }, [rows])
 
-  const handleAdd = async () => {
+  useEffect(() => {
+    listenForRows(fightId, (rowsFromDB) => {
+      setRows(rowsFromDB)
+    })
+  }, [fightId])
+
+  const AddRow = async () => {
     if (!timer || !skill || !damageTotal) return
 
     await saveRow(fightId, timer, {
@@ -82,87 +104,103 @@ const Spreadsheet = () => {
       checkbox: {}
     })
 
-    console.log(fightId)
-
     setTimer('')
     setSkill('')
     setDamageTotal(0)
   }
 
+  const toggleJob = async (jobId: string) => {
+    let updated
+
+    if (activeJobs.includes(jobId)) {
+      updated = activeJobs.filter((j) => j !== jobId)
+    } else {
+      updated = [...activeJobs, jobId]
+    }
+
+    setActiveJobs(updated)
+
+    await updateActiveJobs(fightId, updated)
+  }
+
   return (
-    <Container>
-      <h1 style={{ textAlign: 'center', marginBottom: '40px' }}>{fightId}</h1>
-      <Table>
-        <Row ref={headerRowRef}>
-          <Sticky>
-            <HeaderTitle
-              style={{
-                width: '20px',
-                backgroundColor: 'white',
-                border: 'none'
-              }}
+    <>
+      <Aside jobs={allJobs} activeJobs={activeJobs} toggleJob={toggleJob} />
+      <S.Container>
+        <h1 style={{ textAlign: 'center', marginBottom: '40px' }}>{fightId}</h1>
+        <S.Table>
+          <S.Row ref={headerRowRef}>
+            <S.Sticky>
+              <S.HeaderTitle
+                style={{
+                  width: '20px',
+                  backgroundColor: 'white',
+                  border: 'none'
+                }}
+              />
+              <S.HeaderTitle style={{ width: '40px' }}>timer</S.HeaderTitle>
+              <S.HeaderTitle>skill</S.HeaderTitle>
+            </S.Sticky>
+            <S.Scrolable ref={scrollRef} style={{ marginRight: '40px' }}>
+              <S.HeaderTitle>Damage Total</S.HeaderTitle>
+              <S.HeaderTitle>Damage Taken</S.HeaderTitle>
+              <S.HeaderTitle>Type</S.HeaderTitle>
+              {allJobs
+                .filter((j) => activeJobs.includes(j.job))
+                .map((job) => {
+                  const Component = job.component
+                  return <Component key={job.id} />
+                })}
+            </S.Scrolable>
+          </S.Row>
+
+          {rows.map((row) => (
+            <DataRow
+              key={row.id}
+              row={row}
+              contentWidth={contentWidth}
+              selectedJobs={activeJobs}
             />
-            <HeaderTitle style={{ width: '40px' }}>timer</HeaderTitle>
-            <HeaderTitle>skill</HeaderTitle>
-          </Sticky>
+          ))}
+        </S.Table>
 
-          {/* this is what we measure */}
-          <Scrolable ref={scrollRef} style={{ marginRight: '40px' }}>
-            <HeaderTitle>Damage Total</HeaderTitle>
-            <HeaderTitle>Damage Taken</HeaderTitle>
-            <HeaderTitle>Type</HeaderTitle>
-            <Gunbreaker />
-            <DarkKnight />
-            <Scholar />
-            <WhiteMage />
-            <Samurai />
-            <Viper />
-            <Pictomancer />
-            <Dancer />
-          </Scrolable>
-        </Row>
+        <S.ButtonGroup>
+          <Link to="/">
+            <S.Button style={{ marginRight: '20px', height: '40px' }}>
+              Back to Home
+            </S.Button>
+          </Link>
+          <S.LabelGroups>
+            <label>timer</label>
+            <input
+              type="text"
+              value={timer}
+              onChange={(e) => setTimer(e.target.value)}
+            />
+          </S.LabelGroups>
 
-        {rows.map((row) => (
-          <DataRow key={row.id} row={row} contentWidth={contentWidth} />
-        ))}
-      </Table>
+          <S.LabelGroups>
+            <label>skill name</label>
+            <input
+              type="text"
+              value={skill}
+              onChange={(e) => setSkill(e.target.value)}
+            />
+          </S.LabelGroups>
 
-      <ButtonGroup>
-        <Link to="/">
-          <Button style={{ marginRight: '20px', height: '40px' }}>
-            Back to Home
-          </Button>
-        </Link>
-        <LabelGroups>
-          <label>timer</label>
-          <input
-            type="text"
-            value={timer}
-            onChange={(e) => setTimer(e.target.value)}
-          />
-        </LabelGroups>
+          <S.LabelGroups>
+            <label>damage total</label>
+            <input
+              type="text"
+              value={damageTotal}
+              onChange={(e) => setDamageTotal(Number(e.target.value))}
+            />
+          </S.LabelGroups>
 
-        <LabelGroups>
-          <label>skill name</label>
-          <input
-            type="text"
-            value={skill}
-            onChange={(e) => setSkill(e.target.value)}
-          />
-        </LabelGroups>
-
-        <LabelGroups>
-          <label>damage total</label>
-          <input
-            type="text"
-            value={damageTotal}
-            onChange={(e) => setDamageTotal(Number(e.target.value))}
-          />
-        </LabelGroups>
-
-        <Button onClick={handleAdd}>Add</Button>
-      </ButtonGroup>
-    </Container>
+          <S.Button onClick={AddRow}>Add</S.Button>
+        </S.ButtonGroup>
+      </S.Container>
+    </>
   )
 }
 
