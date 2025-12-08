@@ -1,4 +1,4 @@
-import { JobsAside } from './styles'
+import { AsideContainer, JobsAside } from './styles'
 
 type Job = {
   job: string
@@ -12,7 +12,7 @@ type Props = {
 
 const Aside = ({ jobs, activeJobs, toggleJob }: Props) => {
   return (
-    <aside
+    <AsideContainer
       style={{
         padding: '20px',
         borderRight: '1px solid #ccc'
@@ -34,7 +34,7 @@ const Aside = ({ jobs, activeJobs, toggleJob }: Props) => {
           </label>
         ))}
       </JobsAside>
-    </aside>
+    </AsideContainer>
   )
 }
 

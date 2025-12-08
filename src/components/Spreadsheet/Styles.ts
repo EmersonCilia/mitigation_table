@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-  max-width: 80vw;
+  max-width: calc(80vw - 40px);
   width: 100%;
   margin: 0 auto;
   padding: 40px 0;
@@ -62,4 +62,7 @@ export const Button = styled.button`
 `
 export const Table = styled.div`
   overflow-x: auto;
+`
+export const SpreadSheet = styled.div`
+  display: flex;
 `

@@ -124,7 +124,7 @@ const Spreadsheet = () => {
   }
 
   return (
-    <>
+    <S.SpreadSheet>
       <Aside jobs={allJobs} activeJobs={activeJobs} toggleJob={toggleJob} />
       <S.Container>
         <h1 style={{ textAlign: 'center', marginBottom: '40px' }}>{fightId}</h1>
@@ -138,7 +138,7 @@ const Spreadsheet = () => {
                   border: 'none'
                 }}
               />
-              <S.HeaderTitle style={{ width: '40px' }}>timer</S.HeaderTitle>
+              <S.HeaderTitle style={{ width: '48px' }}>timer</S.HeaderTitle>
               <S.HeaderTitle style={{ width: '120px' }}>skill</S.HeaderTitle>
             </S.Sticky>
             <S.Scrolable ref={scrollRef} style={{ marginRight: '40px' }}>
@@ -200,7 +200,7 @@ const Spreadsheet = () => {
           <S.Button onClick={AddRow}>Add</S.Button>
         </S.ButtonGroup>
       </S.Container>
-    </>
+    </S.SpreadSheet>
   )
 }
 
