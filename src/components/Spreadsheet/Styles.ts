@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const Container = styled.div<{ open: boolean }>`
-  max-width: ${(props) => (props.open ? '75vw' : '80vw')};
+  max-width: ${(props) => (props.open ? '70vw' : '80vw')};
   width: 100%;
   margin: ${(props) => (props.open ? '0 100px' : '0 auto')};
   padding: 40px 0;
@@ -36,6 +36,11 @@ export const AsideButton = styled.button<{ open: boolean }>`
   transition: left 0.3s ease-in-out;
   z-index: 10;
   cursor: pointer;
+
+  img {
+    transition: transform 0.3s ease-in-out;
+    transform: rotate(${(props) => (props.open ? '-90deg' : '0')});
+  }
 `
 
 export const HeaderTitle = styled.h3`

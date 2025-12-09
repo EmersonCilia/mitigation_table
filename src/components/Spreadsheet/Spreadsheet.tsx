@@ -8,6 +8,7 @@ import {
   saveRow,
   updateActiveJobs
 } from '../../firebase/fights'
+import arrow from '../../assets/arrow.svg'
 
 import * as S from './Styles'
 
@@ -23,9 +24,18 @@ import Warrior from '../Jobs/Warrior/Warrior'
 import Sage from '../Jobs/Sage/Sage'
 import Astrologian from '../Jobs/Astrologian/Astrologian'
 import Paladin from '../Jobs/Paladin/Paladin'
+import Monk from '../Jobs/Monk/Monk'
 
 import DataRow, { RowData } from '../DataRow/DataRow'
 import Aside from '../Aside/Aside'
+import Ninja from '../Jobs/Ninja/Ninja'
+import Dragoon from '../Jobs/Dragoon/Dragon'
+import Reaper from '../Jobs/Reaper/Reaper'
+import Machinist from '../Jobs/Machinist/Machinist'
+import Bard from '../Jobs/Bard/Bard'
+import BlackMage from '../Jobs/BlackMage/BlackMage'
+import Summoner from '../Jobs/Summoner/Summoner'
+import RedMage from '../Jobs/RedMage/RedMage'
 
 const Spreadsheet = () => {
   const [rows, setRows] = useState<RowData[]>([])
@@ -45,10 +55,19 @@ const Spreadsheet = () => {
     { id: '5', job: 'SCH', component: Scholar },
     { id: '6', job: 'AST', component: Astrologian },
     { id: '7', job: 'WHM', component: WhiteMage },
-    { id: '8', job: 'SAM', component: Samurai },
-    { id: '9', job: 'VPR', component: Viper },
-    { id: '10', job: 'PCM', component: Pictomancer },
-    { id: '11', job: 'DNC', component: Dancer }
+    { id: '8', job: 'VPR', component: Viper },
+    { id: '9', job: 'SAM', component: Samurai },
+    { id: '10', job: 'NIN', component: Ninja },
+    { id: '11', job: 'DRG', component: Dragoon },
+    { id: '12', job: 'RPR', component: Reaper },
+    { id: '13', job: 'MNK', component: Monk },
+    { id: '14', job: 'PCM', component: Pictomancer },
+    { id: '15', job: 'BLM', component: BlackMage },
+    { id: '16', job: 'SMN', component: Summoner },
+    { id: '17', job: 'RDM', component: RedMage },
+    { id: '18', job: 'DNC', component: Dancer },
+    { id: '19', job: 'BRD', component: Bard },
+    { id: '20', job: 'MCH', component: Machinist }
   ]
 
   const { name: fightId } = useParams()
@@ -135,7 +154,7 @@ const Spreadsheet = () => {
           open={asideOpen}
           onClick={() => setAsideOpen((prev) => !prev)}
         >
-          {asideOpen ? 'Close Jobs' : 'Open Jobs'}
+          <img src={arrow} alt="toggle sidebar" />
         </S.AsideButton>
       </S.AsideContainer>
 

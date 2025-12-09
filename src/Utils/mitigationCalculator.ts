@@ -32,6 +32,10 @@ type MitigationKey =
   | 'Holy_Sheltron'
   | 'Intervention'
   | 'Passage_of_Arms'
+  | 'Dismantle'
+  | 'Magick_Barrier'
+  | 'Troubadour'
+  | 'Tactician'
 
 type PlayerMitigations = {
   [key in MitigationKey]?: boolean
@@ -89,7 +93,11 @@ export default function calculateMitigation(
     Guardian: 0.6,
     Holy_Sheltron: 0.9,
     Intervention: 0.9,
-    Passage_of_Arms: 0.85
+    Passage_of_Arms: 0.85,
+    Dismantle: 0.9,
+    Magick_Barrier: 0.9,
+    Troubadour: 0.85,
+    Tactician: 0.85
   }
 
   const applied: Partial<Record<MitigationKey, boolean>> = {}

@@ -68,6 +68,13 @@ import hallowedGround from '../../assets/paladin/Hallowed_Ground.png'
 import holySheltron from '../../assets/paladin/Holy_Sheltron.png'
 import intervention from '../../assets/paladin/Intervention.png'
 import passageOfArms from '../../assets/paladin/Passage_of_Arms.png'
+import mantra from '../../assets/monk/Mantra.png'
+import arcaneCrest from '../../assets/Reaper/Arcane_Crest.png'
+import naturesMinne from '../../assets/bard/Natures_Minne.png'
+import troubadour from '../../assets/bard/Troubadour.png'
+import dismantle from '../../assets/machinist/Dismantle.png'
+import tactician from '../../assets/machinist/Tactician.png'
+import magickBarrier from '../../assets/red_mage/Magick_Barrier.png'
 
 export const jobSkills = {
   GNB: [
@@ -157,16 +164,40 @@ export const jobSkills = {
   ],
   VPR: [{ src: feint, alt: 'Feint-VPR' }],
   SAM: [{ src: feint, alt: 'Feint-SAM' }],
+  NIN: [{ src: feint, alt: 'Feint-NIN' }],
+  DRG: [{ src: feint, alt: 'Feint-DRG' }],
+  RPR: [
+    { src: feint, alt: 'Feint-RPR' },
+    { src: arcaneCrest, alt: 'Arcane_Crest' }
+  ],
+  MNK: [
+    { src: feint, alt: 'Feint-MNK' },
+    { src: mantra, alt: 'Mantra' }
+  ],
 
   PCM: [
     { src: addle, alt: 'Addle' },
     { src: temperaCoat, alt: 'Tempera_Coat' },
     { src: temperaGrassa, alt: 'Tempera_Grassa' }
   ],
+  BLM: [{ src: addle, alt: 'Addle' }],
+  SMN: [{ src: addle, alt: 'Addle' }],
+  RDM: [
+    { src: addle, alt: 'Addle' },
+    { src: magickBarrier, alt: 'Magick_Barrier' }
+  ],
 
   DNC: [
     { src: shieldSamba, alt: 'Shield_Samba' },
     { src: curingWaltz, alt: 'Curing_Waltz' },
     { src: improvisation, alt: 'Improvisation' }
+  ],
+  BRD: [
+    { src: troubadour, alt: 'Troubadour' },
+    { src: naturesMinne, alt: 'Natures_Minne' }
+  ],
+  MCH: [
+    { src: tactician, alt: 'Tactician' },
+    { src: dismantle, alt: 'Dismantle' }
   ]
 }

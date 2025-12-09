@@ -18,7 +18,7 @@ const Aside = ({ jobs, activeJobs, toggleJob }: Props) => {
         {jobs.map((job) => (
           <label
             key={job.job}
-            style={{ display: 'block', marginBottom: '8px', marginLeft: '8px' }}
+            style={{ display: 'block', margin: '0 8px 8px' }}
           >
             <input
               type="checkbox"

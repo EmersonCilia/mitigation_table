@@ -16,10 +16,18 @@ export const Job = styled.div`
   min-width: 40px;
 `
 
+export const CheckboxWrapper = styled.div`
+  padding: 12px 4px;
+  background: red;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+`
+
 export const Checkbox = styled.input`
-  margin: 4px;
-  height: 20px;
+  margin: auto 4px;
   width: 20px;
+  height: 20px;
   cursor: pointer;
 `
 export const TrashCan = styled.img`
