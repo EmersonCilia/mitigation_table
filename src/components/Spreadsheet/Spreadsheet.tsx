@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import DataRow, { RowData } from '../DataRow/DataRow'
+
+import Aside from '../Aside/Aside'
 
 import {
   listenForActiveJobs,
@@ -25,9 +28,6 @@ import Sage from '../Jobs/Sage/Sage'
 import Astrologian from '../Jobs/Astrologian/Astrologian'
 import Paladin from '../Jobs/Paladin/Paladin'
 import Monk from '../Jobs/Monk/Monk'
-
-import DataRow, { RowData } from '../DataRow/DataRow'
-import Aside from '../Aside/Aside'
 import Ninja from '../Jobs/Ninja/Ninja'
 import Dragoon from '../Jobs/Dragoon/Dragon'
 import Reaper from '../Jobs/Reaper/Reaper'
@@ -145,6 +145,12 @@ const Spreadsheet = () => {
 
   return (
     <S.SpreadSheet>
+      <S.MobileHamburger
+        open={asideOpen}
+        onClick={() => setAsideOpen((prev) => !prev)}
+      >
+        <img src={arrow} alt="open menu" />
+      </S.MobileHamburger>
       <S.AsideContainer open={asideOpen}>
         <S.AsideDiv open={asideOpen}>
           <Aside jobs={allJobs} activeJobs={activeJobs} toggleJob={toggleJob} />
@@ -205,6 +211,7 @@ const Spreadsheet = () => {
           <S.LabelGroups>
             <label htmlFor="timer">timer</label>
             <input
+              style={{ maxWidth: '50px' }}
               id="timer"
               name="timer"
               type="text"
@@ -216,6 +223,7 @@ const Spreadsheet = () => {
           <S.LabelGroups>
             <label htmlFor="skillName">skill name</label>
             <input
+              style={{ maxWidth: '150px' }}
               id="skillName"
               name="skillName"
               type="text"
@@ -227,6 +235,7 @@ const Spreadsheet = () => {
           <S.LabelGroups>
             <label htmlFor="damageTotal">damage total</label>
             <input
+              style={{ maxWidth: '70px' }}
               id="damageTotal"
               name="damageTotal"
               type="text"

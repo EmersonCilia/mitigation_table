@@ -1,13 +1,14 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-  width: 1024px;
+  max-width: 1024px;
   margin: 40px auto;
   align-items: center;
   justify-content: center;
   display: flex;
   flex-direction: column;
 `
+
 export const Title = styled.h1`
   font-size: 40px;
   text-align: center;

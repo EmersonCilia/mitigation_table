@@ -7,7 +7,8 @@ export const Container = styled.div<{ open: boolean }>`
   padding: 40px 0;
 
   @media (max-width: 768px) {
-    max-width: 95vw;
+    max-width: 90vw;
+    margin: 12px auto;
   }
 
   @media (min-width: 769px) and (max-width: 1024px) {
@@ -18,6 +19,40 @@ export const AsideContainer = styled.aside<{ open: boolean }>`
   width: ${(props) => (props.open ? 'auto' : '40px')};
   position: relative;
   display: flex;
+
+  @media (max-width: 768px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    z-index: 20;
+
+    background: white;
+
+    transform: ${(props) =>
+      props.open ? 'translateY(0)' : 'translateY(-100%)'};
+    transition: transform 0.5s ease;
+
+    display: flex;
+  }
+`
+
+export const MobileHamburger = styled.button<{ open: boolean }>`
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  @media (max-width: 768px) {
+    display: block;
+    position: fixed;
+    top: 8px;
+    right: 4px;
+    z-index: 21;
+    transform: rotate(${(props) => (props.open ? '-90deg' : '0')});
+    transition: 0.3s ease-in-out;
+  }
 `
 
 export const AsideDiv = styled.div<{ open: boolean }>`
@@ -29,6 +64,13 @@ export const AsideDiv = styled.div<{ open: boolean }>`
   transition: transform 0.3s ease-in-out;
   position: relative;
   z-index: 10;
+
+  @media (max-width: 768px) {
+    transform: translateY(${(props) => (props.open ? '0' : '-100%')});
+    height: auto;
+    width: 100%;
+    justify-items: center;
+  }
 `
 export const AsideButton = styled.button<{ open: boolean }>`
   position: absolute;
@@ -40,6 +82,9 @@ export const AsideButton = styled.button<{ open: boolean }>`
   img {
     transition: transform 0.3s ease-in-out;
     transform: rotate(${(props) => (props.open ? '-90deg' : '0')});
+  }
+  @media (max-width: 768px) {
+    display: none;
   }
 `
 
@@ -77,6 +122,13 @@ export const ButtonGroup = styled.div`
   display: flex;
   margin-top: 20px;
   justify-self: end;
+
+  @media (max-width: 768px) {
+    justify-self: normal;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
 `
 
 export const LabelGroups = styled.div`
@@ -91,7 +143,9 @@ export const Button = styled.button`
 `
 export const Table = styled.div`
   overflow-x: auto;
+  border: 2px solid black;
 `
 export const SpreadSheet = styled.div`
   display: flex;
+  justify-items: center;
 `
