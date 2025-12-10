@@ -1,48 +1,7 @@
-type DamageType = 'magical' | 'physical'
-type MitigationKey =
-  | 'Reprisal'
-  | 'Rampart'
-  | 'Heart_of_Corundum'
-  | 'Great_Nebula'
-  | 'Heart_of_Light'
-  | 'Camouflage'
-  | 'Dark_Mind'
-  | 'Shadowed_Vigil'
-  | 'Dark_Missionary'
-  | 'Shield_Samba'
-  | 'Fey_Illumination_sch'
-  | 'Sacred_Soil'
-  | 'Expedient'
-  | 'Addle'
-  | 'Feint'
-  | 'Aquaveil'
-  | 'Temperance'
-  | 'Oblation'
-  | 'Kerachole'
-  | 'Holos'
-  | 'Taurochole'
-  | 'Bloodwhetting'
-  | 'Damnation'
-  | 'Nascent_Flash'
-  | 'Collective_Unconscious'
-  | 'Exaltation'
-  | 'Sun_Sign'
-  | 'Bulwark'
-  | 'Guardian'
-  | 'Holy_Sheltron'
-  | 'Intervention'
-  | 'Passage_of_Arms'
-  | 'Dismantle'
-  | 'Magick_Barrier'
-  | 'Troubadour'
-  | 'Tactician'
+import { MitigationKey } from './types'
+import { MitigationMap } from './types'
 
-type PlayerMitigations = {
-  [key in MitigationKey]?: boolean
-}
-export type MitigationMap = {
-  [playerName: string]: PlayerMitigations
-}
+type DamageType = 'magical' | 'physical'
 
 export default function calculateMitigation(
   baseDamage: number,
@@ -94,10 +53,13 @@ export default function calculateMitigation(
     Holy_Sheltron: 0.9,
     Intervention: 0.9,
     Passage_of_Arms: 0.85,
+    //MCH
+    Tactician: 0.85,
     Dismantle: 0.9,
+    //RDM
     Magick_Barrier: 0.9,
-    Troubadour: 0.85,
-    Tactician: 0.85
+    //BRD
+    Troubadour: 0.85
   }
 
   const applied: Partial<Record<MitigationKey, boolean>> = {}

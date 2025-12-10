@@ -11,14 +11,20 @@ export const Container = styled.div<{ open: boolean }>`
     margin: 12px auto;
   }
 
-  @media (min-width: 769px) and (max-width: 1024px) {
+  @media (max-width: 1024px) {
     max-width: 90vw;
+    margin: 0;
+    top: 12px;
+    left: 50px;
+    display: block;
+    position: absolute;
   }
 `
 export const AsideContainer = styled.aside<{ open: boolean }>`
   width: ${(props) => (props.open ? 'auto' : '40px')};
   position: relative;
   display: flex;
+  z-index: 20;
 
   @media (max-width: 768px) {
     position: fixed;
@@ -64,6 +70,7 @@ export const AsideDiv = styled.div<{ open: boolean }>`
   transition: transform 0.3s ease-in-out;
   position: relative;
   z-index: 10;
+  background: white;
 
   @media (max-width: 768px) {
     transform: translateY(${(props) => (props.open ? '0' : '-100%')});

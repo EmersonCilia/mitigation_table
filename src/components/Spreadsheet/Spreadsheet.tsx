@@ -44,7 +44,8 @@ const Spreadsheet = () => {
   const [damageTotal, setDamageTotal] = useState<number>(0)
   const [contentWidth, setContentWidth] = useState<number>(0)
   const [activeJobs, setActiveJobs] = useState<string[]>([])
-  const [asideOpen, setAsideOpen] = useState(true)
+  const isMobile = window.innerWidth <= 480
+  const [asideOpen, setAsideOpen] = useState(!isMobile)
 
   const allJobs = [
     { id: '0', job: 'GNB', component: Gunbreaker },
