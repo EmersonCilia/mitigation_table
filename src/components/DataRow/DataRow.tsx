@@ -5,7 +5,15 @@ import {
 } from '../../firebase/fights'
 import { jobSkills } from '../Data/JobSkills'
 import { Row, Scrolable, Sticky } from '../Spreadsheet/Styles'
-import { Checkbox, Job, TextArea, TrashCan } from './styles'
+import {
+  Checkbox,
+  CheckboxWrapper,
+  Job,
+  OptionSelection,
+  SelectionOption,
+  TextArea,
+  TrashCan
+} from './styles'
 import calculateMitigation from '../../Utils/mitigationCalculator'
 import trashCan from '../../assets/trash_can.svg'
 import { useParams } from 'react-router-dom'
@@ -80,16 +88,16 @@ const DataRow = ({
           readOnly
         />
 
-        <select
+        <SelectionOption
           style={{ width: '80px' }}
           value={row.type}
           onChange={(e) =>
             updateDamageType(fightId, row.timer, e.target.value as any)
           }
         >
-          <option value="magical">Magical</option>
-          <option value="physical">Physical</option>
-        </select>
+          <OptionSelection value="magical">Magical</OptionSelection>
+          <OptionSelection value="physical">Physical</OptionSelection>
+        </SelectionOption>
 
         {/* Only render the jobs selected for this fight */}
         {Object.entries(jobSkills).map(([jobName, skills], jobIndex) => {
@@ -101,15 +109,20 @@ const DataRow = ({
                 const checkboxKey = `${row.timer}-${jobIndex}-${skill.alt}`
 
                 return (
-                  <Checkbox
+                  <CheckboxWrapper
                     key={checkboxKey}
-                    id={checkboxKey}
-                    type="checkbox"
-                    checked={row.checkbox?.[checkboxKey] || false}
-                    onChange={(e) =>
-                      handleCheckboxChange(checkboxKey, e.target.checked)
-                    }
-                  />
+                    active={row.checkbox?.[checkboxKey] || false}
+                  >
+                    <Checkbox
+                      key={checkboxKey}
+                      id={checkboxKey}
+                      type="checkbox"
+                      checked={row.checkbox?.[checkboxKey] || false}
+                      onChange={(e) =>
+                        handleCheckboxChange(checkboxKey, e.target.checked)
+                      }
+                    />
+                  </CheckboxWrapper>
                 )
               })}
             </Job>

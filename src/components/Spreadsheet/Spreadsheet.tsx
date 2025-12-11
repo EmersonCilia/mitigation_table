@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import DataRow, { RowData } from '../DataRow/DataRow'
 
 import Aside from '../Aside/Aside'
+import returnButton from '../../assets/return.svg'
 
 import {
   listenForActiveJobs,
@@ -12,6 +13,7 @@ import {
   updateActiveJobs
 } from '../../firebase/fights'
 import arrow from '../../assets/arrow.svg'
+import add from '../../assets/add.svg'
 
 import * as S from './Styles'
 
@@ -144,6 +146,16 @@ const Spreadsheet = () => {
     await updateActiveJobs(fightId, updated)
   }
 
+  const handleTimer = (value: string) => {
+    let v = value.replace(/\D/g, '').slice(0, 4)
+
+    if (v.length >= 3) {
+      v = v.slice(0, 2) + ':' + v.slice(2)
+    }
+
+    setTimer(v)
+  }
+
   return (
     <S.SpreadSheet>
       <S.MobileHamburger
@@ -173,8 +185,7 @@ const Spreadsheet = () => {
               <S.HeaderTitle
                 style={{
                   width: '20px',
-                  backgroundColor: 'white',
-                  border: 'none'
+                  borderBottom: '1px solid black'
                 }}
               />
               <S.HeaderTitle style={{ width: '48px' }}>timer</S.HeaderTitle>
@@ -205,47 +216,69 @@ const Spreadsheet = () => {
 
         <S.ButtonGroup>
           <Link to="/">
-            <S.Button style={{ marginRight: '20px', height: '40px' }}>
-              Back to Home
+            <S.Button
+              style={{
+                height: '40px',
+                backgroundColor: '#ff5555',
+                border: '1px solid black',
+                borderRadius: '8px',
+                cursor: 'pointer'
+              }}
+            >
+              <img src={returnButton} alt="Back to home" />
             </S.Button>
           </Link>
-          <S.LabelGroups>
-            <label htmlFor="timer">timer</label>
-            <input
-              style={{ maxWidth: '50px' }}
-              id="timer"
-              name="timer"
-              type="text"
-              value={timer}
-              onChange={(e) => setTimer(e.target.value)}
-            />
-          </S.LabelGroups>
+          <S.InputGroups>
+            <S.LabelGroups>
+              <label htmlFor="timer">timer</label>
+              <input
+                style={{ maxWidth: '50px', color: 'black' }}
+                id="timer"
+                name="timer"
+                type="text"
+                value={timer}
+                onChange={(e) => handleTimer(e.target.value)}
+              />
+            </S.LabelGroups>
 
-          <S.LabelGroups>
-            <label htmlFor="skillName">skill name</label>
-            <input
-              style={{ maxWidth: '150px' }}
-              id="skillName"
-              name="skillName"
-              type="text"
-              value={skill}
-              onChange={(e) => setSkill(e.target.value)}
-            />
-          </S.LabelGroups>
+            <S.LabelGroups>
+              <label htmlFor="skillName">skill name</label>
+              <input
+                style={{ maxWidth: '150px', color: 'black' }}
+                id="skillName"
+                name="skillName"
+                type="text"
+                value={skill}
+                onChange={(e) => setSkill(e.target.value)}
+              />
+            </S.LabelGroups>
 
-          <S.LabelGroups>
-            <label htmlFor="damageTotal">damage total</label>
-            <input
-              style={{ maxWidth: '70px' }}
-              id="damageTotal"
-              name="damageTotal"
-              type="text"
-              value={damageTotal}
-              onChange={(e) => setDamageTotal(Number(e.target.value))}
-            />
-          </S.LabelGroups>
+            <S.LabelGroups>
+              <label htmlFor="damageTotal">damage total</label>
+              <input
+                style={{ maxWidth: '70px', color: 'black' }}
+                id="damageTotal"
+                name="damageTotal"
+                type="text"
+                value={damageTotal}
+                onChange={(e) => setDamageTotal(Number(e.target.value))}
+              />
+            </S.LabelGroups>
 
-          <S.Button onClick={AddRow}>Add</S.Button>
+            <S.Button
+              onClick={AddRow}
+              style={{
+                height: '32px',
+                width: '32px',
+                backgroundColor: '#50fa7b',
+                border: '1px solid black',
+                borderRadius: '8px',
+                cursor: 'pointer'
+              }}
+            >
+              <img src={add} alt="Back to home" />
+            </S.Button>
+          </S.InputGroups>
         </S.ButtonGroup>
       </S.Container>
     </S.SpreadSheet>

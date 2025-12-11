@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { colors } from '../../styles'
 
 export const Container = styled.div<{ open: boolean }>`
   max-width: ${(props) => (props.open ? '70vw' : '80vw')};
@@ -11,7 +12,7 @@ export const Container = styled.div<{ open: boolean }>`
     margin: 12px auto;
   }
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1024px) and (min-width: 769px) {
     max-width: 90vw;
     margin: 0;
     top: 12px;
@@ -34,7 +35,7 @@ export const AsideContainer = styled.aside<{ open: boolean }>`
     height: auto;
     z-index: 20;
 
-    background: white;
+    background: ${colors.white};
 
     transform: ${(props) =>
       props.open ? 'translateY(0)' : 'translateY(-100%)'};
@@ -65,12 +66,12 @@ export const AsideDiv = styled.div<{ open: boolean }>`
   width: 280px;
   height: 100vh;
   padding: 20px;
-  border-right: 1px solid #ccc;
+  border-right: 1px solid ${colors.borders};
   transform: translateX(${(props) => (props.open ? '0' : '-100%')});
   transition: transform 0.3s ease-in-out;
   position: relative;
   z-index: 10;
-  background: white;
+  background: ${colors.white};
 
   @media (max-width: 768px) {
     transform: translateY(${(props) => (props.open ? '0' : '-100%')});
@@ -96,13 +97,15 @@ export const AsideButton = styled.button<{ open: boolean }>`
 `
 
 export const HeaderTitle = styled.h3`
-  background-color: #aaa;
+  background-color: ${colors.gray};
   height: 48px;
   width: 100px;
   flex: 0 0 auto;
   text-align: center;
-  border: 1px solid black;
+  border: 1px solid ${colors.borders};
+  background-color: ${colors.white};
 `
+
 export const Sticky = styled.div`
   display: flex;
   position: sticky;
@@ -128,7 +131,7 @@ export const Row = styled.div`
 export const ButtonGroup = styled.div`
   display: flex;
   margin-top: 20px;
-  justify-self: end;
+  justify-content: space-between;
 
   @media (max-width: 768px) {
     justify-self: normal;
@@ -142,6 +145,12 @@ export const LabelGroups = styled.div`
   display: flex;
   flex-direction: column;
   margin-right: 8px;
+  align-self: end;
+  align-items: center;
+
+  @media (max-width: 480px) {
+    margin: 20px 4px;
+  }
 `
 export const Button = styled.button`
   width: 50px;
@@ -150,9 +159,21 @@ export const Button = styled.button`
 `
 export const Table = styled.div`
   overflow-x: auto;
-  border: 2px solid black;
+  border: 2px solid ${colors.borders};
 `
 export const SpreadSheet = styled.div`
   display: flex;
   justify-items: center;
+  background-color: ${colors.white};
+`
+export const InputGroups = styled.div`
+  display: flex;
+  justify-self: end;
+
+  @media (max-width: 768px) {
+    justify-self: normal;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
 `

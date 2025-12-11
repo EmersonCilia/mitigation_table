@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { colors } from '../../styles'
 
 export const Container = styled.div`
   max-width: 1024px;
@@ -22,7 +23,7 @@ export const List = styled.ul`
 export const Fights = styled.li`
   margin: 10px 0;
   width: 100%;
-  border: 2px solid black;
+  border: 2px solid ${colors.borders};
   height: 40px;
   text-align: center;
   padding: 10px;

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { Container, FightContainer, Fights, List, Title } from './styles'
 import { TrashCan } from '../DataRow/styles'
 import trashCan from '../../assets/trash_can.svg'
+import add from '../../assets/add.svg'
 
 const Home = () => {
   const [fights, setFights] = useState<any>({})
@@ -60,10 +61,13 @@ const Home = () => {
           onClick={handleCreateFight}
           style={{
             padding: '10px 20px',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            backgroundColor: '#50fa7b',
+            border: '1px solid black',
+            borderRadius: '8px'
           }}
         >
-          Add
+          <img src={add} alt="Back to home" />
         </button>
       </div>
     </Container>
