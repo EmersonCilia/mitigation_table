@@ -48,7 +48,7 @@ export default function calculateMitigation(
     Exaltation: 0.9,
     Sun_Sign: 0.9,
     //PLD
-    Bulwark: 0.85,
+    Bulwark: 0.8,
     Guardian: 0.6,
     Holy_Sheltron: 0.9,
     Intervention: 0.9,

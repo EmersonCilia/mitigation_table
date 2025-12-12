@@ -1,13 +1,16 @@
 import shieldSamba from '../../assets/dancer/Shield_Samba.png'
 import curingWaltz from '../../assets/dancer/Curing_Waltz.png'
 import improvisation from '../../assets/dancer/Improvisation.png'
+
 import aquaveil from '../../assets/white_mage/Aquaveil.png'
 import divineBenison from '../../assets/white_mage/Divine_Benison.png'
 import asylum from '../../assets/white_mage/Asylum.png'
 import temperance from '../../assets/white_mage/Temperance_(Ability).png'
 import lotb from '../../assets/white_mage/Liturgy_of_the_Bell.png'
 import divineCaress from '../../assets/white_mage/Divine_Caress.png'
+
 import feint from '../../assets/Feint.png'
+
 import protraction from '../../assets/scholar/Protraction.png'
 import consolation from '../../assets/scholar/Consolation.png'
 import deploymentTactics from '../../assets/scholar/Deployment_Tactics.png'
@@ -18,22 +21,28 @@ import sacredSoil from '../../assets/scholar/Sacred_Soil.png'
 import seraphism from '../../assets/scholar/Seraphism.png'
 import succor from '../../assets/scholar/Succor.png'
 import summonSeraph from '../../assets/scholar/Summon_Seraph.png'
+
 import addle from '../../assets/Addle.png'
+
 import temperaCoat from '../../assets/picto/Tempera_Coat.png'
 import temperaGrassa from '../../assets/picto/Tempera_Grassa.png'
+
 import reprisal from '../../assets/Reprisal.png'
 import rampart from '../../assets/Rampart.png'
+
 import heartOfCorundum from '../../assets/gunbreaker/Heart_of_Corundum.png'
 import greatNebula from '../../assets/gunbreaker/Great_Nebula.png'
 import camouflage from '../../assets/gunbreaker/Camouflage.png'
 import superbolide from '../../assets/gunbreaker/Superbolide.png'
 import heartOfLight from '../../assets/gunbreaker/Heart_of_Light.png'
+
 import oblation from '../../assets/dark_knight/Oblation.png'
 import darkMind from '../../assets/dark_knight/Dark_Mind.png'
 import shadowedVigil from '../../assets/dark_knight/Shadowed_Vigil.png'
 import tbn from '../../assets/dark_knight/The_Blackest_Night.png'
 import livingDead from '../../assets/dark_knight/Living_Dead.png'
 import darkMissionary from '../../assets/dark_knight/Dark_Missionary.png'
+
 import bloodwhetting from '../../assets/warrior/Bloodwhetting.png'
 import damnation from '../../assets/warrior/Damnation.png'
 import equilibrium from '../../assets/warrior/Equilibrium.png'
@@ -41,6 +50,7 @@ import holmgang from '../../assets/warrior/Holmgang.png'
 import shakeItOff from '../../assets/warrior/Shake_It_Off.png'
 import thrillOfBattle from '../../assets/warrior/Thrill_of_Battle.png'
 import nascentFlash from '../../assets/warrior/Nascent_Flash.png'
+
 import kerachole from '../../assets/sage/Kerachole.png'
 import zoe from '../../assets/sage/Zoe.png'
 import phisisII from '../../assets/sage/Physis_II.png'
@@ -51,6 +61,7 @@ import haima from '../../assets/sage/Haima.png'
 import pneuma from '../../assets/sage/Pneuma.png'
 import holos from '../../assets/sage/Holos.png'
 import taurochole from '../../assets/sage/Taurochole.png'
+
 import celestialIntersection from '../../assets/astrologian/Celestial_Intersection.png'
 import celestialOpposition from '../../assets/astrologian/Celestial_Opposition.png'
 import collectiveUnconscious from '../../assets/astrologian/Collective_Unconscious.png'
@@ -60,6 +71,7 @@ import horoscope from '../../assets/astrologian/Horoscope.png'
 import macrocosmos from '../../assets/astrologian/Macrocosmos.png'
 import neutralSect from '../../assets/astrologian/Neutral_Sect.png'
 import sunSign from '../../assets/astrologian/Sun_Sign.png'
+
 import cover from '../../assets/paladin/Cover.png'
 import bulwark from '../../assets/paladin/Bulwark.png'
 import divineVeil from '../../assets/paladin/Divine_Veil.png'
@@ -68,12 +80,17 @@ import hallowedGround from '../../assets/paladin/Hallowed_Ground.png'
 import holySheltron from '../../assets/paladin/Holy_Sheltron.png'
 import intervention from '../../assets/paladin/Intervention.png'
 import passageOfArms from '../../assets/paladin/Passage_of_Arms.png'
+
 import mantra from '../../assets/monk/Mantra.png'
+
 import arcaneCrest from '../../assets/Reaper/Arcane_Crest.png'
+
 import naturesMinne from '../../assets/bard/Natures_Minne.png'
 import troubadour from '../../assets/bard/Troubadour.png'
+
 import dismantle from '../../assets/machinist/Dismantle.png'
 import tactician from '../../assets/machinist/Tactician.png'
+
 import magickBarrier from '../../assets/red_mage/Magick_Barrier.png'
 
 export const jobSkills = {
