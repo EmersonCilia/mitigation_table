@@ -38,6 +38,7 @@ import Bard from '../Jobs/Bard/Bard'
 import BlackMage from '../Jobs/BlackMage/BlackMage'
 import Summoner from '../Jobs/Summoner/Summoner'
 import RedMage from '../Jobs/RedMage/RedMage'
+import { toSeconds } from '../../Utils/ToSeconds'
 
 const Spreadsheet = () => {
   const [rows, setRows] = useState<RowData[]>([])
@@ -156,6 +157,43 @@ const Spreadsheet = () => {
     setTimer(v)
   }
 
+  /**
+   * Activations shape:
+   * {
+   *   "<jobIndex>": {
+   *     "<mitName>": [timeInSeconds, timeInSeconds, ...]
+   *   },
+   *   ...
+   * }
+   */
+  const buildActivations = (rows: RowData[]) => {
+    const activations: Record<string, Record<string, number[]>> = {}
+
+    rows.forEach((r) => {
+      Object.entries(r.checkbox || {}).forEach(([key, checked]) => {
+        if (!checked) return
+        // key format: `${timer}-${jobIndex}-${mitName}`
+        const parts = key.split('-')
+        const timer = parts[0]
+        const jobIndex = parts[1] // keep as string for lookup
+        const mitName = parts.slice(2).join('-') // in case mitName contains dashes
+
+        if (!activations[jobIndex]) activations[jobIndex] = {}
+        if (!activations[jobIndex][mitName]) activations[jobIndex][mitName] = []
+
+        activations[jobIndex][mitName].push(toSeconds(timer))
+      })
+    })
+
+    // sort each array ascending (so we can binary-search or reverse-iterate)
+    Object.values(activations).forEach((byJob) => {
+      Object.values(byJob).forEach((arr) => arr.sort((a, b) => a - b))
+    })
+
+    return activations
+  }
+  const activations = buildActivations(rows)
+
   return (
     <S.SpreadSheet>
       <S.MobileHamburger
@@ -210,6 +248,7 @@ const Spreadsheet = () => {
               row={row}
               contentWidth={contentWidth}
               selectedJobs={activeJobs}
+              activations={activations}
             />
           ))}
         </S.Table>

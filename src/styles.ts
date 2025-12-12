@@ -5,7 +5,8 @@ export const colors = {
   gray: '#aaa',
   borders: '#000',
   green: '#50fa7b',
-  text: '#f8f8f2'
+  text: '#f8f8f2',
+  asideColor: '#15161fff'
 }
 
 export const GlobalCss = createGlobalStyle`

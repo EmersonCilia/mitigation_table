@@ -54,11 +54,14 @@ export const MobileHamburger = styled.button<{ open: boolean }>`
   @media (max-width: 768px) {
     display: block;
     position: fixed;
-    top: 8px;
-    right: 4px;
+    top: 2px;
+    right: 2px;
     z-index: 21;
     transform: rotate(${(props) => (props.open ? '-90deg' : '0')});
     transition: 0.3s ease-in-out;
+    background-color: ${colors.text};
+    border-radius: 8px;
+    padding: 4px;
   }
 `
 
@@ -71,7 +74,7 @@ export const AsideDiv = styled.div<{ open: boolean }>`
   transition: transform 0.3s ease-in-out;
   position: relative;
   z-index: 10;
-  background: ${colors.white};
+  background: ${colors.asideColor};
 
   @media (max-width: 768px) {
     transform: translateY(${(props) => (props.open ? '0' : '-100%')});

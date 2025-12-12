@@ -78,8 +78,8 @@ import magickBarrier from '../../assets/red_mage/Magick_Barrier.png'
 
 export const jobSkills = {
   GNB: [
-    { src: reprisal, alt: 'Reprisal-GNB' },
-    { src: rampart, alt: 'Rampart-GNB' },
+    { src: reprisal, alt: 'Reprisal' },
+    { src: rampart, alt: 'Rampart' },
     { src: greatNebula, alt: 'Great_Nebula' },
     { src: camouflage, alt: 'Camouflage' },
     { src: heartOfCorundum, alt: 'Heart_of_Corundum' },
@@ -87,8 +87,8 @@ export const jobSkills = {
     { src: heartOfLight, alt: 'Heart_of_Light' }
   ],
   DRK: [
-    { src: reprisal, alt: 'Reprisal-DRK' },
-    { src: rampart, alt: 'Rampart-DRK' },
+    { src: reprisal, alt: 'Reprisal' },
+    { src: rampart, alt: 'Rampart' },
     { src: shadowedVigil, alt: 'Shadowed_Vigil' },
     { src: darkMind, alt: 'Dark_Mind' },
     { src: oblation, alt: 'Oblation' },
@@ -97,8 +97,8 @@ export const jobSkills = {
     { src: darkMissionary, alt: 'Dark_Missionary' }
   ],
   PLD: [
-    { src: reprisal, alt: 'Reprisal-PLD' },
-    { src: rampart, alt: 'Rampart-PLD' },
+    { src: reprisal, alt: 'Reprisal' },
+    { src: rampart, alt: 'Rampart' },
     { src: guardian, alt: 'Guardian' },
     { src: bulwark, alt: 'Bulwark' },
     { src: holySheltron, alt: 'Holy_Sheltron' },
@@ -109,8 +109,8 @@ export const jobSkills = {
     { src: divineVeil, alt: 'Divine_Veil' }
   ],
   WAR: [
-    { src: reprisal, alt: 'Reprisal-WAR' },
-    { src: rampart, alt: 'Rampart-WAR' },
+    { src: reprisal, alt: 'Reprisal' },
+    { src: rampart, alt: 'Rampart' },
     { src: damnation, alt: 'Damnation' },
     { src: equilibrium, alt: 'Equilibrium' },
     { src: thrillOfBattle, alt: 'Thrill_of_Battle' },
@@ -162,16 +162,16 @@ export const jobSkills = {
     { src: lotb, alt: 'Liturgy_of_the_Bell' },
     { src: divineCaress, alt: 'Divine_Caress' }
   ],
-  VPR: [{ src: feint, alt: 'Feint-VPR' }],
-  SAM: [{ src: feint, alt: 'Feint-SAM' }],
-  NIN: [{ src: feint, alt: 'Feint-NIN' }],
-  DRG: [{ src: feint, alt: 'Feint-DRG' }],
+  VPR: [{ src: feint, alt: 'Feint' }],
+  SAM: [{ src: feint, alt: 'Feint' }],
+  NIN: [{ src: feint, alt: 'Feint' }],
+  DRG: [{ src: feint, alt: 'Feint' }],
   RPR: [
-    { src: feint, alt: 'Feint-RPR' },
+    { src: feint, alt: 'Feint' },
     { src: arcaneCrest, alt: 'Arcane_Crest' }
   ],
   MNK: [
-    { src: feint, alt: 'Feint-MNK' },
+    { src: feint, alt: 'Feint' },
     { src: mantra, alt: 'Mantra' }
   ],
 

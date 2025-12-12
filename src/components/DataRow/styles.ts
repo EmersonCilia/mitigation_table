@@ -29,12 +29,22 @@ export const OptionSelection = styled.option`
   border: solid 1px ${colors.borders};
 `
 
-export const CheckboxWrapper = styled.div<{ active: boolean }>`
+export const CheckboxWrapper = styled.div<{
+  colorState?: 'default' | 'green' | 'red'
+}>`
   padding: 12px 0px;
-  background: ${(props) => (props.active ? colors.green : 'transparent')};
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
+  background: ${({ colorState }) =>
+    colorState === 'green'
+      ? colors.green
+      : colorState === 'red'
+        ? '#ff5c5c'
+        : 'transparent'};
+
+  transition: background 0.2s ease;
 `
 
 export const Checkbox = styled.input`

@@ -17,6 +17,8 @@ import {
 import calculateMitigation from '../../Utils/mitigationCalculator'
 import trashCan from '../../assets/trash_can.svg'
 import { useParams } from 'react-router-dom'
+import { mitigationsData } from '../Data/MitigationData'
+import { toSeconds } from '../../Utils/ToSeconds'
 
 // types.ts
 export type RowData = {
@@ -31,11 +33,13 @@ export type RowData = {
 const DataRow = ({
   row,
   contentWidth,
-  selectedJobs
+  selectedJobs,
+  activations
 }: {
   row: RowData
   contentWidth: number
   selectedJobs: string[]
+  activations: Record<string, Record<string, number[]>>
 }) => {
   const { name: fightId } = useParams()
   const timerKey = row.timer.toString()
@@ -63,6 +67,9 @@ const DataRow = ({
     <Row style={{ width: contentWidth }}>
       <Sticky>
         <TrashCan
+          style={{
+            borderBottom: '1px solid black'
+          }}
           src={trashCan}
           alt="trashCan"
           onClick={() => {
@@ -107,17 +114,48 @@ const DataRow = ({
             <Job key={jobName} style={{ display: 'flex' }}>
               {skills.map((skill) => {
                 const checkboxKey = `${row.timer}-${jobIndex}-${skill.alt}`
+                const isChecked = row.checkbox?.[checkboxKey] || false
+
+                const currentTime = toSeconds(row.timer)
+
+                // Look up all activation times for this jobIndex and mitigation name
+                const jobIndexStr = String(jobIndex)
+                const activationTimes =
+                  activations?.[jobIndexStr]?.[skill.alt] ?? []
+
+                // find the most recent activation that is <= currentTime
+                let activationTime: number | null = null
+                for (let i = activationTimes.length - 1; i >= 0; i--) {
+                  if (activationTimes[i] <= currentTime) {
+                    activationTime = activationTimes[i]
+                    break
+                  }
+                }
+
+                // Get mitigation info
+                const mitInfo =
+                  mitigationsData[skill.alt as keyof typeof mitigationsData]
+                const duration = mitInfo?.duration ?? 0
+                const cooldown = mitInfo?.cooldown ?? 0
+
+                let colorState: 'default' | 'green' | 'red' = 'default'
+
+                if (activationTime !== null) {
+                  const timeDiff = currentTime - activationTime
+                  if (timeDiff <= duration) colorState = 'green'
+                  else if (timeDiff <= cooldown) colorState = 'red'
+                }
 
                 return (
                   <CheckboxWrapper
                     key={checkboxKey}
-                    active={row.checkbox?.[checkboxKey] || false}
+                    colorState={colorState}
+                    data-checked={isChecked}
                   >
                     <Checkbox
-                      key={checkboxKey}
                       id={checkboxKey}
                       type="checkbox"
-                      checked={row.checkbox?.[checkboxKey] || false}
+                      checked={isChecked}
                       onChange={(e) =>
                         handleCheckboxChange(checkboxKey, e.target.checked)
                       }
