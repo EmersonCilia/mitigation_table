@@ -54,6 +54,13 @@ const Groups = () => {
         {Object.values(fights).map((fight: any) => (
           <FightContainer key={fight.name}>
             <TrashCan
+              style={{
+                border: '1px solid black',
+                width: '32px',
+                height: '40px',
+                alignSelf: 'center',
+                padding: '4px'
+              }}
               src={trashCan}
               alt="trashCan"
               onClick={() => {

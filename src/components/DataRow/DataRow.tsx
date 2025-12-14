@@ -36,13 +36,18 @@ type Props = {
   contentWidth: number
   selectedJobs: string[]
   activations: Record<string, Record<string, number[]>>
+  skillVisibility: {
+    singleMitigation: boolean
+    healing: boolean
+  }
 }
 
 const DataRow = ({
   row,
   contentWidth,
   selectedJobs,
-  activations
+  activations,
+  skillVisibility
 }: Props): JSX.Element | null => {
   const { groupId, fightId } = useParams<{
     groupId: string
@@ -125,57 +130,63 @@ const DataRow = ({
 
           return (
             <Job key={jobName} style={{ display: 'flex' }}>
-              {skills.map((skill) => {
-                const checkboxKey = `${row.timer}-${jobIndex}-${skill.alt}`
-                const isChecked = row.checkbox?.[checkboxKey] || false
+              {skills
+                .filter((skill) => {
+                  if (skill.type === 'singleMitigation')
+                    return skillVisibility.singleMitigation
 
-                const currentTime = toSeconds(row.timer)
+                  if (skill.type === 'healing') return skillVisibility.healing
 
-                // Look up all activation times for this jobIndex and mitigation name
-                const jobIndexStr = String(jobIndex)
-                const activationTimes =
-                  activations?.[jobIndexStr]?.[skill.alt] ?? []
+                  return true
+                })
+                .map((skill) => {
+                  const checkboxKey = `${row.timer}-${jobIndex}-${skill.alt}`
+                  const isChecked = row.checkbox?.[checkboxKey] || false
 
-                // find the most recent activation that is <= currentTime
-                let activationTime: number | null = null
-                for (let i = activationTimes.length - 1; i >= 0; i--) {
-                  if (activationTimes[i] <= currentTime) {
-                    activationTime = activationTimes[i]
-                    break
+                  const currentTime = toSeconds(row.timer)
+
+                  const jobIndexStr = String(jobIndex)
+                  const activationTimes =
+                    activations?.[jobIndexStr]?.[skill.alt] ?? []
+
+                  let activationTime: number | null = null
+                  for (let i = activationTimes.length - 1; i >= 0; i--) {
+                    if (activationTimes[i] <= currentTime) {
+                      activationTime = activationTimes[i]
+                      break
+                    }
                   }
-                }
 
-                // Get mitigation info
-                const mitInfo =
-                  mitigationsData[skill.alt as keyof typeof mitigationsData]
-                const duration = mitInfo?.duration ?? 0
-                const cooldown = mitInfo?.cooldown ?? 0
+                  const mitInfo =
+                    mitigationsData[skill.alt as keyof typeof mitigationsData]
+                  const duration = mitInfo?.duration ?? 0
+                  const cooldown = mitInfo?.cooldown ?? 0
 
-                let colorstate: 'default' | 'green' | 'red' = 'default'
+                  let colorstate: 'default' | 'green' | 'red' = 'default'
 
-                if (activationTime !== null) {
-                  const timeDiff = currentTime - activationTime
-                  if (timeDiff <= duration) colorstate = 'green'
-                  else if (timeDiff <= cooldown) colorstate = 'red'
-                }
+                  if (activationTime !== null) {
+                    const timeDiff = currentTime - activationTime
+                    if (timeDiff <= duration) colorstate = 'green'
+                    else if (timeDiff <= cooldown) colorstate = 'red'
+                  }
 
-                return (
-                  <CheckboxWrapper
-                    key={checkboxKey}
-                    colorstate={colorstate}
-                    data-checked={isChecked}
-                  >
-                    <Checkbox
-                      id={checkboxKey}
-                      type="checkbox"
-                      checked={isChecked}
-                      onChange={(e) =>
-                        handleCheckboxChange(checkboxKey, e.target.checked)
-                      }
-                    />
-                  </CheckboxWrapper>
-                )
-              })}
+                  return (
+                    <CheckboxWrapper
+                      key={checkboxKey}
+                      colorstate={colorstate}
+                      data-checked={isChecked}
+                    >
+                      <Checkbox
+                        id={checkboxKey}
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={(e) =>
+                          handleCheckboxChange(checkboxKey, e.target.checked)
+                        }
+                      />
+                    </CheckboxWrapper>
+                  )
+                })}
             </Job>
           )
         })}

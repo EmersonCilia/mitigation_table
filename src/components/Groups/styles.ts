@@ -36,7 +36,6 @@ export const Fights = styled.li`
 export const FightContainer = styled.div`
   display: flex;
   width: 100%;
-  gap: 8px;
 `
 export const InputButtonGroup = styled.div`
   margin-top: 20px;

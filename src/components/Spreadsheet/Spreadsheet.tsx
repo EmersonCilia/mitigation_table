@@ -1,9 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import DataRow, { RowData } from '../DataRow/DataRow'
-
-import Aside from '../Aside/Aside'
-import returnButton from '../../assets/return.svg'
 
 import {
   listenForActiveJobs,
@@ -11,34 +7,19 @@ import {
   saveRow,
   updateActiveJobs
 } from '../../firebase/fights'
+
+import DataRow, { RowData } from '../DataRow/DataRow'
+import Aside from '../Aside/Aside'
+import { toSeconds } from '../../Utils/ToSeconds'
+import Job from '../Jobs/Job'
+
+import returnButton from '../../assets/return.svg'
 import arrow from '../../assets/arrow.svg'
 import add from '../../assets/add.svg'
 
 import * as S from './Styles'
-
-import Dancer from '../Jobs/Dancer/Dancer'
-import DarkKnight from '../Jobs/DarkKnight/DarkKnight'
-import Gunbreaker from '../Jobs/Gunbreaker/Gunbreaker'
-import Pictomancer from '../Jobs/Pictomancer/Pictomancer'
-import Samurai from '../Jobs/Samurai/Samurai'
-import Scholar from '../Jobs/Scholar/Scholar'
-import Viper from '../Jobs/Viper/Viper'
-import WhiteMage from '../Jobs/WhiteMage/WhiteMage'
-import Warrior from '../Jobs/Warrior/Warrior'
-import Sage from '../Jobs/Sage/Sage'
-import Astrologian from '../Jobs/Astrologian/Astrologian'
-import Paladin from '../Jobs/Paladin/Paladin'
-import Monk from '../Jobs/Monk/Monk'
-import Ninja from '../Jobs/Ninja/Ninja'
-import Dragoon from '../Jobs/Dragoon/Dragon'
-import Reaper from '../Jobs/Reaper/Reaper'
-import Machinist from '../Jobs/Machinist/Machinist'
-import Bard from '../Jobs/Bard/Bard'
-import BlackMage from '../Jobs/BlackMage/BlackMage'
-import Summoner from '../Jobs/Summoner/Summoner'
-import RedMage from '../Jobs/RedMage/RedMage'
-import { toSeconds } from '../../Utils/ToSeconds'
 import { Button } from '../../styles'
+import { allJobs } from '../Data/JobSkills'
 
 const Spreadsheet = () => {
   const [rows, setRows] = useState<RowData[]>([])
@@ -50,29 +31,19 @@ const Spreadsheet = () => {
   const isMobile = window.innerWidth <= 480
   const [asideOpen, setAsideOpen] = useState(!isMobile)
 
-  const allJobs = [
-    { id: '0', job: 'GNB', component: Gunbreaker },
-    { id: '1', job: 'DRK', component: DarkKnight },
-    { id: '2', job: 'PLD', component: Paladin },
-    { id: '3', job: 'WAR', component: Warrior },
-    { id: '4', job: 'SGE', component: Sage },
-    { id: '5', job: 'SCH', component: Scholar },
-    { id: '6', job: 'AST', component: Astrologian },
-    { id: '7', job: 'WHM', component: WhiteMage },
-    { id: '8', job: 'VPR', component: Viper },
-    { id: '9', job: 'SAM', component: Samurai },
-    { id: '10', job: 'NIN', component: Ninja },
-    { id: '11', job: 'DRG', component: Dragoon },
-    { id: '12', job: 'RPR', component: Reaper },
-    { id: '13', job: 'MNK', component: Monk },
-    { id: '14', job: 'PCM', component: Pictomancer },
-    { id: '15', job: 'BLM', component: BlackMage },
-    { id: '16', job: 'SMN', component: Summoner },
-    { id: '17', job: 'RDM', component: RedMage },
-    { id: '18', job: 'DNC', component: Dancer },
-    { id: '19', job: 'BRD', component: Bard },
-    { id: '20', job: 'MCH', component: Machinist }
-  ]
+  const [skillVisibility, setSkillVisibility] = useState(() => {
+    const stored = localStorage.getItem('skillVisibility')
+    return stored
+      ? JSON.parse(stored)
+      : {
+          singleMitigation: true,
+          healing: true,
+          partyMitigation: true
+        }
+  })
+  useEffect(() => {
+    localStorage.setItem('skillVisibility', JSON.stringify(skillVisibility))
+  }, [skillVisibility])
 
   const { groupId, fightId } = useParams<{
     groupId: string
@@ -217,7 +188,13 @@ const Spreadsheet = () => {
       </S.MobileHamburger>
       <S.AsideContainer open={asideOpen}>
         <S.AsideDiv open={asideOpen}>
-          <Aside jobs={allJobs} activeJobs={activeJobs} toggleJob={toggleJob} />
+          <Aside
+            jobs={allJobs}
+            activeJobs={activeJobs}
+            toggleJob={toggleJob}
+            skillVisibility={skillVisibility}
+            setSkillVisibility={setSkillVisibility}
+          />
         </S.AsideDiv>
 
         <S.AsideButton
@@ -248,10 +225,13 @@ const Spreadsheet = () => {
               <S.HeaderTitle style={{ width: '80px' }}>Type</S.HeaderTitle>
               {allJobs
                 .filter((j) => activeJobs.includes(j.job))
-                .map((job) => {
-                  const Component = job.component
-                  return <Component key={job.id} />
-                })}
+                .map((job) => (
+                  <Job
+                    key={job.id}
+                    job={job.job}
+                    skillVisibility={skillVisibility}
+                  />
+                ))}
             </S.Scrolable>
           </S.Row>
 
@@ -262,6 +242,7 @@ const Spreadsheet = () => {
               contentWidth={contentWidth}
               selectedJobs={activeJobs}
               activations={activations}
+              skillVisibility={skillVisibility}
             />
           ))}
         </S.Table>
