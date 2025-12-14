@@ -1,74 +1,89 @@
-import { useEffect, useState } from 'react'
-import { getAllFights, createFight, deleteFight } from '../../firebase/fights'
-import { Link } from 'react-router-dom'
-import { Container, FightContainer, Fights, List, Title } from './styles'
-import { TrashCan } from '../DataRow/styles'
-import trashCan from '../../assets/trash_can.svg'
-import add from '../../assets/add.svg'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Container, Title } from './styles'
+import { getGroup } from '../../firebase/fights'
+import { Button } from '../../styles'
 
 const Home = () => {
-  const [fights, setFights] = useState<any>({})
-  const [newFightName, setNewFightName] = useState('')
+  const [groupName, setGroupName] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
 
-  const loadFights = () => {
-    getAllFights().then((data) => setFights(data))
+  const handleLogin = async () => {
+    setError('')
+
+    const key = groupName.trim().toLowerCase()
+
+    if (!key || !password.trim()) {
+      setError('Fill all fields')
+      return
+    }
+
+    const group = await getGroup(key)
+
+    if (!group) {
+      setError('Group not found')
+      return
+    }
+
+    if (group.password !== password) {
+      setError('Invalid password')
+      return
+    }
+
+    localStorage.setItem(
+      'authGroup',
+      JSON.stringify({
+        name: key,
+        loggedAt: Date.now()
+      })
+    )
+
+    navigate(`/${key}`)
   }
 
-  useEffect(() => {
-    loadFights()
-  }, [])
-
-  const handleCreateFight = async () => {
-    if (!newFightName.trim()) return
-
-    await createFight(newFightName.trim())
-    setNewFightName('') // clear input
-    loadFights() // refresh list
+  const goToRegister = () => {
+    navigate('/register')
   }
 
   return (
     <Container>
-      <Title>Cannoli Fights</Title>
+      <Title>FFXIV Mitigation Table</Title>
 
-      <List>
-        {Object.values(fights).map((fight: any) => (
-          <FightContainer key={fight.name}>
-            <TrashCan
-              src={trashCan}
-              alt="trashCan"
-              onClick={() => {
-                if (window.confirm('Delete this fight?')) {
-                  deleteFight(fight.name)
-                  loadFights()
-                }
-              }}
-            />
-            <Link to={`/fight/${fight.name}`} style={{ width: '100%' }}>
-              <Fights>{fight.name}</Fights>
-            </Link>
-          </FightContainer>
-        ))}
-      </List>
-      <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
+      <div
+        style={{
+          marginTop: '20px',
+          display: 'flex',
+          gap: '10px',
+          flexDirection: 'column'
+        }}
+      >
         <input
           type="text"
-          placeholder="New fight name..."
-          value={newFightName}
-          onChange={(e) => setNewFightName(e.target.value)}
-          style={{ padding: '8px', flex: 1 }}
+          placeholder="group name"
+          value={groupName}
+          onChange={(e) => setGroupName(e.target.value)}
+          style={{ padding: '8px', color: 'black' }}
         />
-        <button
-          onClick={handleCreateFight}
-          style={{
-            padding: '10px 20px',
-            cursor: 'pointer',
-            backgroundColor: '#50fa7b',
-            border: '1px solid black',
-            borderRadius: '8px'
-          }}
-        >
-          <img src={add} alt="Back to home" />
-        </button>
+
+        <input
+          type="password"
+          placeholder="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          style={{ padding: '8px', color: 'black' }}
+        />
+
+        {error && <span style={{ color: 'red' }}>{error}</span>}
+
+        <Button onClick={handleLogin} variant="green">
+          Login
+        </Button>
+
+        <Button variant="blue" onClick={goToRegister}>
+          Create group
+        </Button>
       </div>
     </Container>
   )

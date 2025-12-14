@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { Link } from 'react-router-dom'
 import DataRow, { RowData } from '../DataRow/DataRow'
 
 import Aside from '../Aside/Aside'
@@ -39,6 +38,7 @@ import BlackMage from '../Jobs/BlackMage/BlackMage'
 import Summoner from '../Jobs/Summoner/Summoner'
 import RedMage from '../Jobs/RedMage/RedMage'
 import { toSeconds } from '../../Utils/ToSeconds'
+import { Button } from '../../styles'
 
 const Spreadsheet = () => {
   const [rows, setRows] = useState<RowData[]>([])
@@ -74,17 +74,24 @@ const Spreadsheet = () => {
     { id: '20', job: 'MCH', component: Machinist }
   ]
 
-  const { name: fightId } = useParams()
+  const { groupId, fightId } = useParams<{
+    groupId: string
+    fightId: string
+  }>()
 
   // Refs for measuring width
   const scrollRef = useRef<HTMLDivElement>(null)
   const headerRowRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    listenForActiveJobs(fightId, (jobsFromDB) => {
+    if (!groupId || !fightId) return
+
+    const unsubscribe = listenForActiveJobs(groupId, fightId, (jobsFromDB) => {
       setActiveJobs(jobsFromDB || [])
     })
-  }, [fightId])
+
+    return unsubscribe
+  }, [groupId, fightId])
 
   useEffect(() => {
     const updateWidth = () => {
@@ -113,15 +120,20 @@ const Spreadsheet = () => {
   }, [rows])
 
   useEffect(() => {
-    listenForRows(fightId, (rowsFromDB) => {
+    if (!groupId || !fightId) return
+
+    const unsubscribe = listenForRows(groupId, fightId, (rowsFromDB) => {
       setRows(rowsFromDB)
     })
-  }, [fightId])
+
+    return unsubscribe
+  }, [groupId, fightId])
 
   const AddRow = async () => {
+    if (!groupId || !fightId) return
     if (!timer || !skill || !damageTotal) return
 
-    await saveRow(fightId, timer, {
+    await saveRow(groupId, fightId, timer, {
       skill,
       damagetotal: damageTotal,
       type: 'magical',
@@ -134,17 +146,14 @@ const Spreadsheet = () => {
   }
 
   const toggleJob = async (jobId: string) => {
-    let updated
+    if (!groupId || !fightId) return
 
-    if (activeJobs.includes(jobId)) {
-      updated = activeJobs.filter((j) => j !== jobId)
-    } else {
-      updated = [...activeJobs, jobId]
-    }
+    const updated = activeJobs.includes(jobId)
+      ? activeJobs.filter((j) => j !== jobId)
+      : [...activeJobs, jobId]
 
     setActiveJobs(updated)
-
-    await updateActiveJobs(fightId, updated)
+    await updateActiveJobs(groupId, fightId, updated)
   }
 
   const handleTimer = (value: string) => {
@@ -193,6 +202,10 @@ const Spreadsheet = () => {
     return activations
   }
   const activations = buildActivations(rows)
+  if (!groupId || !fightId) {
+    console.log(groupId, fightId)
+    return <div>Invalid fight</div>
+  }
 
   return (
     <S.SpreadSheet>
@@ -254,19 +267,11 @@ const Spreadsheet = () => {
         </S.Table>
 
         <S.ButtonGroup>
-          <Link to="/">
-            <S.Button
-              style={{
-                height: '40px',
-                backgroundColor: '#ff5555',
-                border: '1px solid black',
-                borderRadius: '8px',
-                cursor: 'pointer'
-              }}
-            >
-              <img src={returnButton} alt="Back to home" />
-            </S.Button>
-          </Link>
+          <S.ButtonLink to={`/${groupId}`}>
+            <Button variant="red">
+              <img src={returnButton} alt="Back to fights" />
+            </Button>
+          </S.ButtonLink>
           <S.InputGroups>
             <S.LabelGroups>
               <label htmlFor="timer">timer</label>
@@ -304,19 +309,18 @@ const Spreadsheet = () => {
               />
             </S.LabelGroups>
 
-            <S.Button
+            <Button
+              variant="green"
               onClick={AddRow}
               style={{
-                height: '32px',
-                width: '32px',
-                backgroundColor: '#50fa7b',
-                border: '1px solid black',
-                borderRadius: '8px',
-                cursor: 'pointer'
+                height: '40px',
+                width: '40px',
+                padding: '0',
+                alignSelf: 'end'
               }}
             >
-              <img src={add} alt="Back to home" />
-            </S.Button>
+              <img src={add} alt="Add row" />
+            </Button>
           </S.InputGroups>
         </S.ButtonGroup>
       </S.Container>

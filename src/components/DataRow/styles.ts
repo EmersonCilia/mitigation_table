@@ -7,7 +7,7 @@ export const TextArea = styled.textarea`
   width: 100px;
   text-align: center;
   padding: 8px 4px;
-  background: ${colors.white};
+  background: ${colors.background};
   border: solid 1px ${colors.borders};
 `
 
@@ -16,31 +16,31 @@ export const Job = styled.div`
   justify-content: center;
   align-items: center;
   min-width: 40px;
-  background-color: ${colors.white};
+  background-color: ${colors.background};
 `
 
 export const SelectionOption = styled.select`
   width: 80px;
-  background-color: ${colors.white};
+  background-color: ${colors.background};
   border: solid 1px ${colors.borders};
 `
 export const OptionSelection = styled.option`
-  background-color: ${colors.white};
+  background-color: ${colors.background};
   border: solid 1px ${colors.borders};
 `
 
 export const CheckboxWrapper = styled.div<{
-  colorState?: 'default' | 'green' | 'red'
+  colorstate?: 'default' | 'green' | 'red'
 }>`
   padding: 12px 0px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  background: ${({ colorState }) =>
-    colorState === 'green'
+  background: ${({ colorstate }) =>
+    colorstate === 'green'
       ? colors.green
-      : colorState === 'red'
+      : colorstate === 'red'
         ? '#ff5c5c'
         : 'transparent'};
 
@@ -54,7 +54,7 @@ export const Checkbox = styled.input`
   cursor: pointer;
 `
 export const TrashCan = styled.img`
-  background: ${colors.white};
+  background: ${colors.background};
   width: 20px;
   cursor: pointer;
 `

@@ -20,14 +20,15 @@ export type Fight = {
   }
 }
 
-export async function createFight(name: string) {
+/* ---------------- CREATE FIGHT ---------------- */
+
+export async function createFight(groupId: string, name: string) {
   const key = name.replace(/[.#$[\]]/g, '_')
 
-  // Create a unique ID just like push() normally does
   const idRef = push(ref(db, 'ids'))
   const generatedId = idRef.key
 
-  const fightRef = ref(db, `fights/${key}`)
+  const fightRef = ref(db, `groups/${groupId}/fights/${key}`)
 
   const fight = {
     id: generatedId,
@@ -36,43 +37,63 @@ export async function createFight(name: string) {
   }
 
   await set(fightRef, fight)
-
   return fight
 }
 
-export async function saveRow(fightId: any, timer: string, data: FightSkill) {
-  const skillRef = ref(db, `fights/${fightId}/skills/${timer}`)
+/* ---------------- ROWS ---------------- */
+
+export async function saveRow(
+  groupId: string,
+  fightId: string,
+  timer: string,
+  data: FightSkill
+) {
+  const skillRef = ref(
+    db,
+    `groups/${groupId}/fights/${fightId}/skills/${timer}`
+  )
   await set(skillRef, data)
 }
 
-export async function getAllFights() {
-  const refFights = ref(db, 'fights')
+/* ---------------- READ ---------------- */
+
+export async function getAllFights(groupId: string) {
+  const refFights = ref(db, `groups/${groupId}/fights`)
   const snap = await get(refFights)
   return snap.exists() ? snap.val() : {}
 }
 
-export async function getOneFight(fightId: string) {
-  const fightRef = ref(db, `fights/${fightId}`)
+export async function getOneFight(groupId: string, fightId: string) {
+  const fightRef = ref(db, `groups/${groupId}/fights/${fightId}`)
   const snap = await get(fightRef)
   return snap.exists() ? snap.val() : null
 }
 
+/* ---------------- CHECKBOX ---------------- */
+
 export async function updateCheckbox(
-  fightId: any,
+  groupId: string,
+  fightId: string,
   skillName: string,
   checkboxKey: string,
   value: boolean
 ) {
   const refCheckbox = ref(
     db,
-    `fights/${fightId}/skills/${skillName}/checkbox/${checkboxKey}`
+    `groups/${groupId}/fights/${fightId}/skills/${skillName}/checkbox/${checkboxKey}`
   )
 
   await set(refCheckbox, value)
 }
 
-export function listenForRows(fightId: any, callback: (rows: any[]) => void) {
-  const rowsRef = ref(db, `fights/${fightId}/skills`)
+/* ---------------- LISTENERS ---------------- */
+
+export function listenForRows(
+  groupId: string,
+  fightId: string,
+  callback: (rows: any[]) => void
+) {
+  const rowsRef = ref(db, `groups/${groupId}/fights/${fightId}/skills`)
 
   onValue(rowsRef, (snapshot) => {
     const data = snapshot.val()
@@ -82,10 +103,9 @@ export function listenForRows(fightId: any, callback: (rows: any[]) => void) {
       return
     }
 
-    // Convert Firebase object → array of { timer, ...data }
     const rows = Object.entries(data).map(([timer, values]: any) => ({
-      id: timer, // use timer as row id
-      timer: timer,
+      id: timer,
+      timer,
       skill: values.skill ?? '',
       damagetotal: values.damagetotal ?? '',
       type: values.type ?? 'magical',
@@ -96,38 +116,99 @@ export function listenForRows(fightId: any, callback: (rows: any[]) => void) {
   })
 }
 
+/* ---------------- UPDATES ---------------- */
+
 export async function updateDamageType(
-  fightId: any,
+  groupId: string,
+  fightId: string,
   timer: string,
   type: 'magical' | 'physical'
 ) {
-  const typeRef = ref(db, `fights/${fightId}/skills/${timer}/type`)
+  const typeRef = ref(
+    db,
+    `groups/${groupId}/fights/${fightId}/skills/${timer}/type`
+  )
   await set(typeRef, type)
 }
 
-export async function deleteRow(fightId: any, timerKey: string) {
-  const rowRef = ref(db, `fights/${fightId}/skills/${timerKey}`)
+export async function deleteRow(
+  groupId: string,
+  fightId: string,
+  timerKey: string
+) {
+  const rowRef = ref(
+    db,
+    `groups/${groupId}/fights/${fightId}/skills/${timerKey}`
+  )
   await remove(rowRef)
 }
 
-export async function deleteFight(fightId: any) {
-  const rowRef = ref(db, `fights/${fightId}`)
+export async function deleteFight(groupId: string, fightId: string) {
+  const rowRef = ref(db, `groups/${groupId}/fights/${fightId}`)
   await remove(rowRef)
 }
 
-export async function updateActiveJobs(fightId: any, activeJobs: string[]) {
-  await update(ref(db, `fights/${fightId}`), {
+/* ---------------- ACTIVE JOBS ---------------- */
+
+export async function updateActiveJobs(
+  groupId: string,
+  fightId: string,
+  activeJobs: string[]
+) {
+  await update(ref(db, `groups/${groupId}/fights/${fightId}`), {
     activeJobs
   })
 }
 
 export function listenForActiveJobs(
-  fightId: any,
+  groupId: string,
+  fightId: string,
   callback: (jobs: string[]) => void
 ) {
-  const activeRef = ref(db, `fights/${fightId}/activeJobs`)
+  const activeRef = ref(db, `groups/${groupId}/fights/${fightId}/activeJobs`)
 
   onValue(activeRef, (snap) => {
     callback(snap.exists() ? snap.val() : [])
   })
+}
+
+/* ---------------- GROUPS ---------------- */
+
+export async function createGroup(name: string, password: string) {
+  const key = name.trim().toLowerCase()
+  const groupRef = ref(db, `groups/${key}`)
+
+  const snapshot = await get(groupRef)
+  if (snapshot.exists()) {
+    throw new Error('Group already exists')
+  }
+
+  await set(groupRef, {
+    name: key,
+    password,
+    createdAt: Date.now()
+  })
+}
+
+export async function deleteGroup(groupId: string) {
+  await remove(ref(db, `groups/${groupId}`))
+}
+
+export async function getGroup(groupId: string) {
+  const key = groupId.replace(/[.#$[\]]/g, '_')
+  const snapshot = await get(ref(db, `groups/${key}`))
+
+  if (!snapshot.exists()) return null
+  return snapshot.val()
+}
+
+export async function verifyGroupLogin(groupName: string, password: string) {
+  const key = groupName.trim().toLowerCase()
+  const groupRef = ref(db, `groups/${key}`)
+  const snapshot = await get(groupRef)
+
+  if (!snapshot.exists()) return false
+
+  const group = snapshot.val()
+  return group.password === password
 }

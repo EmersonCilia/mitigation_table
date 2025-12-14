@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { colors } from '../../styles'
+import { Link } from 'react-router-dom'
 
 export const Container = styled.div<{ open: boolean }>`
   max-width: ${(props) => (props.open ? '70vw' : '80vw')};
@@ -35,7 +36,7 @@ export const AsideContainer = styled.aside<{ open: boolean }>`
     height: auto;
     z-index: 20;
 
-    background: ${colors.white};
+    background: ${colors.background};
 
     transform: ${(props) =>
       props.open ? 'translateY(0)' : 'translateY(-100%)'};
@@ -106,7 +107,7 @@ export const HeaderTitle = styled.h3`
   flex: 0 0 auto;
   text-align: center;
   border: 1px solid ${colors.borders};
-  background-color: ${colors.white};
+  background-color: ${colors.background};
 `
 
 export const Sticky = styled.div`
@@ -141,6 +142,7 @@ export const ButtonGroup = styled.div`
     display: flex;
     flex-wrap: wrap;
     row-gap: 10px;
+    flex-direction: column-reverse;
   }
 `
 
@@ -152,14 +154,10 @@ export const LabelGroups = styled.div`
   align-items: center;
 
   @media (max-width: 480px) {
-    margin: 20px 4px;
+    margin: 0px 4px;
   }
 `
-export const Button = styled.button`
-  width: 50px;
-  height: 20px;
-  align-self: end;
-`
+
 export const Table = styled.div`
   overflow-x: auto;
   border: 2px solid ${colors.borders};
@@ -167,16 +165,30 @@ export const Table = styled.div`
 export const SpreadSheet = styled.div`
   display: flex;
   justify-items: center;
-  background-color: ${colors.white};
+  background-color: ${colors.background};
 `
 export const InputGroups = styled.div`
   display: flex;
-  justify-self: end;
+  align-items: center;
+  justify-content: center;
 
   @media (max-width: 768px) {
     justify-self: normal;
     display: flex;
     flex-wrap: wrap;
     row-gap: 10px;
+  }
+`
+
+export const ButtonLink = styled(Link)`
+  background-color: ${colors.red}
+
+  &:hover {
+    filter: brightness(1.2);
+  }
+
+  @media (max-width: 768px) {
+    align-self: center;
+    margin-top:60px;
   }
 `

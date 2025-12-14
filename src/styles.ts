@@ -1,12 +1,14 @@
 import styled, { createGlobalStyle } from 'styled-components'
 
 export const colors = {
-  white: '#303241',
+  background: '#303241',
   gray: '#aaa',
   borders: '#000',
-  green: '#50fa7b',
-  text: '#f8f8f2',
-  asideColor: '#15161fff'
+  green: '#45d369ff',
+  text: '#d6d6cbff',
+  asideColor: '#15161fff',
+  red: '#ff5555',
+  blue: '#58bbd1ff'
 }
 
 export const GlobalCss = createGlobalStyle`
@@ -19,9 +21,8 @@ export const GlobalCss = createGlobalStyle`
     color: ${colors.text}
   }
     body{
-      background-color: ${colors.white}
+      background-color: ${colors.background}
     }
-
 `
 
 export const JobSkills = styled.img`
@@ -37,12 +38,36 @@ export const Jobs = styled.div`
   align-items: center;
   flex-direction: column;
   border: solid 2px ${colors.borders};
-  background-color: ${colors.white};
+  background-color: ${colors.background};
   min-width: 40px;
 `
 
 export const SkillsRow = styled.div`
   display: flex;
   flex-direction: row;
-  background-color: ${colors.white};
+  background-color: ${colors.background};
+`
+
+export const Button = styled.button<{ variant?: 'red' | 'green' | 'blue' }>`
+  padding: 10px 20px;
+  cursor: pointer;
+  border: 1px solid ${colors.borders};
+  border-radius: 8px;
+  color: ${colors.text};
+  text-shadow: 2px 2px 4px ${colors.borders};
+
+  background-color: ${({ variant }) => {
+    switch (variant) {
+      case 'red':
+        return colors.red
+      case 'blue':
+        return colors.blue
+      case 'green':
+      default:
+        return colors.green
+    }
+  }};
+  &:hover {
+    filter: brightness(1.2);
+  }
 `

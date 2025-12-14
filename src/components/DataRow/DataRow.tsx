@@ -19,6 +19,7 @@ import trashCan from '../../assets/trash_can.svg'
 import { useParams } from 'react-router-dom'
 import { mitigationsData } from '../Data/MitigationData'
 import { toSeconds } from '../../Utils/ToSeconds'
+import { JSX } from 'react'
 
 // types.ts
 export type RowData = {
@@ -30,22 +31,29 @@ export type RowData = {
   checkbox?: Record<string, boolean>
 }
 
+type Props = {
+  row: RowData
+  contentWidth: number
+  selectedJobs: string[]
+  activations: Record<string, Record<string, number[]>>
+}
+
 const DataRow = ({
   row,
   contentWidth,
   selectedJobs,
   activations
-}: {
-  row: RowData
-  contentWidth: number
-  selectedJobs: string[]
-  activations: Record<string, Record<string, number[]>>
-}) => {
-  const { name: fightId } = useParams()
+}: Props): JSX.Element | null => {
+  const { groupId, fightId } = useParams<{
+    groupId: string
+    fightId: string
+  }>()
   const timerKey = row.timer.toString()
 
+  if (!groupId || !fightId) return null
+
   const handleCheckboxChange = async (checkboxKey: string, value: boolean) => {
-    await updateCheckbox(fightId, timerKey, checkboxKey, value)
+    await updateCheckbox(groupId, fightId, timerKey, checkboxKey, value)
   }
 
   const jobs = Object.keys(jobSkills)
@@ -74,7 +82,7 @@ const DataRow = ({
           alt="trashCan"
           onClick={() => {
             if (window.confirm('Delete this row?')) {
-              deleteRow(fightId, row.timer)
+              deleteRow(groupId, fightId, row.timer)
             }
           }}
         />
@@ -99,7 +107,12 @@ const DataRow = ({
           style={{ width: '80px' }}
           value={row.type}
           onChange={(e) =>
-            updateDamageType(fightId, row.timer, e.target.value as any)
+            updateDamageType(
+              groupId,
+              fightId,
+              row.timer,
+              e.target.value as 'magical' | 'physical'
+            )
           }
         >
           <OptionSelection value="magical">Magical</OptionSelection>
@@ -138,18 +151,18 @@ const DataRow = ({
                 const duration = mitInfo?.duration ?? 0
                 const cooldown = mitInfo?.cooldown ?? 0
 
-                let colorState: 'default' | 'green' | 'red' = 'default'
+                let colorstate: 'default' | 'green' | 'red' = 'default'
 
                 if (activationTime !== null) {
                   const timeDiff = currentTime - activationTime
-                  if (timeDiff <= duration) colorState = 'green'
-                  else if (timeDiff <= cooldown) colorState = 'red'
+                  if (timeDiff <= duration) colorstate = 'green'
+                  else if (timeDiff <= cooldown) colorstate = 'red'
                 }
 
                 return (
                   <CheckboxWrapper
                     key={checkboxKey}
-                    colorState={colorState}
+                    colorstate={colorstate}
                     data-checked={isChecked}
                   >
                     <Checkbox
