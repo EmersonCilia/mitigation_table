@@ -1,12 +1,8 @@
+import { SkillVisibility } from '../../Utils/types'
 import { JobsAside } from './styles'
 
 type Job = {
   job: string
-}
-
-type SkillVisibility = {
-  singleMitigation: boolean
-  healing: boolean
 }
 
 type Props = {

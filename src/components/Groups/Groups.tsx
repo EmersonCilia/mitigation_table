@@ -1,24 +1,21 @@
 import { useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+
 import { getAllFights, createFight, deleteFight } from '../../firebase/fights'
-import { Link, useNavigate } from 'react-router-dom'
-import {
-  Container,
-  FightContainer,
-  Fights,
-  InputButtonGroup,
-  List,
-  Title
-} from './styles'
+
+import * as S from './styles'
 import { TrashCan } from '../DataRow/styles'
-import trashCan from '../../assets/trash_can.svg'
-import add from '../../assets/add.svg'
-import { useParams } from 'react-router-dom'
-import { logout } from '../../Utils/auth'
-import returnButton from '../../assets/return.svg'
 import { Button } from '../../styles'
 
+import trashCan from '../../assets/trash_can.svg'
+import returnButton from '../../assets/return.svg'
+import add from '../../assets/add.svg'
+
+import { logout } from '../../Utils/auth'
+import { FightsMap } from '../../Utils/types'
+
 const Groups = () => {
-  const [fights, setFights] = useState<any>({})
+  const [fights, setFights] = useState<FightsMap>({})
   const [newFightName, setNewFightName] = useState('')
 
   const navigate = useNavigate()
@@ -47,12 +44,12 @@ const Groups = () => {
   }
 
   return (
-    <Container>
-      <Title>{groupId} Fights</Title>
+    <S.Container>
+      <S.Title>{groupId} Fights</S.Title>
 
-      <List>
-        {Object.values(fights).map((fight: any) => (
-          <FightContainer key={fight.name}>
+      <S.List>
+        {Object.values(fights).map((fight) => (
+          <S.FightContainer key={fight.name}>
             <TrashCan
               style={{
                 border: '1px solid black',
@@ -71,15 +68,15 @@ const Groups = () => {
               }}
             />
             <Link to={`/${groupId}/${fight.name}`} style={{ width: '100%' }}>
-              <Fights>{fight.name}</Fights>
+              <S.Fights>{fight.name}</S.Fights>
             </Link>
-          </FightContainer>
+          </S.FightContainer>
         ))}
-      </List>
+      </S.List>
 
-      <InputButtonGroup>
+      <S.InputButtonGroup>
         <Button
-          variant="red"
+          $variant="red"
           onClick={() => {
             logout()
             navigate('/', { replace: true })
@@ -95,11 +92,11 @@ const Groups = () => {
           onChange={(e) => setNewFightName(e.target.value)}
           style={{ padding: '8px', flex: 1, color: 'black' }}
         />
-        <Button variant="green" onClick={handleCreateFight}>
+        <Button $variant="green" onClick={handleCreateFight}>
           <img src={add} alt="Add new fight" />
         </Button>
-      </InputButtonGroup>
-    </Container>
+      </S.InputButtonGroup>
+    </S.Container>
   )
 }
 

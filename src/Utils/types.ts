@@ -43,3 +43,45 @@ export type MitigationMap = {
 export type PlayerMitigations = {
   [key in MitigationKey]?: boolean
 }
+
+export type RowData = {
+  id: string
+  timer: string
+  skill: string
+  damagetotal: number
+  type: 'magical' | 'physical'
+  checkbox?: Record<string, boolean>
+}
+
+export type SkillVisibility = {
+  singleMitigation: boolean
+  healing: boolean
+}
+
+export type RowStructure = {
+  row: RowData
+  contentWidth: number
+  selectedJobs: string[]
+  activations: Record<string, Record<string, number[]>>
+  skillVisibility: SkillVisibility
+}
+
+export type SkillsMap = Record<string, RowData>
+
+export type Fight = {
+  id: string
+  name: string
+  activeJobs?: string[]
+  skills?: SkillsMap
+}
+
+export type FightsMap = Record<string, Fight>
+
+export type Group = {
+  name: string
+  password: string
+  createdAt: number
+  fights: FightsMap
+}
+
+export type GroupsMap = Record<string, Group>

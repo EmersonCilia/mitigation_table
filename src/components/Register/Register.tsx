@@ -1,11 +1,14 @@
 import { useState } from 'react'
-import { Container, Title } from './styles'
+import { ButtonGroup, Container, Title } from './styles'
 import { createGroup } from '../../firebase/fights'
 import { Button } from '../../styles'
+import { useNavigate } from 'react-router-dom'
+import returnButton from '../../assets/return.svg'
 
 const Register = () => {
   const [groupName, setGroupName] = useState('')
   const [password, setPassword] = useState('')
+  const navigate = useNavigate()
 
   const handleCreateGroup = async () => {
     if (!groupName.trim() || !password.trim()) return
@@ -48,9 +51,23 @@ const Register = () => {
           style={{ padding: '8px', color: 'black' }}
         />
 
-        <Button onClick={handleCreateGroup} variant="green">
-          Add
-        </Button>
+        <ButtonGroup>
+          <Button
+            $variant="red"
+            onClick={() => {
+              navigate('/', { replace: true })
+            }}
+          >
+            <img src={returnButton} alt="Return Home" />
+          </Button>
+          <Button
+            style={{ width: '100%' }}
+            onClick={handleCreateGroup}
+            $variant="green"
+          >
+            Add
+          </Button>
+        </ButtonGroup>
       </div>
     </Container>
   )

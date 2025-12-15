@@ -5,42 +5,14 @@ import {
 } from '../../firebase/fights'
 import { jobSkills } from '../Data/JobSkills'
 import { Row, Scrolable, Sticky } from '../Spreadsheet/Styles'
-import {
-  Checkbox,
-  CheckboxWrapper,
-  Job,
-  OptionSelection,
-  SelectionOption,
-  TextArea,
-  TrashCan
-} from './styles'
+import * as S from './styles'
 import calculateMitigation from '../../Utils/mitigationCalculator'
 import trashCan from '../../assets/trash_can.svg'
 import { useParams } from 'react-router-dom'
 import { mitigationsData } from '../Data/MitigationData'
 import { toSeconds } from '../../Utils/ToSeconds'
 import { JSX } from 'react'
-
-// types.ts
-export type RowData = {
-  id: string
-  timer: string
-  skill: string
-  damagetotal: string
-  type: 'magical' | 'physical'
-  checkbox?: Record<string, boolean>
-}
-
-type Props = {
-  row: RowData
-  contentWidth: number
-  selectedJobs: string[]
-  activations: Record<string, Record<string, number[]>>
-  skillVisibility: {
-    singleMitigation: boolean
-    healing: boolean
-  }
-}
+import { RowStructure } from '../../Utils/types'
 
 const DataRow = ({
   row,
@@ -48,7 +20,7 @@ const DataRow = ({
   selectedJobs,
   activations,
   skillVisibility
-}: Props): JSX.Element | null => {
+}: RowStructure): JSX.Element | null => {
   const { groupId, fightId } = useParams<{
     groupId: string
     fightId: string
@@ -79,7 +51,7 @@ const DataRow = ({
   return (
     <Row style={{ width: contentWidth }}>
       <Sticky>
-        <TrashCan
+        <S.TrashCan
           style={{
             borderBottom: '1px solid black'
           }}
@@ -91,14 +63,14 @@ const DataRow = ({
             }
           }}
         />
-        <TextArea style={{ width: '48px' }} value={row.timer} readOnly />
-        <TextArea value={row.skill} style={{ width: '120px' }} readOnly />
+        <S.TextArea style={{ width: '48px' }} value={row.timer} readOnly />
+        <S.TextArea value={row.skill} style={{ width: '120px' }} readOnly />
       </Sticky>
 
       <Scrolable>
-        <TextArea value={row.damagetotal} readOnly />
+        <S.TextArea value={row.damagetotal} readOnly />
 
-        <TextArea
+        <S.TextArea
           value={calculateMitigation(
             Number(row.damagetotal),
             row.type || 'magical',
@@ -108,7 +80,7 @@ const DataRow = ({
           readOnly
         />
 
-        <SelectionOption
+        <S.SelectionOption
           style={{ width: '80px' }}
           value={row.type}
           onChange={(e) =>
@@ -120,16 +92,16 @@ const DataRow = ({
             )
           }
         >
-          <OptionSelection value="magical">Magical</OptionSelection>
-          <OptionSelection value="physical">Physical</OptionSelection>
-        </SelectionOption>
+          <S.OptionSelection value="magical">Magical</S.OptionSelection>
+          <S.OptionSelection value="physical">Physical</S.OptionSelection>
+        </S.SelectionOption>
 
         {/* Only render the jobs selected for this fight */}
         {Object.entries(jobSkills).map(([jobName, skills], jobIndex) => {
           if (!selectedJobs.includes(jobName)) return null // skip hidden jobs
 
           return (
-            <Job key={jobName} style={{ display: 'flex' }}>
+            <S.Job key={jobName} style={{ display: 'flex' }}>
               {skills
                 .filter((skill) => {
                   if (skill.type === 'singleMitigation')
@@ -171,12 +143,12 @@ const DataRow = ({
                   }
 
                   return (
-                    <CheckboxWrapper
+                    <S.CheckboxWrapper
                       key={checkboxKey}
-                      colorstate={colorstate}
+                      $colorstate={colorstate}
                       data-checked={isChecked}
                     >
-                      <Checkbox
+                      <S.Checkbox
                         id={checkboxKey}
                         type="checkbox"
                         checked={isChecked}
@@ -184,10 +156,10 @@ const DataRow = ({
                           handleCheckboxChange(checkboxKey, e.target.checked)
                         }
                       />
-                    </CheckboxWrapper>
+                    </S.CheckboxWrapper>
                   )
                 })}
-            </Job>
+            </S.Job>
           )
         })}
       </Scrolable>

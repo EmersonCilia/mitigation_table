@@ -48,16 +48,16 @@ export const SkillsRow = styled.div`
   background-color: ${colors.background};
 `
 
-export const Button = styled.button<{ variant?: 'red' | 'green' | 'blue' }>`
-  padding: 10px 20px;
+export const Button = styled.button<{ $variant?: 'red' | 'green' | 'blue' }>`
+  padding: 10px 10px;
   cursor: pointer;
   border: 1px solid ${colors.borders};
   border-radius: 8px;
   color: ${colors.text};
   text-shadow: 2px 2px 4px ${colors.borders};
 
-  background-color: ${({ variant }) => {
-    switch (variant) {
+  background-color: ${({ $variant }) => {
+    switch ($variant) {
       case 'red':
         return colors.red
       case 'blue':

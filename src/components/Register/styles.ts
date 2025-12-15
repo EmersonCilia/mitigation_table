@@ -14,3 +14,8 @@ export const Title = styled.h1`
   text-align: center;
   margin-bottom: 40px;
 `
+export const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+`

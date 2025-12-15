@@ -30,17 +30,17 @@ export const OptionSelection = styled.option`
 `
 
 export const CheckboxWrapper = styled.div<{
-  colorstate?: 'default' | 'green' | 'red'
+  $colorstate?: 'default' | 'green' | 'red'
 }>`
   padding: 12px 0px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  background: ${({ colorstate }) =>
-    colorstate === 'green'
+  background: ${({ $colorstate }) =>
+    $colorstate === 'green'
       ? colors.green
-      : colorstate === 'red'
+      : $colorstate === 'red'
         ? '#ff5c5c'
         : 'transparent'};
 

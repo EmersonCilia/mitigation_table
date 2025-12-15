@@ -8,7 +8,7 @@ import {
   updateActiveJobs
 } from '../../firebase/fights'
 
-import DataRow, { RowData } from '../DataRow/DataRow'
+import DataRow from '../DataRow/DataRow'
 import Aside from '../Aside/Aside'
 import { toSeconds } from '../../Utils/ToSeconds'
 import Job from '../Jobs/Job'
@@ -20,6 +20,7 @@ import add from '../../assets/add.svg'
 import * as S from './Styles'
 import { Button } from '../../styles'
 import { allJobs } from '../Data/JobSkills'
+import { RowData } from '../../Utils/types'
 
 const Spreadsheet = () => {
   const [rows, setRows] = useState<RowData[]>([])
@@ -102,11 +103,13 @@ const Spreadsheet = () => {
 
   const AddRow = async () => {
     if (!groupId || !fightId) return
-    if (!timer || !skill || !damageTotal) return
+    if (!timer || !skill) return
 
-    await saveRow(groupId, fightId, timer, {
+    const timerToSave = getSaveFormat(timer)
+
+    await saveRow(groupId, fightId, timerToSave, {
       skill,
-      damagetotal: damageTotal,
+      damagetotal: damageTotal || 0,
       type: 'magical',
       checkbox: {}
     })
@@ -127,14 +130,36 @@ const Spreadsheet = () => {
     await updateActiveJobs(groupId, fightId, updated)
   }
 
+  // timer input mask
+  // Keep the display
   const handleTimer = (value: string) => {
-    let v = value.replace(/\D/g, '').slice(0, 4)
+    const digits = value.replace(/\D/g, '').slice(0, 4)
 
-    if (v.length >= 3) {
-      v = v.slice(0, 2) + ':' + v.slice(2)
+    let minutes = ''
+    let seconds = ''
+
+    if (digits.length === 0) {
+      minutes = ''
+      seconds = ''
+    } else if (digits.length <= 2) {
+      minutes = ''
+      seconds = digits
+    } else {
+      minutes = digits.slice(0, digits.length - 2)
+      seconds = digits.slice(-2)
     }
 
-    setTimer(v)
+    const formatted =
+      (minutes ? minutes : '__') + ':' + (seconds ? seconds : '__')
+    setTimer(formatted)
+  }
+
+  // When saving
+  const getSaveFormat = (timer: string) => {
+    const [m, s] = timer.split(':')
+    const minutes = m === '' || m === '__' ? '00' : m.padStart(2, '0')
+    const seconds = s === '' || s === '__' ? '00' : s.padStart(2, '0')
+    return `${minutes}:${seconds}`
   }
 
   /**
@@ -249,7 +274,7 @@ const Spreadsheet = () => {
 
         <S.ButtonGroup>
           <S.ButtonLink to={`/${groupId}`}>
-            <Button variant="red">
+            <Button $variant="red">
               <img src={returnButton} alt="Back to fights" />
             </Button>
           </S.ButtonLink>
@@ -285,13 +310,13 @@ const Spreadsheet = () => {
                 id="damageTotal"
                 name="damageTotal"
                 type="text"
-                value={damageTotal}
+                value={damageTotal || ''}
                 onChange={(e) => setDamageTotal(Number(e.target.value))}
               />
             </S.LabelGroups>
 
             <Button
-              variant="green"
+              $variant="green"
               onClick={AddRow}
               style={{
                 height: '40px',

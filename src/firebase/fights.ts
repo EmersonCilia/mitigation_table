@@ -1,3 +1,4 @@
+import { RowData } from '../Utils/types'
 import { db } from './index'
 import { ref, set, get, push, onValue, remove, update } from 'firebase/database'
 
@@ -91,19 +92,19 @@ export async function updateCheckbox(
 export function listenForRows(
   groupId: string,
   fightId: string,
-  callback: (rows: any[]) => void
+  callback: (rows: RowData[]) => void
 ) {
   const rowsRef = ref(db, `groups/${groupId}/fights/${fightId}/skills`)
 
   onValue(rowsRef, (snapshot) => {
-    const data = snapshot.val()
+    const data = snapshot.val() as Record<string, RowData> | null
 
     if (!data) {
       callback([])
       return
     }
 
-    const rows = Object.entries(data).map(([timer, values]: any) => ({
+    const rows: RowData[] = Object.entries(data).map(([timer, values]) => ({
       id: timer,
       timer,
       skill: values.skill ?? '',
@@ -188,10 +189,6 @@ export async function createGroup(name: string, password: string) {
     password,
     createdAt: Date.now()
   })
-}
-
-export async function deleteGroup(groupId: string) {
-  await remove(ref(db, `groups/${groupId}`))
 }
 
 export async function getGroup(groupId: string) {

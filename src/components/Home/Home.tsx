@@ -14,19 +14,16 @@ const Home = () => {
     setError('')
 
     const key = groupName.trim().toLowerCase()
+    const group = await getGroup(key)
 
     if (!key || !password.trim()) {
       setError('Fill all fields')
       return
     }
-
-    const group = await getGroup(key)
-
     if (!group) {
       setError('Group not found')
       return
     }
-
     if (group.password !== password) {
       setError('Invalid password')
       return
@@ -77,11 +74,11 @@ const Home = () => {
 
         {error && <span style={{ color: 'red' }}>{error}</span>}
 
-        <Button onClick={handleLogin} variant="green">
+        <Button onClick={handleLogin} $variant="green">
           Login
         </Button>
 
-        <Button variant="blue" onClick={goToRegister}>
+        <Button $variant="blue" onClick={goToRegister}>
           Create group
         </Button>
       </div>
