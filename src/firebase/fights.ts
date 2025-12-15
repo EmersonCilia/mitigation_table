@@ -2,6 +2,25 @@ import { RowData } from '../Utils/types'
 import { db } from './index'
 import { ref, set, get, push, onValue, remove, update } from 'firebase/database'
 
+async function authorizedWrite<T>(
+  groupId: string,
+  callback: () => Promise<T>
+): Promise<T> {
+  const authData = JSON.parse(localStorage.getItem('authGroup') || '{}')
+
+  if (!authData?.token || authData.name !== groupId) {
+    throw new Error('Not authorized')
+  }
+
+  const SESSION_DURATION = 1000 * 60 * 60 * 8 // 8h
+  if (Date.now() - authData.loggedAt > SESSION_DURATION) {
+    localStorage.removeItem('authGroup')
+    throw new Error('Session expired')
+  }
+
+  return await callback()
+}
+
 export type CheckboxMap = {
   [key: string]: boolean
 }
@@ -24,21 +43,16 @@ export type Fight = {
 /* ---------------- CREATE FIGHT ---------------- */
 
 export async function createFight(groupId: string, name: string) {
-  const key = name.replace(/[.#$[\]]/g, '_')
+  return authorizedWrite(groupId, async () => {
+    const key = name.replace(/[.#$[\]]/g, '_')
+    const idRef = push(ref(db, 'ids'))
+    const generatedId = idRef.key
+    const fightRef = ref(db, `groups/${groupId}/fights/${key}`)
 
-  const idRef = push(ref(db, 'ids'))
-  const generatedId = idRef.key
-
-  const fightRef = ref(db, `groups/${groupId}/fights/${key}`)
-
-  const fight = {
-    id: generatedId,
-    name,
-    skills: {}
-  }
-
-  await set(fightRef, fight)
-  return fight
+    const fight = { id: generatedId, name, skills: {} }
+    await set(fightRef, fight)
+    return fight
+  })
 }
 
 /* ---------------- ROWS ---------------- */
@@ -49,11 +63,13 @@ export async function saveRow(
   timer: string,
   data: FightSkill
 ) {
-  const skillRef = ref(
-    db,
-    `groups/${groupId}/fights/${fightId}/skills/${timer}`
-  )
-  await set(skillRef, data)
+  return authorizedWrite(groupId, async () => {
+    const skillRef = ref(
+      db,
+      `groups/${groupId}/fights/${fightId}/skills/${timer}`
+    )
+    await set(skillRef, data)
+  })
 }
 
 /* ---------------- READ ---------------- */
@@ -79,12 +95,13 @@ export async function updateCheckbox(
   checkboxKey: string,
   value: boolean
 ) {
-  const refCheckbox = ref(
-    db,
-    `groups/${groupId}/fights/${fightId}/skills/${skillName}/checkbox/${checkboxKey}`
-  )
-
-  await set(refCheckbox, value)
+  return authorizedWrite(groupId, async () => {
+    const refCheckbox = ref(
+      db,
+      `groups/${groupId}/fights/${fightId}/skills/${skillName}/checkbox/${checkboxKey}`
+    )
+    await set(refCheckbox, value)
+  })
 }
 
 /* ---------------- LISTENERS ---------------- */
@@ -125,11 +142,13 @@ export async function updateDamageType(
   timer: string,
   type: 'magical' | 'physical'
 ) {
-  const typeRef = ref(
-    db,
-    `groups/${groupId}/fights/${fightId}/skills/${timer}/type`
-  )
-  await set(typeRef, type)
+  return authorizedWrite(groupId, async () => {
+    const typeRef = ref(
+      db,
+      `groups/${groupId}/fights/${fightId}/skills/${timer}/type`
+    )
+    await set(typeRef, type)
+  })
 }
 
 export async function deleteRow(
@@ -137,16 +156,20 @@ export async function deleteRow(
   fightId: string,
   timerKey: string
 ) {
-  const rowRef = ref(
-    db,
-    `groups/${groupId}/fights/${fightId}/skills/${timerKey}`
-  )
-  await remove(rowRef)
+  return authorizedWrite(groupId, async () => {
+    const rowRef = ref(
+      db,
+      `groups/${groupId}/fights/${fightId}/skills/${timerKey}`
+    )
+    await remove(rowRef)
+  })
 }
 
 export async function deleteFight(groupId: string, fightId: string) {
-  const rowRef = ref(db, `groups/${groupId}/fights/${fightId}`)
-  await remove(rowRef)
+  return authorizedWrite(groupId, async () => {
+    const fightRef = ref(db, `groups/${groupId}/fights/${fightId}`)
+    await remove(fightRef)
+  })
 }
 
 /* ---------------- ACTIVE JOBS ---------------- */
@@ -156,8 +179,10 @@ export async function updateActiveJobs(
   fightId: string,
   activeJobs: string[]
 ) {
-  await update(ref(db, `groups/${groupId}/fights/${fightId}`), {
-    activeJobs
+  return authorizedWrite(groupId, async () => {
+    await update(ref(db, `groups/${groupId}/fights/${fightId}`), {
+      activeJobs
+    })
   })
 }
 
@@ -197,15 +222,4 @@ export async function getGroup(groupId: string) {
 
   if (!snapshot.exists()) return null
   return snapshot.val()
-}
-
-export async function verifyGroupLogin(groupName: string, password: string) {
-  const key = groupName.trim().toLowerCase()
-  const groupRef = ref(db, `groups/${key}`)
-  const snapshot = await get(groupRef)
-
-  if (!snapshot.exists()) return false
-
-  const group = snapshot.val()
-  return group.password === password
 }

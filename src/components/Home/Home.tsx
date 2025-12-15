@@ -14,26 +14,29 @@ const Home = () => {
     setError('')
 
     const key = groupName.trim().toLowerCase()
-    const group = await getGroup(key)
-
     if (!key || !password.trim()) {
       setError('Fill all fields')
       return
     }
+
+    const group = await getGroup(key)
     if (!group) {
       setError('Group not found')
       return
     }
+
     if (group.password !== password) {
       setError('Invalid password')
       return
     }
 
+    // Instead of password, store a "logged-in" token
     localStorage.setItem(
       'authGroup',
       JSON.stringify({
         name: key,
-        loggedAt: Date.now()
+        loggedAt: Date.now(),
+        token: Math.random().toString(36).substr(2) // random token
       })
     )
 
