@@ -39,7 +39,7 @@ const Spreadsheet = () => {
       : {
           singleMitigation: true,
           healing: true,
-          partyMitigation: true
+          numbers: true
         }
   })
   useEffect(() => {
@@ -244,10 +244,18 @@ const Spreadsheet = () => {
               <S.HeaderTitle style={{ width: '48px' }}>timer</S.HeaderTitle>
               <S.HeaderTitle style={{ width: '120px' }}>skill</S.HeaderTitle>
             </S.Sticky>
-            <S.Scrolable ref={scrollRef} style={{ marginRight: '40px' }}>
-              <S.HeaderTitle>Damage Total</S.HeaderTitle>
-              <S.HeaderTitle>Damage Taken</S.HeaderTitle>
-              <S.HeaderTitle style={{ width: '80px' }}>Type</S.HeaderTitle>
+            <S.Scrolable
+              ref={scrollRef}
+              $damageVisible={skillVisibility.numbers}
+              style={{ marginRight: '40px' }}
+            >
+              {skillVisibility.numbers && (
+                <>
+                  <S.HeaderTitle>Damage Total</S.HeaderTitle>
+                  <S.HeaderTitle>Damage Taken</S.HeaderTitle>
+                  <S.HeaderTitle style={{ width: '80px' }}>Type</S.HeaderTitle>
+                </>
+              )}
               {allJobs
                 .filter((j) => activeJobs.includes(j.job))
                 .map((job) => (
@@ -303,17 +311,21 @@ const Spreadsheet = () => {
               />
             </S.LabelGroups>
 
-            <S.LabelGroups>
-              <label htmlFor="damageTotal">damage total</label>
-              <input
-                style={{ maxWidth: '70px', color: 'black' }}
-                id="damageTotal"
-                name="damageTotal"
-                type="text"
-                value={damageTotal || ''}
-                onChange={(e) => setDamageTotal(Number(e.target.value))}
-              />
-            </S.LabelGroups>
+            {skillVisibility.numbers && (
+              <>
+                <S.LabelGroups>
+                  <label htmlFor="damageTotal">damage total</label>
+                  <input
+                    style={{ maxWidth: '70px', color: 'black' }}
+                    id="damageTotal"
+                    name="damageTotal"
+                    type="text"
+                    value={damageTotal || ''}
+                    onChange={(e) => setDamageTotal(Number(e.target.value))}
+                  />
+                </S.LabelGroups>
+              </>
+            )}
 
             <Button
               $variant="green"

@@ -1,8 +1,11 @@
 import { SkillVisibility } from '../../Utils/types'
-import { JobsAside } from './styles'
+import { JobRole } from '../Data/JobSkills'
+import { JobsAside, SelectJobsTitle } from './styles'
 
 type Job = {
+  img: string
   job: string
+  role: JobRole
 }
 
 type Props = {
@@ -20,28 +23,48 @@ const Aside = ({
   skillVisibility,
   setSkillVisibility
 }: Props) => {
+  const jobsByRole = jobs.reduce<Record<JobRole, Job[]>>(
+    (acc, job) => {
+      acc[job.role].push(job)
+      return acc
+    },
+    {
+      tank: [],
+      healer: [],
+      melee: [],
+      caster: [],
+      ranged: []
+    }
+  )
+
   return (
     <>
-      <h3>Select jobs:</h3>
-      <JobsAside>
-        {jobs.map((job) => (
-          <label
-            key={job.job}
-            style={{ display: 'block', margin: '0 8px 8px' }}
-          >
-            <input
-              type="checkbox"
-              checked={activeJobs.includes(job.job)}
-              onChange={() => toggleJob(job.job)}
-            />
-            {job.job}
-          </label>
-        ))}
-      </JobsAside>
+      <SelectJobsTitle>Select jobs:</SelectJobsTitle>
+      {Object.entries(jobsByRole).map(([role, roleJobs]) => (
+        <div key={role} style={{ marginTop: '20px' }}>
+          <h4>{role.toUpperCase()}</h4>
+          <JobsAside>
+            {roleJobs.map((job) => (
+              <label key={job.job} style={{ display: 'block' }}>
+                <input
+                  type="checkbox"
+                  checked={activeJobs.includes(job.job)}
+                  onChange={() => toggleJob(job.job)}
+                />
+                <img
+                  src={job.img}
+                  alt={job.job}
+                  style={{ marginLeft: 4, height: 20 }}
+                />
+              </label>
+            ))}
+          </JobsAside>
+        </div>
+      ))}
 
-      <h3 style={{ marginTop: '20px' }}>Skill visibility:</h3>
-      <JobsAside>
-        <label>
+      <h3 style={{ marginTop: '48px' }}>Skill visibility:</h3>
+      <JobsAside style={{ gridTemplateColumns: '80px 80px 80px' }}>
+        <label style={{ display: 'flex', alignItems: 'center' }}>
           <input
             type="checkbox"
             checked={skillVisibility.singleMitigation}
@@ -52,10 +75,10 @@ const Aside = ({
               }))
             }
           />
-          Single mitigation
+          <p style={{ marginLeft: '4px' }}>Single mitigation</p>
         </label>
 
-        <label>
+        <label style={{ display: 'flex', alignItems: 'center' }}>
           <input
             type="checkbox"
             checked={skillVisibility.healing}
@@ -66,7 +89,20 @@ const Aside = ({
               }))
             }
           />
-          Healing
+          <p style={{ marginLeft: '4px' }}>Healing</p>
+        </label>
+        <label style={{ display: 'flex', alignItems: 'center' }}>
+          <input
+            type="checkbox"
+            checked={skillVisibility.numbers}
+            onChange={() =>
+              setSkillVisibility((v) => ({
+                ...v,
+                numbers: !v.numbers
+              }))
+            }
+          />
+          <p style={{ marginLeft: '4px' }}>Damage info</p>
         </label>
       </JobsAside>
     </>

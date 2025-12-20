@@ -28,7 +28,7 @@ export const AsideContainer = styled.aside<{ open: boolean }>`
   display: flex;
   z-index: 20;
 
-  @media (max-width: 768px) {
+  @media (max-width: 480px) {
     position: fixed;
     top: 0;
     left: 0;
@@ -52,7 +52,7 @@ export const MobileHamburger = styled.button<{ open: boolean }>`
   border: none;
   cursor: pointer;
 
-  @media (max-width: 768px) {
+  @media (max-width: 480px) {
     display: block;
     position: fixed;
     top: 2px;
@@ -67,7 +67,7 @@ export const MobileHamburger = styled.button<{ open: boolean }>`
 `
 
 export const AsideDiv = styled.div<{ open: boolean }>`
-  width: 280px;
+  width: 300px;
   height: 100vh;
   padding: 20px;
   border-right: 1px solid ${colors.borders};
@@ -77,11 +77,15 @@ export const AsideDiv = styled.div<{ open: boolean }>`
   z-index: 10;
   background: ${colors.asideColor};
 
-  @media (max-width: 768px) {
+  @media (max-width: 480px) {
     transform: translateY(${(props) => (props.open ? '0' : '-100%')});
     height: auto;
     width: 100%;
+    height: auto;
     justify-items: center;
+  }
+  @media (max-width: 1400px) {
+    height: auto;
   }
 `
 export const AsideButton = styled.button<{ open: boolean }>`
@@ -95,7 +99,7 @@ export const AsideButton = styled.button<{ open: boolean }>`
     transition: transform 0.3s ease-in-out;
     transform: rotate(${(props) => (props.open ? '-90deg' : '0')});
   }
-  @media (max-width: 768px) {
+  @media (max-width: 480px) {
     display: none;
   }
 `
@@ -118,11 +122,11 @@ export const Sticky = styled.div`
   height: 48px;
 `
 
-export const Scrolable = styled.div`
+export const Scrolable = styled.div<{ $damageVisible: boolean }>`
   display: flex;
   height: 48px;
   position: absolute;
-  left: 180px;
+  left: ${({ $damageVisible }) => ($damageVisible ? '180px' : '188px')};
 `
 
 export const Row = styled.div`

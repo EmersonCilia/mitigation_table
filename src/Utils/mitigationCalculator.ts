@@ -35,6 +35,7 @@ export default function calculateMitigation(
     //WHM
     Aquaveil: 0.9,
     Temperance: 0.9,
+    Plenary_Indulgence: 0.9,
     //SGE
     Kerachole: 0.9,
     Holos: 0.9,

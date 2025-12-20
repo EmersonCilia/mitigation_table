@@ -35,6 +35,7 @@ export type MitigationKey =
   | 'Magick_Barrier'
   | 'Troubadour'
   | 'Tactician'
+  | 'Plenary_Indulgence'
 
 export type MitigationMap = {
   [playerName: string]: PlayerMitigations
@@ -56,6 +57,7 @@ export type RowData = {
 export type SkillVisibility = {
   singleMitigation: boolean
   healing: boolean
+  numbers: boolean
 }
 
 export type RowStructure = {
