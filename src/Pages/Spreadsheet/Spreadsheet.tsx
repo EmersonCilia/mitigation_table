@@ -6,7 +6,7 @@ import {
   listenForRows,
   saveRow,
   updateActiveJobs
-} from '../../Firebase/fights'
+} from '../../firebase/fights'
 
 import DataRow from '../../components/DataRow/DataRow'
 import Aside from '../../components/Aside/Aside'

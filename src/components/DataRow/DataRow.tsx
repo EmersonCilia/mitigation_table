@@ -2,7 +2,7 @@ import {
   deleteRow,
   updateCheckbox,
   updateDamageType
-} from '../../Firebase/fights'
+} from '../../firebase/fights'
 import { jobSkills } from '../Data/JobSkills'
 import { Row, Scrolable, Sticky } from '../../Pages/Spreadsheet/Styles'
 import * as S from './styles'
