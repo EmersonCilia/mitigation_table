@@ -22,8 +22,7 @@ export const Container = styled.div<{ open: boolean }>`
     position: absolute;
   }
 `
-export const AsideContainer = styled.aside<{ open: boolean }>`
-  width: ${(props) => (props.open ? 'auto' : '40px')};
+export const AsideContainer = styled.aside`
   position: relative;
   display: flex;
   z-index: 20;
@@ -33,16 +32,47 @@ export const AsideContainer = styled.aside<{ open: boolean }>`
     top: 0;
     left: 0;
     width: 100%;
+    background: transparent;
+  }
+`
+
+export const AsidePanel = styled.div<{ open: boolean }>`
+  width: 300px;
+  height: 100vh;
+  padding: 20px;
+  border-right: 1px solid ${colors.borders};
+  background: ${colors.asideColor};
+  position: relative;
+  z-index: 10;
+
+  transform: translateX(${(p) => (p.open ? '0' : '-100%')});
+  transition: transform 0.3s ease-in-out;
+
+  @media (max-width: 480px) {
+    width: 100%;
     height: auto;
-    z-index: 20;
+    transform: translateY(${(p) => (p.open ? '0' : '-100%')});
+  }
 
-    background: ${colors.background};
+  @media (max-width: 1400px) {
+    height: auto;
+  }
+`
 
-    transform: ${(props) =>
-      props.open ? 'translateY(0)' : 'translateY(-100%)'};
-    transition: transform 0.5s ease;
+export const AsideButton = styled.button<{ open: boolean }>`
+  position: absolute;
+  left: ${(p) => (p.open ? '210px' : '0')};
+  transition: left 0.3s ease-in-out;
+  z-index: 10;
+  cursor: pointer;
 
-    display: flex;
+  img {
+    transition: transform 0.3s ease-in-out;
+    transform: rotate(${(p) => (p.open ? '-90deg' : '0')});
+  }
+
+  @media (max-width: 480px) {
+    display: none;
   }
 `
 
@@ -63,44 +93,6 @@ export const MobileHamburger = styled.button<{ open: boolean }>`
     background-color: ${colors.text};
     border-radius: 8px;
     padding: 4px;
-  }
-`
-
-export const AsideDiv = styled.div<{ open: boolean }>`
-  width: 300px;
-  height: 100vh;
-  padding: 20px;
-  border-right: 1px solid ${colors.borders};
-  transform: translateX(${(props) => (props.open ? '0' : '-100%')});
-  transition: transform 0.3s ease-in-out;
-  position: relative;
-  z-index: 10;
-  background: ${colors.asideColor};
-
-  @media (max-width: 480px) {
-    transform: translateY(${(props) => (props.open ? '0' : '-100%')});
-    height: auto;
-    width: 100%;
-    height: auto;
-    justify-items: center;
-  }
-  @media (max-width: 1400px) {
-    height: auto;
-  }
-`
-export const AsideButton = styled.button<{ open: boolean }>`
-  position: absolute;
-  left: ${(props) => (props.open ? '210px' : '0')};
-  transition: left 0.3s ease-in-out;
-  z-index: 10;
-  cursor: pointer;
-
-  img {
-    transition: transform 0.3s ease-in-out;
-    transform: rotate(${(props) => (props.open ? '-90deg' : '0')});
-  }
-  @media (max-width: 480px) {
-    display: none;
   }
 `
 

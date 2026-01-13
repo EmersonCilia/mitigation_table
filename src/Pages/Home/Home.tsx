@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Container, Title } from './styles'
-import { getGroup } from '../../firebase/fights'
+import { getGroup } from '../../Firebase/fights'
 import { Button } from '../../styles'
 
 const Home = () => {

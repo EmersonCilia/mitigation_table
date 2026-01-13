@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
-import { getAllFights, createFight, deleteFight } from '../../firebase/fights'
+import { getAllFights, createFight, deleteFight } from '../../Firebase/fights'
 
 import * as S from './styles'
-import { TrashCan } from '../DataRow/styles'
+import { TrashCan } from '../../components/DataRow/styles'
 import { Button } from '../../styles'
 
 import trashCan from '../../assets/trash_can.svg'

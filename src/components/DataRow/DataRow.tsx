@@ -2,9 +2,9 @@ import {
   deleteRow,
   updateCheckbox,
   updateDamageType
-} from '../../firebase/fights'
+} from '../../Firebase/fights'
 import { jobSkills } from '../Data/JobSkills'
-import { Row, Scrolable, Sticky } from '../Spreadsheet/Styles'
+import { Row, Scrolable, Sticky } from '../../Pages/Spreadsheet/Styles'
 import * as S from './styles'
 import calculateMitigation from '../../Utils/mitigationCalculator'
 import trashCan from '../../assets/trash_can.svg'

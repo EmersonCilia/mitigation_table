@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { ButtonGroup, Container, Title } from './styles'
-import { createGroup } from '../../firebase/fights'
+import { createGroup } from '../../Firebase/fights'
 import { Button } from '../../styles'
 import { useNavigate } from 'react-router-dom'
 import returnButton from '../../assets/return.svg'

@@ -6,12 +6,12 @@ import {
   listenForRows,
   saveRow,
   updateActiveJobs
-} from '../../firebase/fights'
+} from '../../Firebase/fights'
 
-import DataRow from '../DataRow/DataRow'
-import Aside from '../Aside/Aside'
+import DataRow from '../../components/DataRow/DataRow'
+import Aside from '../../components/Aside/Aside'
 import { toSeconds } from '../../Utils/ToSeconds'
-import Job from '../Jobs/Job'
+import Job from '../../components/Jobs/Job'
 
 import returnButton from '../../assets/return.svg'
 import arrow from '../../assets/arrow.svg'
@@ -19,7 +19,7 @@ import add from '../../assets/add.svg'
 
 import * as S from './Styles'
 import { Button } from '../../styles'
-import { allJobs } from '../Data/JobSkills'
+import { allJobs } from '../../components/Data/JobSkills'
 import { RowData } from '../../Utils/types'
 
 const Spreadsheet = () => {
@@ -197,6 +197,7 @@ const Spreadsheet = () => {
 
     return activations
   }
+
   const activations = buildActivations(rows)
   if (!groupId || !fightId) {
     console.log(groupId, fightId)
@@ -211,8 +212,8 @@ const Spreadsheet = () => {
       >
         <img src={arrow} alt="open menu" />
       </S.MobileHamburger>
-      <S.AsideContainer open={asideOpen}>
-        <S.AsideDiv open={asideOpen}>
+      <S.AsideContainer>
+        <S.AsidePanel open={asideOpen}>
           <Aside
             jobs={allJobs}
             activeJobs={activeJobs}
@@ -220,7 +221,7 @@ const Spreadsheet = () => {
             skillVisibility={skillVisibility}
             setSkillVisibility={setSkillVisibility}
           />
-        </S.AsideDiv>
+        </S.AsidePanel>
 
         <S.AsideButton
           open={asideOpen}
