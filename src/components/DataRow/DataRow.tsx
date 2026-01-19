@@ -109,7 +109,7 @@ const DataRow = ({
             }
           }}
         />
-        <S.TextArea style={{ width: '48px' }} value={row.timer} readOnly />
+        <S.TextArea style={{ width: '56px' }} value={row.timer} readOnly />
         <S.TextArea value={row.skill} style={{ width: '120px' }} readOnly />
       </Sticky>
 
