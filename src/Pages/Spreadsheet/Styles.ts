@@ -118,7 +118,7 @@ export const Scrolable = styled.div<{ $damageVisible: boolean }>`
   display: flex;
   height: 48px;
   position: absolute;
-  left: ${({ $damageVisible }) => ($damageVisible ? '180px' : '188px')};
+  left: ${({ $damageVisible }) => ($damageVisible ? '188px' : '196px')};
 `
 
 export const Row = styled.div`
