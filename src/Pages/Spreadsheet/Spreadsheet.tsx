@@ -242,7 +242,7 @@ const Spreadsheet = () => {
                   borderBottom: '1px solid black'
                 }}
               />
-              <S.HeaderTitle style={{ width: '48px' }}>timer</S.HeaderTitle>
+              <S.HeaderTitle style={{ width: '56px' }}>timer</S.HeaderTitle>
               <S.HeaderTitle style={{ width: '120px' }}>skill</S.HeaderTitle>
             </S.Sticky>
             <S.Scrolable
