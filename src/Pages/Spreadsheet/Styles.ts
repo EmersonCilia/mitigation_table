@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 export const Container = styled.div<{ open: boolean }>`
   max-width: ${(props) => (props.open ? '70vw' : '80vw')};
   width: 100%;
-  margin: ${(props) => (props.open ? '0 100px' : '0 auto')};
+  margin: ${(props) => (props.open ? '0 100px 0 380px' : '0 auto')};
   padding: 40px 0;
 
   @media (max-width: 768px) {
@@ -23,7 +23,7 @@ export const Container = styled.div<{ open: boolean }>`
   }
 `
 export const AsideContainer = styled.aside`
-  position: relative;
+  position: fixed;
   display: flex;
   z-index: 20;
 
@@ -118,7 +118,7 @@ export const Scrolable = styled.div<{ $damageVisible: boolean }>`
   display: flex;
   height: 48px;
   position: absolute;
-  left: ${({ $damageVisible }) => ($damageVisible ? '188px' : '196px')};
+  left: ${({ $damageVisible }) => ($damageVisible ? '268px' : '276px')};
 `
 
 export const Row = styled.div`
