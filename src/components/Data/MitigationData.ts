@@ -66,7 +66,7 @@ export const mitigationsData = {
   // AST
   Celestial_Intersection: { duration: 1, cooldown: 20 },
   Exaltation: { duration: 8, cooldown: 60 },
-  Celestial_Opposition: { duration: 15, cooldown: 120 },
+  Celestial_Opposition: { duration: 15, cooldown: 60 },
   Collective_Unconscious: { duration: 10, cooldown: 60 },
   Earthly_Star: { duration: 1, cooldown: 60 },
   Horoscope: { duration: 1, cooldown: 60 },
