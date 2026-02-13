@@ -21,9 +21,10 @@ export const Job = styled.div`
 `
 
 export const SelectionOption = styled.select`
-  width: 80px;
+  width: 100px;
   background-color: ${colors.background};
   border: solid 1px ${colors.borders};
+  padding: 8px;
 `
 export const OptionSelection = styled.option`
   background-color: ${colors.background};
