@@ -39,11 +39,13 @@ export const AsideContainer = styled.aside`
 export const AsidePanel = styled.div<{ open: boolean }>`
   width: 300px;
   height: 100vh;
+  max-height: 100vh;
   padding: 20px;
   border-right: 1px solid ${colors.borders};
   background: ${colors.asideColor};
   position: relative;
   z-index: 10;
+  overflow-y: auto;
 
   transform: translateX(${(p) => (p.open ? '0' : '-100%')});
   transition: transform 0.3s ease-in-out;
@@ -158,6 +160,10 @@ export const Table = styled.div`
   -ms-overflow-style: thin;
   scrollbar-width: thin;
   border: 2px solid ${colors.borders};
+
+  @media (max-height: 480px) {
+    max-height: 350px;
+  }
 `
 export const SpreadSheet = styled.div`
   display: flex;
