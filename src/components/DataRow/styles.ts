@@ -9,6 +9,7 @@ export const TextArea = styled.textarea`
   padding: 8px 4px;
   background: ${colors.background};
   border: solid 1px ${colors.borders};
+  scrollbar-width: none;
 `
 
 export const Job = styled.div`
