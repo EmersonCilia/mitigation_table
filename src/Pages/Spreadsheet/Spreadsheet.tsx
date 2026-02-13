@@ -234,7 +234,7 @@ const Spreadsheet = () => {
       <S.Container open={asideOpen}>
         <h1 style={{ textAlign: 'center', marginBottom: '40px' }}>{fightId}</h1>
         <S.Table>
-          <S.Row ref={headerRowRef}>
+          <S.TableHeader style={{ width: contentWidth }}>
             <S.Sticky>
               <S.HeaderTitle
                 style={{
@@ -267,7 +267,7 @@ const Spreadsheet = () => {
                   />
                 ))}
             </S.Scrolable>
-          </S.Row>
+          </S.TableHeader>
 
           {rows.map((row) => (
             <DataRow

@@ -110,15 +110,12 @@ export const Sticky = styled.div`
   display: flex;
   position: sticky;
   left: 0;
-  z-index: 10;
   height: 48px;
 `
 
 export const Scrolable = styled.div<{ $damageVisible: boolean }>`
   display: flex;
   height: 48px;
-  position: absolute;
-  left: ${({ $damageVisible }) => ($damageVisible ? '268px' : '276px')};
 `
 
 export const Row = styled.div`
@@ -156,6 +153,10 @@ export const LabelGroups = styled.div`
 
 export const Table = styled.div`
   overflow-x: auto;
+  overflow-y: auto;
+  max-height: 700px;
+  -ms-overflow-style: thin;
+  scrollbar-width: thin;
   border: 2px solid ${colors.borders};
 `
 export const SpreadSheet = styled.div`
@@ -187,4 +188,10 @@ export const ButtonLink = styled(Link)`
     align-self: center;
     margin-top:60px;
   }
+`
+export const TableHeader = styled.div`
+  display: flex;
+  position: sticky;
+  top: 0px;
+  z-index: 10;
 `
