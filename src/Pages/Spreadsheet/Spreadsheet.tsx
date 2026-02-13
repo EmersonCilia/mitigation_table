@@ -254,7 +254,7 @@ const Spreadsheet = () => {
                 <>
                   <S.HeaderTitle>Damage Total</S.HeaderTitle>
                   <S.HeaderTitle>Damage Taken</S.HeaderTitle>
-                  <S.HeaderTitle style={{ width: '80px' }}>Type</S.HeaderTitle>
+                  <S.HeaderTitle style={{ width: '100px' }}>Type</S.HeaderTitle>
                 </>
               )}
               {allJobs

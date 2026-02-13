@@ -3,7 +3,7 @@ import { colors } from '../../styles'
 
 export const TextArea = styled.textarea`
   resize: none;
-  height: 48px;
+  height: 52px;
   width: 100px;
   text-align: center;
   padding: 8px 4px;

@@ -129,7 +129,7 @@ const DataRow = ({
             />
 
             <S.SelectionOption
-              style={{ width: '80px' }}
+              style={{ width: '100px' }}
               value={row.type}
               onChange={(e) =>
                 updateDamageType(
