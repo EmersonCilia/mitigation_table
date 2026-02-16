@@ -29,6 +29,7 @@ export type FightSkill = {
   skill: string
   damagetotal: number
   type: string
+  mechanicType: string
   checkbox: CheckboxMap
 }
 
@@ -127,7 +128,8 @@ export function listenForRows(
       skill: values.skill ?? '',
       damagetotal: values.damagetotal ?? '',
       type: values.type ?? 'magical',
-      checkbox: values.checkbox ?? {}
+      checkbox: values.checkbox ?? {},
+      mechanicType: values.mechanicType
     }))
 
     callback(rows)

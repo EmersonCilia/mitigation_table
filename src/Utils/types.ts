@@ -51,6 +51,7 @@ export type RowData = {
   skill: string
   damagetotal: number
   type: 'magical' | 'physical'
+  mechanicType: string
   checkbox?: Record<string, boolean>
 }
 

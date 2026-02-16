@@ -31,6 +31,7 @@ const Spreadsheet = () => {
   const [activeJobs, setActiveJobs] = useState<string[]>([])
   const isMobile = window.innerWidth <= 480
   const [asideOpen, setAsideOpen] = useState(!isMobile)
+  const [mechanicType, setMechanicType] = useState('mechanic')
 
   const [skillVisibility, setSkillVisibility] = useState(() => {
     const stored = localStorage.getItem('skillVisibility')
@@ -111,6 +112,7 @@ const Spreadsheet = () => {
       skill,
       damagetotal: damageTotal || 0,
       type: 'magical',
+      mechanicType: mechanicType,
       checkbox: {}
     })
 
@@ -291,7 +293,7 @@ const Spreadsheet = () => {
             <S.LabelGroups>
               <label htmlFor="timer">timer</label>
               <input
-                style={{ maxWidth: '50px', color: 'black' }}
+                style={{ maxWidth: '50px' }}
                 id="timer"
                 name="timer"
                 type="text"
@@ -303,7 +305,7 @@ const Spreadsheet = () => {
             <S.LabelGroups>
               <label htmlFor="skillName">skill name</label>
               <input
-                style={{ maxWidth: '150px', color: 'black' }}
+                style={{ maxWidth: '150px' }}
                 id="skillName"
                 name="skillName"
                 type="text"
@@ -317,13 +319,28 @@ const Spreadsheet = () => {
                 <S.LabelGroups>
                   <label htmlFor="damageTotal">damage total</label>
                   <input
-                    style={{ maxWidth: '70px', color: 'black' }}
+                    style={{ maxWidth: '70px' }}
                     id="damageTotal"
                     name="damageTotal"
                     type="text"
                     value={damageTotal || ''}
                     onChange={(e) => setDamageTotal(Number(e.target.value))}
                   />
+                </S.LabelGroups>
+                <S.LabelGroups>
+                  <label htmlFor="mechanicType">type</label>
+                  <select
+                    id="mechanicType"
+                    name="mechanicType"
+                    value={mechanicType}
+                    onChange={(e) => setMechanicType(e.target.value)}
+                    style={{ maxWidth: '150px' }}
+                  >
+                    <option value="raidwide">raidwide</option>
+                    <option value="debuff">debuff</option>
+                    <option value="tankbuster">tankbuster</option>
+                    <option value="mechanic">mechanic</option>
+                  </select>
                 </S.LabelGroups>
               </>
             )}

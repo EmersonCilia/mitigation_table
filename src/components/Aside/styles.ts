@@ -5,7 +5,7 @@ export const JobsAside = styled.div`
   grid-template-columns: 60px 60px 60px 60px;
   transition: left 0.3s ease-in-out;
   margin-top: 12px;
-  gap: 20px 10px;
+  gap: 10px 10px;
 `
 
 export const AsideContainer = styled.aside`

@@ -14,6 +14,7 @@ import { toSeconds } from '../../Utils/ToSeconds'
 import { JSX } from 'react'
 import { RowStructure } from '../../Utils/types'
 import { resolveMitigationState } from '../../Utils/resolveMitigationActive'
+import { colors } from '../../styles'
 
 const DataRow = ({
   row,
@@ -27,6 +28,20 @@ const DataRow = ({
     fightId: string
   }>()
   const timerKey = row.timer.toString()
+
+  const getMechanicColor = (type?: string) => {
+    switch (type) {
+      case 'tankbuster':
+        return colors.blue
+      case 'raidwide':
+        return colors.red
+      case 'debuff':
+        return colors.green
+      case 'mechanic':
+      default:
+        return colors.background
+    }
+  }
 
   if (!groupId || !fightId) return null
 
@@ -110,7 +125,14 @@ const DataRow = ({
           }}
         />
         <S.TextArea style={{ width: '56px' }} value={row.timer} readOnly />
-        <S.TextArea value={row.skill} style={{ width: '200px' }} readOnly />
+        <S.TextArea
+          value={row.skill}
+          style={{
+            width: '200px',
+            backgroundColor: getMechanicColor(row.mechanicType)
+          }}
+          readOnly
+        />
       </Sticky>
 
       <Scrolable $damageVisible={skillVisibility.numbers}>

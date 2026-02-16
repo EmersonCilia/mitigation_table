@@ -10,6 +10,11 @@ export const TextArea = styled.textarea`
   background: ${colors.background};
   border: solid 1px ${colors.borders};
   scrollbar-width: none;
+  text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
 `
 
 export const Job = styled.div`
@@ -18,6 +23,7 @@ export const Job = styled.div`
   align-items: center;
   min-width: 40px;
   background-color: ${colors.background};
+  height: 52px;
 `
 
 export const SelectionOption = styled.select`
@@ -25,6 +31,7 @@ export const SelectionOption = styled.select`
   background-color: ${colors.background};
   border: solid 1px ${colors.borders};
   padding: 8px;
+  height: 52px;
 `
 export const OptionSelection = styled.option`
   background-color: ${colors.background};
@@ -34,7 +41,7 @@ export const OptionSelection = styled.option`
 export const CheckboxWrapper = styled.div<{
   $colorstate?: 'default' | 'green' | 'red'
 }>`
-  padding: 12px 0px;
+  padding: 14px 0px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -59,4 +66,6 @@ export const TrashCan = styled.img`
   background: ${colors.background};
   width: 20px;
   cursor: pointer;
+  height: 50px;
+  border: solid 1px ${colors.borders};
 `

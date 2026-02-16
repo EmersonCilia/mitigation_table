@@ -41,7 +41,7 @@ const Aside = ({
     <>
       <SelectJobsTitle>Select jobs:</SelectJobsTitle>
       {Object.entries(jobsByRole).map(([role, roleJobs]) => (
-        <div key={role} style={{ marginTop: '20px' }}>
+        <div key={role} style={{ marginTop: '16px' }}>
           <h4>{role.toUpperCase()}</h4>
           <JobsAside>
             {roleJobs.map((job) => (

@@ -148,6 +148,19 @@ export const LabelGroups = styled.div`
   align-self: end;
   align-items: center;
 
+  option,
+  select,
+  input,
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    color: ${colors.text};
+    background-color: ${colors.background};
+    -webkit-box-shadow: 0 0 0 1000px ${colors.background} inset;
+    -webkit-text-fill-color: ${colors.text};
+  }
+
   @media (max-width: 480px) {
     margin: 0px 4px;
   }
