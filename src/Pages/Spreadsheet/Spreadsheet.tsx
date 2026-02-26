@@ -32,7 +32,10 @@ const Spreadsheet = () => {
   const isMobile = window.innerWidth <= 480
   const [asideOpen, setAsideOpen] = useState(!isMobile)
   const [mechanicType, setMechanicType] = useState('mechanic')
-
+  const [visibleJobs, setVisibleJobs] = useState<string[]>(() => {
+    const stored = localStorage.getItem('visibleJobs')
+    return stored ? JSON.parse(stored) : []
+  })
   const [skillVisibility, setSkillVisibility] = useState(() => {
     const stored = localStorage.getItem('skillVisibility')
     return stored
@@ -43,9 +46,6 @@ const Spreadsheet = () => {
           numbers: true
         }
   })
-  useEffect(() => {
-    localStorage.setItem('skillVisibility', JSON.stringify(skillVisibility))
-  }, [skillVisibility])
 
   const { groupId, fightId } = useParams<{
     groupId: string
@@ -102,6 +102,14 @@ const Spreadsheet = () => {
     return unsubscribe
   }, [groupId, fightId])
 
+  useEffect(() => {
+    localStorage.setItem('skillVisibility', JSON.stringify(skillVisibility))
+  }, [skillVisibility])
+
+  useEffect(() => {
+    localStorage.setItem('visibleJobs', JSON.stringify(visibleJobs))
+  }, [visibleJobs])
+
   const AddRow = async () => {
     if (!groupId || !fightId) return
     if (!timer || !skill) return
@@ -121,14 +129,19 @@ const Spreadsheet = () => {
     setDamageTotal(0)
   }
 
-  const toggleJob = async (jobId: string) => {
+  const toggleActiveJob = async (jobId: string) => {
     if (!groupId || !fightId) return
+    const isActive = activeJobs.includes(jobId)
 
     const updated = activeJobs.includes(jobId)
       ? activeJobs.filter((j) => j !== jobId)
       : [...activeJobs, jobId]
 
     setActiveJobs(updated)
+
+    if (!isActive) {
+      setVisibleJobs((prev) => (prev.includes(jobId) ? prev : [...prev, jobId]))
+    }
     await updateActiveJobs(groupId, fightId, updated)
   }
 
@@ -219,9 +232,11 @@ const Spreadsheet = () => {
           <Aside
             jobs={allJobs}
             activeJobs={activeJobs}
-            toggleJob={toggleJob}
+            toggleJob={toggleActiveJob}
             skillVisibility={skillVisibility}
             setSkillVisibility={setSkillVisibility}
+            visibleJobs={visibleJobs}
+            setVisibleJobs={setVisibleJobs}
           />
         </S.AsidePanel>
 
@@ -266,6 +281,7 @@ const Spreadsheet = () => {
                     key={job.id}
                     job={job.job}
                     skillVisibility={skillVisibility}
+                    visibleJobs={visibleJobs}
                   />
                 ))}
             </S.Scrolable>
@@ -276,9 +292,10 @@ const Spreadsheet = () => {
               key={row.id}
               row={row}
               contentWidth={contentWidth}
-              selectedJobs={activeJobs}
+              activeJobs={activeJobs}
               activations={activations}
               skillVisibility={skillVisibility}
+              visibleJobs={visibleJobs}
             />
           ))}
         </S.Table>

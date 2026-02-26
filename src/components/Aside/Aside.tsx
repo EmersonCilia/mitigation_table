@@ -14,6 +14,8 @@ type Props = {
   toggleJob: (id: string) => void
   skillVisibility: SkillVisibility
   setSkillVisibility: React.Dispatch<React.SetStateAction<SkillVisibility>>
+  visibleJobs: string[]
+  setVisibleJobs: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 const Aside = ({
@@ -21,7 +23,9 @@ const Aside = ({
   activeJobs,
   toggleJob,
   skillVisibility,
-  setSkillVisibility
+  setSkillVisibility,
+  visibleJobs,
+  setVisibleJobs
 }: Props) => {
   const jobsByRole = jobs.reduce<Record<JobRole, Job[]>>(
     (acc, job) => {
@@ -104,6 +108,26 @@ const Aside = ({
           />
           <p style={{ marginLeft: '4px' }}>Damage info</p>
         </label>
+        {Object.values(jobsByRole)
+          .flat()
+          .filter((job) => activeJobs.includes(job.job))
+          .map((job) => (
+            <label key={job.job}>
+              {' '}
+              <input
+                type="checkbox"
+                checked={visibleJobs.includes(job.job)}
+                onChange={() =>
+                  setVisibleJobs((prev) =>
+                    prev.includes(job.job)
+                      ? prev.filter((j) => j !== job.job)
+                      : [...prev, job.job]
+                  )
+                }
+              />{' '}
+              <img src={job.img} alt={job.job} height={20} />{' '}
+            </label>
+          ))}
       </JobsAside>
     </>
   )

@@ -19,9 +19,10 @@ import { colors } from '../../styles'
 const DataRow = ({
   row,
   contentWidth,
-  selectedJobs,
+  activeJobs,
   activations,
-  skillVisibility
+  skillVisibility,
+  visibleJobs
 }: RowStructure): JSX.Element | null => {
   const { groupId, fightId } = useParams<{
     groupId: string
@@ -66,7 +67,7 @@ const DataRow = ({
 
   // Loop through all jobs and their skills
   Object.entries(jobSkills).forEach(([jobName, skills], jobIndex) => {
-    if (!selectedJobs.includes(jobName)) return // Skip hidden jobs
+    if (!activeJobs.includes(jobName)) return null
 
     const jobIndexStr = String(jobIndex)
 
@@ -74,14 +75,6 @@ const DataRow = ({
 
     // Loop through every skill of this job
     skills.forEach((skill) => {
-      if (
-        skill.type === 'singleMitigation' && // If the category is hidden, skip it
-        !skillVisibility.singleMitigation
-      )
-        return
-
-      if (skill.type === 'healing' && !skillVisibility.healing) return // If the category is hidden, skip it
-
       // Get all recorded activation times for this skill
       // Example: [30, 120, 210]
       // If none exist, default to an empty array
@@ -145,7 +138,7 @@ const DataRow = ({
                 Number(row.damagetotal),
                 row.type || 'magical',
                 activeMitigations,
-                selectedJobs
+                activeJobs
               )}
               readOnly
             />
@@ -169,7 +162,8 @@ const DataRow = ({
 
         {/* Only render the jobs selected for this fight */}
         {Object.entries(jobSkills).map(([jobName, skills], jobIndex) => {
-          if (!selectedJobs.includes(jobName)) return null // skip hidden jobs
+          if (!activeJobs.includes(jobName)) return null // skip hidden jobs
+          if (!visibleJobs.includes(jobName)) return null
 
           return (
             <S.Job key={jobName} style={{ display: 'flex' }}>

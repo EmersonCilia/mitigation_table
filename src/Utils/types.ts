@@ -64,9 +64,10 @@ export type SkillVisibility = {
 export type RowStructure = {
   row: RowData
   contentWidth: number
-  selectedJobs: string[]
+  activeJobs: string[]
   activations: Record<string, Record<string, number[]>>
   skillVisibility: SkillVisibility
+  visibleJobs: string[]
 }
 
 export type SkillsMap = Record<string, RowData>
@@ -88,3 +89,12 @@ export type Group = {
 }
 
 export type GroupsMap = Record<string, Group>
+
+export type UISettings = {
+  skillVisibility: {
+    singleMitigation: boolean
+    healing: boolean
+    numbers: boolean
+  }
+  activeJobs: string[]
+}

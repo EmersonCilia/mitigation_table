@@ -7,9 +7,12 @@ type Props = {
     singleMitigation: boolean
     healing: boolean
   }
+  visibleJobs: string[]
 }
 
-const Job = ({ job, skillVisibility }: Props) => {
+const Job = ({ job, skillVisibility, visibleJobs }: Props) => {
+  if (!visibleJobs.includes(job)) return null
+
   const visibleSkills = jobSkills[job].filter((skill) => {
     if (skill.type === 'singleMitigation')
       return skillVisibility.singleMitigation
