@@ -63,7 +63,6 @@ export type SkillVisibility = {
 
 export type RowStructure = {
   row: RowData
-  contentWidth: number
   activeJobs: string[]
   activations: Record<string, Record<string, number[]>>
   skillVisibility: SkillVisibility

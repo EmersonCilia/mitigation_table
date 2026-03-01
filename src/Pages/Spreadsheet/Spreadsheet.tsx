@@ -27,7 +27,6 @@ const Spreadsheet = () => {
   const [timer, setTimer] = useState('')
   const [skill, setSkill] = useState('')
   const [damageTotal, setDamageTotal] = useState<number>(0)
-  const [contentWidth, setContentWidth] = useState<number>(0)
   const [activeJobs, setActiveJobs] = useState<string[]>([])
   const isMobile = window.innerWidth <= 480
   const [asideOpen, setAsideOpen] = useState(!isMobile)
@@ -65,18 +64,6 @@ const Spreadsheet = () => {
 
     return unsubscribe
   }, [groupId, fightId])
-
-  useEffect(() => {
-    const updateWidth = () => {
-      if (!scrollRef.current) return
-      const w = scrollRef.current.scrollWidth
-      setContentWidth(w)
-    }
-
-    updateWidth()
-    window.addEventListener('resize', updateWidth)
-    return () => window.removeEventListener('resize', updateWidth)
-  }, [rows])
 
   // EFFECT: Sync row width to scrollable content width
   useEffect(() => {
@@ -251,7 +238,7 @@ const Spreadsheet = () => {
       <S.Container open={asideOpen}>
         <h1 style={{ textAlign: 'center', marginBottom: '40px' }}>{fightId}</h1>
         <S.Table>
-          <S.TableHeader style={{ width: contentWidth }}>
+          <S.TableHeader>
             <S.Sticky>
               <S.HeaderTitle
                 style={{
@@ -265,7 +252,6 @@ const Spreadsheet = () => {
             <S.Scrolable
               ref={scrollRef}
               $damageVisible={skillVisibility.numbers}
-              style={{ marginRight: '40px' }}
             >
               {skillVisibility.numbers && (
                 <>
@@ -291,7 +277,6 @@ const Spreadsheet = () => {
             <DataRow
               key={row.id}
               row={row}
-              contentWidth={contentWidth}
               activeJobs={activeJobs}
               activations={activations}
               skillVisibility={skillVisibility}

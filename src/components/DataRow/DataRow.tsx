@@ -18,7 +18,6 @@ import { colors } from '../../styles'
 
 const DataRow = ({
   row,
-  contentWidth,
   activeJobs,
   activations,
   skillVisibility,
@@ -103,7 +102,7 @@ const DataRow = ({
   })
 
   return (
-    <Row style={{ width: contentWidth }}>
+    <Row>
       <Sticky>
         <S.TrashCan
           style={{

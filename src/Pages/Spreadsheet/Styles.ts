@@ -3,9 +3,10 @@ import { colors } from '../../styles'
 import { Link } from 'react-router-dom'
 
 export const Container = styled.div<{ open: boolean }>`
-  max-width: ${(props) => (props.open ? '70vw' : '80vw')};
   width: 100%;
-  margin: ${(props) => (props.open ? '0 100px 0 380px' : '0 auto')};
+  max-width: ${(props) => (props.open ? '70vw' : '80vw')};
+  margin-left: ${(props) => (props.open ? '380px' : 'auto')};
+  margin-right: auto;
   padding: 40px 0;
 
   @media (max-width: 768px) {
@@ -121,6 +122,7 @@ export const Scrolable = styled.div<{ $damageVisible: boolean }>`
 `
 
 export const Row = styled.div`
+  width: fit-content;
   display: flex;
   align-items: stretch;
   position: relative;
@@ -128,7 +130,10 @@ export const Row = styled.div`
 `
 
 export const ButtonGroup = styled.div`
+  max-width: 1024px;
   display: flex;
+  margin-right: auto;
+  margin-left: auto;
   margin-top: 20px;
   justify-content: space-between;
 
@@ -167,11 +172,16 @@ export const LabelGroups = styled.div`
 `
 
 export const Table = styled.div`
+  margin: 0 auto;
+  width: fit-content;
+  max-width: 100%;
   overflow-x: auto;
   overflow-y: auto;
   max-height: 700px;
+
   -ms-overflow-style: thin;
   scrollbar-width: thin;
+
   border: 2px solid ${colors.borders};
 
   @media (max-height: 480px) {
@@ -179,8 +189,7 @@ export const Table = styled.div`
   }
 `
 export const SpreadSheet = styled.div`
-  display: flex;
-  justify-items: center;
+  display: block;
   background-color: ${colors.background};
 `
 export const InputGroups = styled.div`
@@ -209,6 +218,7 @@ export const ButtonLink = styled(Link)`
   }
 `
 export const TableHeader = styled.div`
+  width: fit-content;
   display: flex;
   position: sticky;
   top: 0px;

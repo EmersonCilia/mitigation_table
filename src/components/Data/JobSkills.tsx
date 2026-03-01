@@ -27,6 +27,13 @@ import sacredSoil from '../../assets/scholar/Sacred_Soil.png'
 import seraphism from '../../assets/scholar/Seraphism.png'
 import succor from '../../assets/scholar/Succor.png'
 import summonSeraph from '../../assets/scholar/Summon_Seraph.png'
+import excogitation from '../../assets/scholar/Excogitation.png'
+import indomitability from '../../assets/scholar/Indomitability.png'
+import whisperingDawn from '../../assets/scholar/Whispering_Dawn-sch.png'
+import feyBlessing from '../../assets/scholar/Fey_Blessing.png'
+import lustrate from '../../assets/scholar/Lustrate.png'
+import recitation from '../../assets/scholar/Recitation.png'
+
 import scholarIcon from '../../assets/scholar/Scholar_icon.png'
 
 import temperaCoat from '../../assets/picto/Tempera_Coat.png'
@@ -67,6 +74,9 @@ import haima from '../../assets/sage/Haima.png'
 import pneuma from '../../assets/sage/Pneuma.png'
 import holos from '../../assets/sage/Holos.png'
 import taurochole from '../../assets/sage/Taurochole.png'
+import krasis from '../../assets/sage/Krasis.png'
+import ixochole from '../../assets/sage/Ixochole.png'
+import druochole from '../../assets/sage/Druochole.png'
 import sageIcon from '../../assets/sage/Sage_icon.png'
 
 import celestialIntersection from '../../assets/astrologian/Celestial_Intersection.png'
@@ -203,8 +213,11 @@ export const jobSkills = {
     { src: holos, alt: 'Holos', type: 'partyMitigation' },
     { src: panhaima, alt: 'Panhaima', type: 'partyMitigation' },
     { src: taurochole, alt: 'Taurochole', type: 'singleMitigation' },
+    { src: krasis, alt: 'Krasis', type: 'singleMitigation' },
+    { src: druochole, alt: 'Druochole', type: 'healing' },
     { src: haima, alt: 'Haima', type: 'singleMitigation' },
     { src: phisisII, alt: 'Phisis_II', type: 'healing' },
+    { src: ixochole, alt: 'Ixochole', type: 'healing' },
     { src: philosophia, alt: 'Philosophia', type: 'healing' },
     { src: zoe, alt: 'Zoe', type: 'healing' },
     { src: pneuma, alt: 'Pneuma', type: 'healing' },
@@ -227,11 +240,17 @@ export const jobSkills = {
       alt: 'Deployment_Tactics',
       type: 'partyMitigation'
     },
+    { src: excogitation, alt: 'Excogitation', type: 'singleMitigation' },
     { src: protraction, alt: 'Protraction', type: 'singleMitigation' },
+    { src: lustrate, alt: 'Lustrate', type: 'healing' },
+    { src: feyBlessing, alt: 'Fey_Blessing', type: 'healing' },
+    { src: indomitability, alt: 'Indomitability', type: 'healing' },
+    { src: whisperingDawn, alt: 'Whispering_Dawn', type: 'healing' },
     { src: seraphism, alt: 'Seraphism', type: 'healing' },
+    { src: recitation, alt: 'Recitation', type: 'healing' },
     { src: dissipation, alt: 'Dissipation', type: 'healing' },
-    { src: consolation, alt: 'Consolation', type: 'healing' },
-    { src: summonSeraph, alt: 'Summon_Seraph', type: 'healing' },
+    { src: consolation, alt: 'Consolation', type: 'partyMitigation' },
+    { src: summonSeraph, alt: 'Summon_Seraph', type: 'partyMitigation' },
     { src: succor, alt: 'Succor', type: 'partyMitigation' }
   ],
   AST: [
