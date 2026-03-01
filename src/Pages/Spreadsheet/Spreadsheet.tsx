@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
 import {
@@ -51,10 +51,6 @@ const Spreadsheet = () => {
     fightId: string
   }>()
 
-  // Refs for measuring width
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const headerRowRef = useRef<HTMLDivElement>(null)
-
   useEffect(() => {
     if (!groupId || !fightId) return
 
@@ -64,20 +60,6 @@ const Spreadsheet = () => {
 
     return unsubscribe
   }, [groupId, fightId])
-
-  // EFFECT: Sync row width to scrollable content width
-  useEffect(() => {
-    const updateWidth = () => {
-      if (!scrollRef.current || !headerRowRef.current) return
-      const fullWidth = scrollRef.current.scrollWidth
-      headerRowRef.current.style.width = fullWidth + 'px'
-    }
-
-    updateWidth()
-    window.addEventListener('resize', updateWidth)
-
-    return () => window.removeEventListener('resize', updateWidth)
-  }, [rows])
 
   useEffect(() => {
     if (!groupId || !fightId) return
@@ -249,10 +231,7 @@ const Spreadsheet = () => {
               <S.HeaderTitle style={{ width: '56px' }}>timer</S.HeaderTitle>
               <S.HeaderTitle style={{ width: '200px' }}>skill</S.HeaderTitle>
             </S.Sticky>
-            <S.Scrolable
-              ref={scrollRef}
-              $damageVisible={skillVisibility.numbers}
-            >
+            <S.Scrolable $damageVisible={skillVisibility.numbers}>
               {skillVisibility.numbers && (
                 <>
                   <S.HeaderTitle>Damage Total</S.HeaderTitle>
