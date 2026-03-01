@@ -18,11 +18,38 @@ export const GlobalCss = createGlobalStyle`
     box-sizing: border-box;
     font-family: Roboto, sans-serif;
     list-style: none;
-    color: ${colors.text}
+    color: ${colors.text};
   }
-    body{
-      background-color: ${colors.background}
-    }
+
+  body {
+    background-color: ${colors.background};
+  }
+
+  /* ===== Scrollbar (Firefox) ===== */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: ${colors.gray} ${colors.background};
+  }
+
+  /* ===== Scrollbar (Chrome, Edge, Opera) ===== */
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: ${colors.background};
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: ${colors.gray};
+    border-radius: 6px;
+    border: 2px solid ${colors.background};
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: ${colors.text};
+  }
 `
 
 export const JobSkills = styled.img`

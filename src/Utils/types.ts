@@ -50,10 +50,12 @@ export type RowData = {
   timer: string
   skill: string
   damagetotal: number
-  type: 'magical' | 'physical'
-  mechanicType: string
+  type: DamageType
+  mechanicType: MechanicType
   checkbox?: Record<string, boolean>
 }
+export type MechanicType = 'raidwide' | 'debuff' | 'tankbuster' | 'mechanic'
+export type DamageType = 'magical' | 'physical'
 
 export type SkillVisibility = {
   singleMitigation: boolean
@@ -88,12 +90,3 @@ export type Group = {
 }
 
 export type GroupsMap = Record<string, Group>
-
-export type UISettings = {
-  skillVisibility: {
-    singleMitigation: boolean
-    healing: boolean
-    numbers: boolean
-  }
-  activeJobs: string[]
-}

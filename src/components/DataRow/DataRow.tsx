@@ -136,6 +136,7 @@ const DataRow = ({
               value={calculateMitigation(
                 Number(row.damagetotal),
                 row.type || 'magical',
+                row.mechanicType || 'mechanic',
                 activeMitigations,
                 activeJobs
               )}

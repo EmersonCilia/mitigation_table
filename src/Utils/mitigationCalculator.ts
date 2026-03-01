@@ -1,11 +1,9 @@
-import { MitigationKey } from './types'
-import { MitigationMap } from './types'
-
-type DamageType = 'magical' | 'physical'
+import { MitigationKey, MitigationMap, MechanicType, DamageType } from './types'
 
 export default function calculateMitigation(
   baseDamage: number,
   damageType: DamageType,
+  mechanicType: MechanicType,
   mitigations: MitigationMap,
   activeJobs: string[]
 ): number {
@@ -13,17 +11,17 @@ export default function calculateMitigation(
   const values: Record<MitigationKey, number> = {
     // commom mitigation
     Reprisal: 0.9,
-    Rampart: 0.8,
+    Rampart: mechanicType === 'tankbuster' ? 0.8 : 1,
     Addle: damageType === 'magical' ? 0.9 : 0.95,
     Feint: damageType === 'magical' ? 0.95 : 0.9,
     //GNB
     Heart_of_Corundum: 0.85,
-    Great_Nebula: 0.6,
+    Great_Nebula: mechanicType === 'tankbuster' ? 0.6 : 1,
     Heart_of_Light: damageType === 'magical' ? 0.9 : 0.95,
-    Camouflage: 0.85,
+    Camouflage: mechanicType === 'tankbuster' ? 0.85 : 1,
     //DRK
     Dark_Mind: damageType === 'magical' ? 0.8 : 0.9,
-    Shadowed_Vigil: 0.6,
+    Shadowed_Vigil: mechanicType === 'tankbuster' ? 0.6 : 1,
     Oblation: 0.9,
     Dark_Missionary: damageType === 'magical' ? 0.9 : 0.95,
     //DNC
@@ -41,17 +39,17 @@ export default function calculateMitigation(
     Holos: 0.9,
     Taurochole: 0.9,
     //WAR
-    Bloodwhetting: 0.9,
-    Damnation: 0.6,
+    Bloodwhetting: mechanicType === 'tankbuster' ? 0.9 : 1,
+    Damnation: mechanicType === 'tankbuster' ? 0.6 : 1,
     Nascent_Flash: 0.9,
     //AST
     Collective_Unconscious: 0.9,
     Exaltation: 0.9,
     Sun_Sign: 0.9,
     //PLD
-    Bulwark: 0.8,
-    Guardian: 0.6,
-    Holy_Sheltron: 0.9,
+    Bulwark: mechanicType === 'tankbuster' ? 0.8 : 1,
+    Guardian: mechanicType === 'tankbuster' ? 0.6 : 1,
+    Holy_Sheltron: mechanicType === 'tankbuster' ? 0.9 : 1,
     Intervention: 0.9,
     Passage_of_Arms: 0.85,
     //MCH
