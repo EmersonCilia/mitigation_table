@@ -196,7 +196,7 @@ const Spreadsheet = () => {
       >
         <img src={arrow} alt="open menu" />
       </S.MobileHamburger>
-      <S.AsideContainer>
+      <S.AsideContainer open={asideOpen}>
         <S.AsidePanel open={asideOpen}>
           <Aside
             jobs={allJobs}

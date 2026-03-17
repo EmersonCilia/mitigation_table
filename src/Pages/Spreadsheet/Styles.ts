@@ -20,10 +20,10 @@ export const Container = styled.div<{ open: boolean }>`
     top: 12px;
     left: 50px;
     display: block;
-    position: absolute;
+    position: relative;
   }
 `
-export const AsideContainer = styled.aside`
+export const AsideContainer = styled.aside<{ open: boolean }>`
   position: fixed;
   display: flex;
   z-index: 20;
@@ -34,6 +34,9 @@ export const AsideContainer = styled.aside`
     left: 0;
     width: 100%;
     background: transparent;
+    transition: transform 0.5s ease-in-out;
+    transform: translateY(${(p) => (p.open ? '0' : '-100%')});
+    pointer-events: ${(p) => (p.open ? 'auto' : 'none')};
   }
 `
 
@@ -45,8 +48,8 @@ export const AsidePanel = styled.div<{ open: boolean }>`
   border-right: 1px solid ${colors.borders};
   background: ${colors.asideColor};
   position: relative;
-  z-index: 10;
   overflow-y: auto;
+  z-index: 10;
 
   transform: translateX(${(p) => (p.open ? '0' : '-100%')});
   transition: transform 0.3s ease-in-out;

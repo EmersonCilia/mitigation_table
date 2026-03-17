@@ -90,3 +90,4 @@ export type Group = {
 }
 
 export type GroupsMap = Record<string, Group>
+export type ColorState = 'green' | 'red' | 'default'

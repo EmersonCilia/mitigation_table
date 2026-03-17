@@ -1,20 +1,25 @@
+import React, { JSX, useMemo, useCallback } from 'react'
+import { useParams } from 'react-router-dom'
+
 import {
   deleteRow,
   updateCheckbox,
   updateDamageType
 } from '../../firebase/fights'
+
 import { jobSkills } from '../Data/JobSkills'
+import { mitigationsData } from '../Data/MitigationData'
+
 import { Row, Scrolable, Sticky } from '../../Pages/Spreadsheet/Styles'
 import * as S from './styles'
+
 import calculateMitigation from '../../Utils/mitigationCalculator'
-import trashCan from '../../assets/trash_can.svg'
-import { useParams } from 'react-router-dom'
-import { mitigationsData } from '../Data/MitigationData'
-import { toSeconds } from '../../Utils/ToSeconds'
-import { JSX } from 'react'
-import { RowStructure } from '../../Utils/types'
 import { resolveMitigationState } from '../../Utils/resolveMitigationActive'
+import { toSeconds } from '../../Utils/ToSeconds'
+
+import { ColorState, RowStructure } from '../../Utils/types'
 import { colors } from '../../styles'
+import trashCan from '../../assets/trash_can.svg'
 
 const DataRow = ({
   row,
@@ -23,13 +28,45 @@ const DataRow = ({
   skillVisibility,
   visibleJobs
 }: RowStructure): JSX.Element | null => {
+  /**
+   * Route params (can be undefined on first render)
+   */
   const { groupId, fightId } = useParams<{
-    groupId: string
-    fightId: string
+    groupId?: string
+    fightId?: string
   }>()
+
+  /**
+   * Always work with safe values.
+   * This avoids conditional hooks and hook-order violations.
+   */
+  const safeGroupId = groupId ?? ''
+  const safeFightId = fightId ?? ''
+
+  /**
+   * Stable key used by Firestore updates
+   */
   const timerKey = row.timer.toString()
 
-  const getMechanicColor = (type?: string) => {
+  /**
+   * Convert timer string (e.g. "01:23") into seconds
+   *
+   * Why useMemo?
+   * - Parsing time is pure
+   * - Used multiple times
+   * - No reason to recompute on every render
+   */
+  const currentTime = useMemo(() => {
+    return toSeconds(row.timer)
+  }, [row.timer])
+
+  /**
+   * Maps mechanic type → background color
+   *
+   * useCallback keeps the function identity stable,
+   * so React.memo children don't re-render unnecessarily.
+   */
+  const getMechanicColor = useCallback((type?: string) => {
     switch (type) {
       case 'tankbuster':
         return colors.blue
@@ -37,86 +74,127 @@ const DataRow = ({
         return colors.red
       case 'debuff':
         return colors.green
-      case 'mechanic':
       default:
         return colors.background
     }
-  }
+  }, [])
 
-  if (!groupId || !fightId) return null
+  /**
+   * PRECOMPUTE ALL mitigation states.
+   *
+   * What this does:
+   * - Iterates jobs + skills ONCE
+   * - Computes resolveMitigationState ONCE
+   * - Stores results in a flat lookup table
+   *
+   * What this avoids:
+   * Re-running heavy logic inside JSX
+   * Mutating objects during render
+   * Nested loops during every re-render
+   */
+  const mitigationStateMap = useMemo(() => {
+    const map: Record<string, ColorState> = {}
 
-  const handleCheckboxChange = async (checkboxKey: string, value: boolean) => {
-    await updateCheckbox(groupId, fightId, timerKey, checkboxKey, value)
-  }
+    Object.entries(jobSkills).forEach(([jobName, skills], jobIndex) => {
+      // Skip jobs that are not active or visible
+      if (!activeJobs.includes(jobName)) return
+      if (!visibleJobs.includes(jobName)) return
 
-  // Parse checkbox keys into a structure for mitigation
-  // This object will end up looking like:
-  // {
-  //   "WAR": {
-  //      "Vengeance": true,
-  //       "Rampart": true
-  //  },
-  //   "PLD": {
-  //       "Sentinel": true
-  //   }
-  // }
-  //
-  // Meaning: which mitigations are ACTIVE at this exact row time
-  const activeMitigations: Record<string, Record<string, boolean>> = {}
+      const jobIndexStr = String(jobIndex)
 
-  // Loop through all jobs and their skills
-  Object.entries(jobSkills).forEach(([jobName, skills], jobIndex) => {
-    if (!activeJobs.includes(jobName)) return null
+      skills.forEach((skill) => {
+        // Respect UI visibility filters
+        if (
+          (skill.type === 'singleMitigation' &&
+            !skillVisibility.singleMitigation) ||
+          (skill.type === 'healing' && !skillVisibility.healing)
+        ) {
+          return
+        }
 
-    const jobIndexStr = String(jobIndex)
+        const activationTimes = activations?.[jobIndexStr]?.[skill.alt] ?? []
 
-    const currentTime = toSeconds(row.timer) // This is the "current moment" in the fight (e.g. "01:23")
+        const mitInfo =
+          mitigationsData[skill.alt as keyof typeof mitigationsData]
 
-    // Loop through every skill of this job
-    skills.forEach((skill) => {
-      // Get all recorded activation times for this skill
-      // Example: [30, 120, 210]
-      // If none exist, default to an empty array
-      const activationTimes = activations?.[jobIndexStr]?.[skill.alt] ?? []
-
-      // Get mitigation metadata from mitigationData
-      const mitInfo = mitigationsData[skill.alt as keyof typeof mitigationsData]
-
-      // Determine the current state of this skill at this time
-      const colorstate = resolveMitigationState(
-        currentTime,
-        activationTimes,
-        mitInfo?.duration ?? 0,
-        mitInfo?.cooldown ?? 0
-      )
-
-      // If the mitigation is ACTIVE right now
-      if (colorstate === 'green') {
-        // Ensure this job exists in the activeMitigations object
-        activeMitigations[jobName] ??= {}
-
-        // Mark this specific mitigation as active
-        activeMitigations[jobName][skill.alt] = true
-      }
+        // Compute the color state ONCE
+        map[`${jobName}-${skill.alt}`] = resolveMitigationState(
+          currentTime,
+          activationTimes,
+          mitInfo?.duration ?? 0,
+          mitInfo?.cooldown ?? 0
+        ) as ColorState
+      })
     })
-  })
+
+    return map
+  }, [activeJobs, visibleJobs, activations, currentTime, skillVisibility])
+
+  /**
+   * Build the activeMitigations structure used by
+   * calculateMitigation().
+   *
+   * This is DERIVED DATA:
+   * - no side effects
+   * - no mutations during render
+   */
+  const activeMitigations = useMemo(() => {
+    const result: Record<string, Record<string, boolean>> = {}
+
+    Object.entries(mitigationStateMap).forEach(([key, state]) => {
+      if (state !== 'green') return
+
+      const [jobName, skillAlt] = key.split('-')
+
+      result[jobName] ??= {}
+      result[jobName][skillAlt] = true
+    })
+
+    return result
+  }, [mitigationStateMap])
+
+  /**
+   * Checkbox handler
+   *
+   * useCallback prevents re-creating the function
+   * for every checkbox on every render.
+   */
+  const handleCheckboxChange = useCallback(
+    async (checkboxKey: string, value: boolean) => {
+      if (!safeGroupId || !safeFightId) return
+
+      await updateCheckbox(
+        safeGroupId,
+        safeFightId,
+        timerKey,
+        checkboxKey,
+        value
+      )
+    },
+    [safeGroupId, safeFightId, timerKey]
+  )
+
+  /**
+   * EARLY RETURN MUST COME AFTER ALL HOOKS
+   */
+  if (!safeGroupId || !safeFightId) return null
 
   return (
     <Row>
       <Sticky>
         <S.TrashCan
-          style={{
-            borderBottom: '1px solid black'
-          }}
+          style={{ borderBottom: '1px solid black' }}
           src={trashCan}
           alt="trashCan"
           onClick={() => {
             if (window.confirm('Delete this row?')) {
-              deleteRow(groupId, fightId, row.timer)
+              deleteRow(safeGroupId, safeFightId, row.timer)
             }
           }}
         />
+
         <S.TextArea style={{ width: '56px' }} value={row.timer} readOnly />
+
         <S.TextArea
           value={row.skill}
           style={{
@@ -147,8 +225,8 @@ const DataRow = ({
               value={row.type}
               onChange={(e) =>
                 updateDamageType(
-                  groupId,
-                  fightId,
+                  safeGroupId,
+                  safeFightId,
                   row.timer,
                   e.target.value as 'magical' | 'physical'
                 )
@@ -160,20 +238,23 @@ const DataRow = ({
           </>
         )}
 
-        {/* Only render the jobs selected for this fight */}
         {Object.entries(jobSkills).map(([jobName, skills], jobIndex) => {
-          if (!activeJobs.includes(jobName)) return null // skip hidden jobs
+          if (!activeJobs.includes(jobName)) return null
           if (!visibleJobs.includes(jobName)) return null
 
           return (
             <S.Job key={jobName} style={{ display: 'flex' }}>
               {skills
                 .filter((skill) => {
-                  if (skill.type === 'singleMitigation') {
-                    return skillVisibility.singleMitigation
+                  if (
+                    skill.type === 'singleMitigation' &&
+                    !skillVisibility.singleMitigation
+                  ) {
+                    return false
                   }
-                  if (skill.type === 'healing') {
-                    return skillVisibility.healing
+
+                  if (skill.type === 'healing' && !skillVisibility.healing) {
+                    return false
                   }
 
                   return true
@@ -181,24 +262,9 @@ const DataRow = ({
                 .map((skill) => {
                   const checkboxKey = `${row.timer}-${jobIndex}-${skill.alt}`
                   const isChecked = row.checkbox?.[checkboxKey] || false
-                  const jobIndexStr = String(jobIndex)
 
-                  const activationTimes =
-                    activations?.[jobIndexStr]?.[skill.alt] ?? []
-
-                  const mitInfo =
-                    mitigationsData[skill.alt as keyof typeof mitigationsData]
-
-                  const colorstate = resolveMitigationState(
-                    toSeconds(row.timer),
-                    activationTimes,
-                    mitInfo?.duration ?? 0,
-                    mitInfo?.cooldown ?? 0
-                  )
-                  if (colorstate === 'green') {
-                    activeMitigations[jobName] ??= {}
-                    activeMitigations[jobName][skill.alt] = true
-                  }
+                  const colorstate =
+                    mitigationStateMap[`${jobName}-${skill.alt}`] ?? 'default'
 
                   return (
                     <S.CheckboxWrapper
@@ -225,4 +291,10 @@ const DataRow = ({
   )
 }
 
-export default DataRow
+/**
+ * React.memo prevents re-rendering this row
+ * unless its props actually change.
+ *
+ * VERY important for tables / spreadsheets.
+ */
+export default React.memo(DataRow)
