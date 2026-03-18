@@ -115,7 +115,7 @@ export function listenForRows(
 
     const rows: RowData[] = Object.entries(data).map(([id, values]) => ({
       id: id,
-      timer: values.timer ?? '',
+      timer: values.timer ?? id,
       skill: values.skill ?? '',
       damagetotal: values.damagetotal ?? '',
       type: values.type ?? 'magical',
