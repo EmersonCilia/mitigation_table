@@ -84,15 +84,15 @@ const Spreadsheet = () => {
     if (!timer || !skill) return
 
     const timerToSave = getSaveFormat(timer)
-
-    await saveRow(groupId, fightId, timerToSave, {
+    const cryptoid = crypto.randomUUID()
+    await saveRow(groupId, fightId, cryptoid, {
+      timer: timerToSave,
       skill,
       damagetotal: damageTotal || 0,
       type: 'magical',
       mechanicType: mechanicType,
       checkbox: {}
     })
-
     setTimer('')
     setSkill('')
     setDamageTotal(0)
@@ -161,20 +161,16 @@ const Spreadsheet = () => {
     rows.forEach((r) => {
       Object.entries(r.checkbox || {}).forEach(([key, checked]) => {
         if (!checked) return
-        // key format: `${timer}-${jobIndex}-${mitName}`
-        const parts = key.split('-')
-        const timer = parts[0]
-        const jobIndex = parts[1] // keep as string for lookup
-        const mitName = parts.slice(2).join('-') // in case mitName contains dashes
+
+        const [rowId, jobIndex, mitName] = key.split('|')
 
         if (!activations[jobIndex]) activations[jobIndex] = {}
         if (!activations[jobIndex][mitName]) activations[jobIndex][mitName] = []
 
-        activations[jobIndex][mitName].push(toSeconds(timer))
+        activations[jobIndex][mitName].push(toSeconds(r.timer))
       })
     })
 
-    // sort each array ascending (so we can binary-search or reverse-iterate)
     Object.values(activations).forEach((byJob) => {
       Object.values(byJob).forEach((arr) => arr.sort((a, b) => a - b))
     })
@@ -184,7 +180,6 @@ const Spreadsheet = () => {
 
   const activations = buildActivations(rows)
   if (!groupId || !fightId) {
-    console.log(groupId, fightId)
     return <div>Invalid fight</div>
   }
 

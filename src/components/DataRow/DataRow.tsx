@@ -46,8 +46,7 @@ const DataRow = ({
   /**
    * Stable key used by Firestore updates
    */
-  const timerKey = row.timer.toString()
-
+  const rowKey = row.id
   /**
    * Convert timer string (e.g. "01:23") into seconds
    *
@@ -98,7 +97,6 @@ const DataRow = ({
     Object.entries(jobSkills).forEach(([jobName, skills], jobIndex) => {
       // Skip jobs that are not active or visible
       if (!activeJobs.includes(jobName)) return
-      if (!visibleJobs.includes(jobName)) return
 
       const jobIndexStr = String(jobIndex)
 
@@ -116,7 +114,6 @@ const DataRow = ({
 
         const mitInfo =
           mitigationsData[skill.alt as keyof typeof mitigationsData]
-
         // Compute the color state ONCE
         map[`${jobName}-${skill.alt}`] = resolveMitigationState(
           currentTime,
@@ -128,7 +125,7 @@ const DataRow = ({
     })
 
     return map
-  }, [activeJobs, visibleJobs, activations, currentTime, skillVisibility])
+  }, [activeJobs, activations, currentTime, skillVisibility])
 
   /**
    * Build the activeMitigations structure used by
@@ -163,15 +160,9 @@ const DataRow = ({
     async (checkboxKey: string, value: boolean) => {
       if (!safeGroupId || !safeFightId) return
 
-      await updateCheckbox(
-        safeGroupId,
-        safeFightId,
-        timerKey,
-        checkboxKey,
-        value
-      )
+      await updateCheckbox(safeGroupId, safeFightId, rowKey, checkboxKey, value)
     },
-    [safeGroupId, safeFightId, timerKey]
+    [safeGroupId, safeFightId, rowKey]
   )
 
   /**
@@ -188,7 +179,7 @@ const DataRow = ({
           alt="trashCan"
           onClick={() => {
             if (window.confirm('Delete this row?')) {
-              deleteRow(safeGroupId, safeFightId, row.timer)
+              deleteRow(safeGroupId, safeFightId, row.id)
             }
           }}
         />
@@ -227,7 +218,7 @@ const DataRow = ({
                 updateDamageType(
                   safeGroupId,
                   safeFightId,
-                  row.timer,
+                  row.id,
                   e.target.value as 'magical' | 'physical'
                 )
               }
@@ -241,7 +232,6 @@ const DataRow = ({
         {Object.entries(jobSkills).map(([jobName, skills], jobIndex) => {
           if (!activeJobs.includes(jobName)) return null
           if (!visibleJobs.includes(jobName)) return null
-
           return (
             <S.Job key={jobName} style={{ display: 'flex' }}>
               {skills
@@ -256,16 +246,18 @@ const DataRow = ({
                   if (skill.type === 'healing' && !skillVisibility.healing) {
                     return false
                   }
-
+                  console.log({
+                    rowTimer: row.timer,
+                    activeMitigations
+                  })
+                  console.log('activations', activations)
                   return true
                 })
                 .map((skill) => {
-                  const checkboxKey = `${row.timer}-${jobIndex}-${skill.alt}`
+                  const checkboxKey = `${row.id}|${jobIndex}|${skill.alt}`
                   const isChecked = row.checkbox?.[checkboxKey] || false
-
                   const colorstate =
                     mitigationStateMap[`${jobName}-${skill.alt}`] ?? 'default'
-
                   return (
                     <S.CheckboxWrapper
                       key={checkboxKey}

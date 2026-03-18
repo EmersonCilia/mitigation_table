@@ -1,3 +1,4 @@
+import { toSeconds } from '../Utils/ToSeconds'
 import { RowData } from '../Utils/types'
 import { db } from './index'
 import { ref, set, get, push, onValue, remove, update } from 'firebase/database'
@@ -26,19 +27,12 @@ export type CheckboxMap = {
 }
 
 export type FightSkill = {
+  timer: string
   skill: string
   damagetotal: number
   type: string
   mechanicType: string
   checkbox: CheckboxMap
-}
-
-export type Fight = {
-  id: string
-  name: string
-  skills: {
-    [skillName: string]: FightSkill
-  }
 }
 
 /* ---------------- CREATE FIGHT ---------------- */
@@ -61,14 +55,11 @@ export async function createFight(groupId: string, name: string) {
 export async function saveRow(
   groupId: string,
   fightId: string,
-  timer: string,
+  id: string,
   data: FightSkill
 ) {
   return authorizedWrite(groupId, async () => {
-    const skillRef = ref(
-      db,
-      `groups/${groupId}/fights/${fightId}/skills/${timer}`
-    )
+    const skillRef = ref(db, `groups/${groupId}/fights/${fightId}/skills/${id}`)
     await set(skillRef, data)
   })
 }
@@ -92,14 +83,14 @@ export async function getOneFight(groupId: string, fightId: string) {
 export async function updateCheckbox(
   groupId: string,
   fightId: string,
-  skillName: string,
+  skillId: string,
   checkboxKey: string,
   value: boolean
 ) {
   return authorizedWrite(groupId, async () => {
     const refCheckbox = ref(
       db,
-      `groups/${groupId}/fights/${fightId}/skills/${skillName}/checkbox/${checkboxKey}`
+      `groups/${groupId}/fights/${fightId}/skills/${skillId}/checkbox/${checkboxKey}`
     )
     await set(refCheckbox, value)
   })
@@ -122,15 +113,16 @@ export function listenForRows(
       return
     }
 
-    const rows: RowData[] = Object.entries(data).map(([timer, values]) => ({
-      id: timer,
-      timer,
+    const rows: RowData[] = Object.entries(data).map(([id, values]) => ({
+      id: id,
+      timer: values.timer ?? '',
       skill: values.skill ?? '',
       damagetotal: values.damagetotal ?? '',
       type: values.type ?? 'magical',
       checkbox: values.checkbox ?? {},
       mechanicType: values.mechanicType
     }))
+    rows.sort((a, b) => toSeconds(a.timer) - toSeconds(b.timer))
 
     callback(rows)
   })
@@ -141,13 +133,13 @@ export function listenForRows(
 export async function updateDamageType(
   groupId: string,
   fightId: string,
-  timer: string,
+  id: string,
   type: 'magical' | 'physical'
 ) {
   return authorizedWrite(groupId, async () => {
     const typeRef = ref(
       db,
-      `groups/${groupId}/fights/${fightId}/skills/${timer}/type`
+      `groups/${groupId}/fights/${fightId}/skills/${id}/type`
     )
     await set(typeRef, type)
   })
@@ -156,12 +148,12 @@ export async function updateDamageType(
 export async function deleteRow(
   groupId: string,
   fightId: string,
-  timerKey: string
+  idkey: string
 ) {
   return authorizedWrite(groupId, async () => {
     const rowRef = ref(
       db,
-      `groups/${groupId}/fights/${fightId}/skills/${timerKey}`
+      `groups/${groupId}/fights/${fightId}/skills/${idkey}`
     )
     await remove(rowRef)
   })

@@ -91,3 +91,73 @@ export type Group = {
 
 export type GroupsMap = Record<string, Group>
 export type ColorState = 'green' | 'red' | 'default'
+
+export type ActionType = 'gcd' | 'ogcd'
+
+export interface AddSpell {
+  addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
+}
+export interface addDowntime {
+  addDowntime: (Downtime: Omit<Downtime, 'id' | 'start'>) => void
+}
+
+export interface PlayerState {
+  astralFire: number
+  umbralIce: number
+  umbralHearts: number
+  paradox: boolean
+  thunderhead: boolean
+  polyglot: number
+  polyglotTimer: number
+  astralGauge: number
+  fireStarter: boolean
+  mana: number
+  highThunderDuration: number
+  highThunderTickTimer: number
+  highThunderDotPotency: number
+  swiftcast: number
+  triplecast: number
+  triplecastDuration: number
+  leylines: number
+}
+
+export interface Action {
+  id: string
+  name: string
+  icon: string | null
+  start: number
+  cast: number
+  type: ActionType
+  potency: number
+  requiresTarget: boolean
+  recast: number
+  cooldown: number
+  manacost: number
+  dotPotency?: number
+  dotDuration?: number
+  dotInterval?: number
+}
+
+export interface Downtime {
+  id: string
+  start: number
+  duration: number
+}
+export const actions: Action[] = []
+
+export const downtimes: Downtime[] = [
+  {
+    id: 'dt1',
+    start: 5,
+    duration: 2
+  },
+  {
+    id: 'dt2',
+    start: 9,
+    duration: 3.4
+  }
+]
+
+export const PIXELS_PER_SECOND = 50
+export const ROW_DURATION = 15
+export const OFFSET = 30
