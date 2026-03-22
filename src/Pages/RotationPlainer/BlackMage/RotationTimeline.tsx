@@ -27,6 +27,7 @@ export default function RotationTimeline() {
   const lastSavedDowntimes = useRef<Downtime[]>([])
   const lastSavedSpellSpeed = useRef<number>(spellSpeed)
   const lastSavedTimelineStart = useRef<number>(timelineStart)
+  const [isLoaded, setIsLoaded] = useState(false)
   const [bossSkills, setBossSkills] = useState<
     { name: string; start: number }[]
   >([])
@@ -47,15 +48,34 @@ export default function RotationTimeline() {
   useEffect(() => {
     if (!groupId || !fightId || !jobId) return
 
-    const unsubscribe = listenForRotation(
-      groupId,
-      fightId,
-      jobId,
-      (actionsFromDB) => {
-        setActions(actionsFromDB)
-        lastSavedActions.current = actionsFromDB // sync lastSavedActions
+    let unsubscribe: (() => void) | undefined
+
+    async function loadRotation() {
+      if (!groupId || !fightId || !jobId) return
+
+      const data = await getRotation(groupId, fightId, jobId)
+
+      if (data) {
+        setActions(data.actions || [])
+        setDowntimes(data.downtimes || [])
+        setSpellSpeed(data.spellSpeed || 420)
+        setTimelineStart(data.timelineStart || -3.5)
       }
-    )
+
+      unsubscribe = listenForRotation(
+        groupId,
+        fightId,
+        jobId,
+        (actionsFromDB) => {
+          setActions(actionsFromDB)
+          lastSavedActions.current = actionsFromDB
+        }
+      )
+
+      setIsLoaded(true)
+    }
+
+    loadRotation()
 
     return () => unsubscribe && unsubscribe()
   }, [groupId, fightId, jobId])
@@ -74,7 +94,7 @@ export default function RotationTimeline() {
     return () => unsubscribe && unsubscribe()
   }, [groupId, fightId, jobId])
   useEffect(() => {
-    if (!groupId || !fightId || !jobId) return
+    if (!isLoaded || !groupId || !fightId || !jobId) return
 
     const save = async () => {
       // only save if something actually changed
@@ -100,7 +120,16 @@ export default function RotationTimeline() {
     }
 
     save()
-  }, [actions, downtimes, spellSpeed, timelineStart, groupId, fightId, jobId])
+  }, [
+    actions,
+    downtimes,
+    spellSpeed,
+    timelineStart,
+    groupId,
+    fightId,
+    jobId,
+    isLoaded
+  ])
   useEffect(() => {
     if (!groupId || !fightId) return
 
