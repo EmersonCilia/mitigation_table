@@ -75,7 +75,7 @@ export default function RotationTimeline() {
       }
 
       autoSave()
-    }, 1000)
+    }, 500)
 
     return () => clearTimeout(timeout)
   }, [
