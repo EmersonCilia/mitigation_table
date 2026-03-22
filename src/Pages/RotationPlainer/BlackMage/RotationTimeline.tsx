@@ -116,12 +116,14 @@ export default function RotationTimeline() {
     const lastGCD = [...actions].reverse().find((a) => a.type === 'gcd')
 
     if (type === 'ogcd') {
+      // OGCDs only care about animation lock, not gcd
       return lastAction.start + lastAction.cast
     }
 
-    if (!lastGCD) return timelineStart
-
-    const gcdReady = lastGCD.start + Math.max(lastGCD.cast, lastGCD.recast)
+    // GCDs must respect last GCD and animation lock of last action (even if OGCD)
+    const gcdReady = lastGCD
+      ? lastGCD.start + Math.max(lastGCD.cast, lastGCD.recast)
+      : timelineStart
     const animationLockEnd = lastAction.start + lastAction.cast
 
     return Math.max(gcdReady, animationLockEnd)
