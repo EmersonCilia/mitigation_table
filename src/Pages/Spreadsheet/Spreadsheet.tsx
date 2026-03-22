@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 import {
   listenForActiveJobs,
+  listenForRotation,
   listenForRows,
   saveRow,
   updateActiveJobs
@@ -20,7 +21,7 @@ import add from '../../assets/add.svg'
 import * as S from './Styles'
 import { Button } from '../../styles'
 import { allJobs } from '../../components/Data/JobSkills'
-import { RowData } from '../../Utils/types'
+import { Action, MechanicType, RowData } from '../../Utils/types'
 
 const Spreadsheet = () => {
   const [rows, setRows] = useState<RowData[]>([])
@@ -30,11 +31,13 @@ const Spreadsheet = () => {
   const [activeJobs, setActiveJobs] = useState<string[]>([])
   const isMobile = window.innerWidth <= 480
   const [asideOpen, setAsideOpen] = useState(!isMobile)
-  const [mechanicType, setMechanicType] = useState('mechanic')
+  const [mechanicType, setMechanicType] = useState<MechanicType>('mechanic')
+  const [dbRotationActions, setDbRotationActions] = useState<Action[]>([])
   const [visibleJobs, setVisibleJobs] = useState<string[]>(() => {
     const stored = localStorage.getItem('visibleJobs')
     return stored ? JSON.parse(stored) : []
   })
+
   const [skillVisibility, setSkillVisibility] = useState(() => {
     const stored = localStorage.getItem('skillVisibility')
     return stored
@@ -46,10 +49,28 @@ const Spreadsheet = () => {
         }
   })
 
-  const { groupId, fightId } = useParams<{
-    groupId: string
-    fightId: string
-  }>()
+  const { groupId, fightId } = useParams()
+
+  useEffect(() => {
+    if (!groupId || !fightId) return
+
+    const unsubscribes: (() => void)[] = []
+
+    allJobs.forEach((job) => {
+      const unsub = listenForRotation(groupId, fightId, job.job, (actions) => {
+        // merge actions from all jobs
+        setDbRotationActions((prev) => {
+          const otherActions = prev.filter((a) => a.job !== job.job)
+          return [...otherActions, ...actions]
+        })
+      })
+      unsubscribes.push(unsub)
+    })
+
+    return () => {
+      unsubscribes.forEach((unsub) => unsub())
+    }
+  }, [groupId, fightId])
 
   useEffect(() => {
     if (!groupId || !fightId) return
@@ -155,30 +176,43 @@ const Spreadsheet = () => {
    *   ...
    * }
    */
-  const buildActivations = (rows: RowData[]) => {
+  const buildActivations = (rows: RowData[], rotation: Action[]) => {
     const activations: Record<string, Record<string, number[]>> = {}
 
+    // Add checked boxes first (existing logic)
     rows.forEach((r) => {
       Object.entries(r.checkbox || {}).forEach(([key, checked]) => {
         if (!checked) return
-
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const [rowId, jobIndex, mitName] = key.split('|')
-
-        if (!activations[jobIndex]) activations[jobIndex] = {}
-        if (!activations[jobIndex][mitName]) activations[jobIndex][mitName] = []
-
+        activations[jobIndex] ??= {}
+        activations[jobIndex][mitName] ??= []
         activations[jobIndex][mitName].push(toSeconds(r.timer))
       })
     })
+    // Merge in rotation actions automatically
+    rotation.forEach((action) => {
+      // Match action name → mitigation skill alt
+      const mitName = action.name // you can map this if different
+      const jobIndex = String(
+        allJobs.findIndex(
+          (j) => j.job.toLowerCase() === action.job?.toLowerCase()
+        )
+      )
+      if (!jobIndex) return
+      activations[jobIndex] ??= {}
+      activations[jobIndex][mitName] ??= []
+      activations[jobIndex][mitName].push(action.start)
+    })
 
+    // Sort each array
     Object.values(activations).forEach((byJob) => {
       Object.values(byJob).forEach((arr) => arr.sort((a, b) => a - b))
     })
-
     return activations
   }
 
-  const activations = buildActivations(rows)
+  const activations = buildActivations(rows, dbRotationActions)
   if (!groupId || !fightId) {
     return <div>Invalid fight</div>
   }
@@ -191,6 +225,12 @@ const Spreadsheet = () => {
       >
         <img src={arrow} alt="open menu" />
       </S.MobileHamburger>
+      <S.AsideButton
+        open={asideOpen}
+        onClick={() => setAsideOpen((prev) => !prev)}
+      >
+        <img src={arrow} alt="toggle sidebar" />
+      </S.AsideButton>
       <S.AsideContainer open={asideOpen}>
         <S.AsidePanel open={asideOpen}>
           <Aside
@@ -203,13 +243,6 @@ const Spreadsheet = () => {
             setVisibleJobs={setVisibleJobs}
           />
         </S.AsidePanel>
-
-        <S.AsideButton
-          open={asideOpen}
-          onClick={() => setAsideOpen((prev) => !prev)}
-        >
-          <img src={arrow} alt="toggle sidebar" />
-        </S.AsideButton>
       </S.AsideContainer>
 
       <S.Container open={asideOpen}>
@@ -237,12 +270,17 @@ const Spreadsheet = () => {
               {allJobs
                 .filter((j) => activeJobs.includes(j.job))
                 .map((job) => (
-                  <Job
+                  <Link
                     key={job.id}
-                    job={job.job}
-                    skillVisibility={skillVisibility}
-                    visibleJobs={visibleJobs}
-                  />
+                    to={`/${groupId}/${fightId}/${job.job}`}
+                    style={{ width: '100%', textDecoration: 'none' }}
+                  >
+                    <Job
+                      job={job.job}
+                      skillVisibility={skillVisibility}
+                      visibleJobs={visibleJobs}
+                    />
+                  </Link>
                 ))}
             </S.Scrolable>
           </S.TableHeader>
@@ -309,8 +347,9 @@ const Spreadsheet = () => {
                     id="mechanicType"
                     name="mechanicType"
                     value={mechanicType}
-                    onChange={(e) => setMechanicType(e.target.value)}
-                    style={{ maxWidth: '150px' }}
+                    onChange={(e) =>
+                      setMechanicType(e.target.value as MechanicType)
+                    }
                   >
                     <option value="raidwide">raidwide</option>
                     <option value="debuff">debuff</option>

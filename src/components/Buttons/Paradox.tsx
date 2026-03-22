@@ -37,7 +37,8 @@ export default function Paradox({
             recast: recast * leylinesModifier,
             requiresTarget: true,
             cooldown: 0,
-            manacost: 1600
+            manacost: 1600,
+            job: 'BLM'
           })
         }
       >

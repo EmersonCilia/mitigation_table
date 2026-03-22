@@ -63,7 +63,8 @@ export default function FireIII({
           recast: recast * leylinesModifier,
           requiresTarget: true,
           cooldown: 0,
-          manacost: cost
+          manacost: cost,
+          job: 'BLM'
         })
       }
     >

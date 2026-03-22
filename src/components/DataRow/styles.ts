@@ -21,7 +21,7 @@ export const Job = styled.div`
   border: solid 2px ${colors.borders};
   justify-content: center;
   align-items: center;
-  min-width: 40px;
+  min-width: 60px;
   background-color: ${colors.background};
   height: 52px;
 `
@@ -41,7 +41,7 @@ export const OptionSelection = styled.option`
 export const CheckboxWrapper = styled.div<{
   $colorstate?: 'default' | 'green' | 'red'
 }>`
-  padding: 14px 0px;
+  padding: 14px 4px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -57,7 +57,6 @@ export const CheckboxWrapper = styled.div<{
 `
 
 export const Checkbox = styled.input`
-  margin: auto 4px;
   width: 20px;
   height: 20px;
   cursor: pointer;
@@ -66,6 +65,6 @@ export const TrashCan = styled.img`
   background: ${colors.background};
   width: 20px;
   cursor: pointer;
-  height: 50px;
+  height: 52px;
   border: solid 1px ${colors.borders};
 `

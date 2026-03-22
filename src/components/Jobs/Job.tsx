@@ -1,5 +1,6 @@
 import { jobSkills, JobKey } from '../Data/JobSkills'
 import { Jobs, JobSkills, SkillsRow } from '../../styles'
+import linkArrow from '../../assets/right-external-arrow-of-a-square-svgrepo-com.svg'
 
 type Props = {
   job: JobKey
@@ -24,7 +25,10 @@ const Job = ({ job, skillVisibility, visibleJobs }: Props) => {
 
   return (
     <Jobs>
-      <p>{job}</p>
+      <p>
+        {job}{' '}
+        <img src={linkArrow} alt="" style={{ width: '12px', height: '12px' }} />
+      </p>
       <SkillsRow>
         {visibleSkills.map((skill) => (
           <JobSkills key={skill.alt} src={skill.src} alt={skill.alt} />

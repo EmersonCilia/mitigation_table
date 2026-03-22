@@ -54,7 +54,8 @@ export default function FlareStar({
             recast: recast * leylinesModifier,
             requiresTarget: true,
             cooldown: 0,
-            manacost: 0
+            manacost: 0,
+            job: 'BLM'
           })
         }
       >

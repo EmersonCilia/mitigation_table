@@ -92,7 +92,7 @@ export type Group = {
 export type GroupsMap = Record<string, Group>
 export type ColorState = 'green' | 'red' | 'default'
 
-export type ActionType = 'gcd' | 'ogcd'
+export type ActionType = 'gcd' | 'ogcd' | 'bossSkill'
 
 export interface AddSpell {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
@@ -136,6 +136,7 @@ export interface Action {
   dotPotency?: number
   dotDuration?: number
   dotInterval?: number
+  job: string
 }
 
 export interface Downtime {
@@ -145,18 +146,7 @@ export interface Downtime {
 }
 export const actions: Action[] = []
 
-export const downtimes: Downtime[] = [
-  {
-    id: 'dt1',
-    start: 5,
-    duration: 2
-  },
-  {
-    id: 'dt2',
-    start: 9,
-    duration: 3.4
-  }
-]
+export const downtimes: Downtime[] = []
 
 export const PIXELS_PER_SECOND = 50
 export const ROW_DURATION = 15

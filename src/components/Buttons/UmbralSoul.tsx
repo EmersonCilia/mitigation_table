@@ -30,7 +30,8 @@ export default function UmbralSoul({
             recast: recast * leylinesModifier,
             requiresTarget: false,
             cooldown: 0,
-            manacost: 0
+            manacost: 0,
+            job: 'BLM'
           })
         }
       >

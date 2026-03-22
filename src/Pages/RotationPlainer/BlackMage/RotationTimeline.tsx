@@ -1,16 +1,107 @@
 import { useState, useEffect, useMemo } from 'react'
-import Timeline from '../components/Timeline/Timeline'
-import { type Action, type ActionType, type Downtime } from '../Utils/types'
-import SpellBar from '../components/SpellBar/SpellBar'
-import { simulate } from '../Utils/simulation'
+import Timeline from '../../../components/Timeline/Timeline'
+import {
+  type Action,
+  type ActionType,
+  type Downtime
+} from '../../../Utils/types'
+import SpellBar from '../../../components/SpellBar/SpellBar'
+import { simulate } from '../../../Utils/simulation'
 import { PageDiv, TimelineDiv, TimelineInfo } from './styles'
-import Gauge from '../components/Gauge/gauge'
+import Gauge from '../../../components/Gauge/gauge'
+import {
+  getBossSkills,
+  getRotation,
+  listenForBossSkills,
+  saveRotation
+} from '../../../firebase/fights'
+import { Link, useParams } from 'react-router-dom'
 
 export default function RotationTimeline() {
   const [actions, setActions] = useState<Action[]>([])
   const [downtimes, setDowntimes] = useState<Downtime[]>([])
   const [timelineStart, setTimelineStart] = useState(-3.5)
   const [spellSpeed, setSpellSpeed] = useState(420)
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  const [bossSkills, setBossSkills] = useState<
+    { name: string; start: number }[]
+  >([])
+
+  const { groupId, fightId, jobId } = useParams<{
+    groupId: string
+    fightId: string
+    jobId: string
+  }>()
+
+  useEffect(() => {
+    if (!groupId || !fightId) return
+
+    const unsubscribe = listenForBossSkills(groupId, fightId, setBossSkills)
+
+    return () => unsubscribe && unsubscribe()
+  }, [groupId, fightId])
+  useEffect(() => {
+    async function loadRotation() {
+      if (!groupId || !fightId || !jobId) return
+
+      const data = await getRotation(groupId, fightId, jobId)
+
+      if (data) {
+        setActions(data.actions || [])
+        setDowntimes(data.downtimes || [])
+        setSpellSpeed(data.spellSpeed || 420)
+        setTimelineStart(data.timelineStart || -3.5)
+      }
+
+      setIsLoaded(true)
+    }
+
+    loadRotation()
+  }, [groupId, fightId, jobId])
+  useEffect(() => {
+    if (!isLoaded) return
+
+    const timeout = setTimeout(() => {
+      async function autoSave() {
+        if (!groupId || !fightId || !jobId) return
+
+        await saveRotation(groupId, fightId, jobId, {
+          spellSpeed,
+          timelineStart,
+          actions,
+          downtimes
+        })
+      }
+
+      autoSave()
+    }, 1000)
+
+    return () => clearTimeout(timeout)
+  }, [
+    groupId,
+    fightId,
+    jobId,
+    actions,
+    downtimes,
+    spellSpeed,
+    timelineStart,
+    isLoaded
+  ])
+  useEffect(() => {
+    if (!groupId || !fightId) return
+
+    const fetchBossSkills = async () => {
+      const skills = await getBossSkills(groupId, fightId)
+      setBossSkills(skills)
+    }
+
+    fetchBossSkills()
+  }, [groupId, fightId])
+  useEffect(() => {
+    window.addAction = addAction
+    window.addDowntime = addDowntime
+  }, [])
 
   function addAction(action: Action) {
     setActions((prev) => [...prev, action])
@@ -18,10 +109,6 @@ export default function RotationTimeline() {
   function addDowntime(downtime: Downtime) {
     setDowntimes((prev) => [...prev, downtime])
   }
-  useEffect(() => {
-    window.addAction = addAction
-    window.addDowntime = addDowntime
-  }, [])
   function getNextStart(type: ActionType) {
     if (actions.length === 0) return timelineStart
 
@@ -51,7 +138,7 @@ export default function RotationTimeline() {
 
     return isDuringDowntime(start) || isDuringDowntime(end)
   }
-  function addSpell(spell: Omit<Action, 'id' | 'start'>) {
+  function addSpell(spell: Omit<Action, 'id' | 'start'> & { job: string }) {
     const start = getNextStart(spell.type)
 
     if (isCastInvalid(start, spell.cast, spell.requiresTarget)) {
@@ -85,29 +172,27 @@ export default function RotationTimeline() {
 
     return gcd
   }
+
   const getGCD = (baseGCD: number) => calculateGCD(baseGCD, spellSpeed)
-
   const simulation = useMemo(() => simulate(actions), [actions])
-
   const playerState = simulation.state
   const totalPotency = simulation.totalPotency
-
   const rotationDuration = useMemo(() => {
     if (actions.length === 0) return 0
-
     const lastAction = actions[actions.length - 1]
     const endTime = lastAction.start + lastAction.cast
-
     return Math.max(endTime, 0)
   }, [actions])
-
   const pps = useMemo(() => {
     if (rotationDuration <= 0) return 0
     return totalPotency / rotationDuration
   }, [totalPotency, rotationDuration])
+
   return (
     <PageDiv>
-      <Gauge playerState={playerState} />
+      <div>
+        <Gauge playerState={playerState} />
+      </div>
       <TimelineDiv>
         <TimelineInfo>
           <p>Total Potency: {totalPotency.toFixed(2)}</p>
@@ -117,10 +202,14 @@ export default function RotationTimeline() {
         <Timeline
           actions={actions}
           downtimes={downtimes}
+          bossSkills={bossSkills}
           timelineStart={timelineStart}
         />
       </TimelineDiv>
       <div>
+        <Link to={`/${groupId}/${fightId}`} style={{ textDecoration: 'none' }}>
+          <button>go back</button>
+        </Link>
         <div>
           <input
             id="spellSpeedInput"

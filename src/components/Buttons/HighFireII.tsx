@@ -60,7 +60,8 @@ export default function HighFireII({
           recast: recast * leylinesModifier,
           requiresTarget: true,
           cooldown: 0,
-          manacost: manaCost
+          manacost: manaCost,
+          job: 'BLM'
         })
       }
     >

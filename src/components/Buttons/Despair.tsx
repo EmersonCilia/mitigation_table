@@ -48,7 +48,8 @@ export default function Despair({
             recast: recast * leylinesModifier,
             requiresTarget: true,
             cooldown: 0,
-            manacost: playerState.mana
+            manacost: playerState.mana,
+            job: 'BLM'
           })
         }
       >

@@ -50,7 +50,8 @@ export default function Flare({ addSpell, playerState, calculateGCD }: Flare) {
             recast: recast * leylinesModifier,
             requiresTarget: true,
             cooldown: 0,
-            manacost: playerState.mana
+            manacost: playerState.mana,
+            job: 'BLM'
           })
         }
       >

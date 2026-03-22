@@ -66,7 +66,8 @@ export const Jobs = styled.div`
   flex-direction: column;
   border: solid 2px ${colors.borders};
   background-color: ${colors.background};
-  min-width: 40px;
+  min-width: 60px;
+  height: 52px;
 `
 
 export const SkillsRow = styled.div`

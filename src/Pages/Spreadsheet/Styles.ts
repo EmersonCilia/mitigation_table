@@ -27,6 +27,8 @@ export const AsideContainer = styled.aside<{ open: boolean }>`
   position: fixed;
   display: flex;
   z-index: 20;
+  transform: translateX(${(p) => (p.open ? '0' : '-100%')});
+  transition: transform 0.3s ease-in-out;
 
   @media (max-width: 480px) {
     position: fixed;
@@ -59,15 +61,11 @@ export const AsidePanel = styled.div<{ open: boolean }>`
     height: auto;
     transform: translateY(${(p) => (p.open ? '0' : '-100%')});
   }
-
-  @media (max-width: 1400px) {
-    height: auto;
-  }
 `
 
 export const AsideButton = styled.button<{ open: boolean }>`
   position: absolute;
-  left: ${(p) => (p.open ? '210px' : '0')};
+  left: ${(p) => (p.open ? '300px' : '0')};
   transition: left 0.3s ease-in-out;
   z-index: 10;
   cursor: pointer;
@@ -104,7 +102,6 @@ export const MobileHamburger = styled.button<{ open: boolean }>`
 
 export const HeaderTitle = styled.h3`
   background-color: ${colors.gray};
-  height: 48px;
   width: 100px;
   flex: 0 0 auto;
   text-align: center;
@@ -116,12 +113,12 @@ export const Sticky = styled.div`
   display: flex;
   position: sticky;
   left: 0;
-  height: 48px;
+  height: 52px;
 `
 
 export const Scrolable = styled.div<{ $damageVisible: boolean }>`
   display: flex;
-  height: 48px;
+  height: 52px;
 `
 
 export const Row = styled.div`

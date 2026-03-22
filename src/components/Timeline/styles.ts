@@ -35,3 +35,27 @@ export const Row = styled.div`
   border: 1px solid #444;
   background-color: #121213;
 `
+export const BossSkillLine = styled.div`
+  position: absolute;
+  width: 1px;
+  height: 80%;
+  background: white;
+  z-index: 5;
+`
+export const BossSkillWrapper = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  top: 0;
+  width: 1px;
+`
+export const BossSkillName = styled.div`
+  color: white;
+  font-size: 10px;
+  text-align: center;
+  margin-top: 2px;
+  white-space: nowrap;
+  margin-top: auto;
+  margin-bottom: 15px;
+`

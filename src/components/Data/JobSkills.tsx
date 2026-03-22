@@ -123,7 +123,7 @@ import summonerIcon from '../../assets/summoner/Summoner_icon.png'
 
 import dragoonIcon from '../../assets/dragoon/Dragoon_icon.png'
 
-import blackMageIcon from '../../assets/black_mage/Black_Mage_icon.png'
+import blackMageIcon from '../../assets/BLM/Black_Mage_icon.png'
 
 import samuraiIcon from '../../assets/samurai/Samurai_icon.png'
 

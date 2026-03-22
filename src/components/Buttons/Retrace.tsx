@@ -35,7 +35,8 @@ export default function Retrace({
             requiresTarget: false,
             recast: 0,
             cooldown: cooldown,
-            manacost: 0
+            manacost: 0,
+            job: 'BLM'
           })
         }}
       >

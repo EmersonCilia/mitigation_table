@@ -53,7 +53,8 @@ export default function BlizardIII({
             manacost:
               playerState.astralFire === 0 && playerState.umbralIce === 0
                 ? 0
-                : 800
+                : 800,
+            job: 'BLM'
           })
         }
       >

@@ -14,13 +14,20 @@ interface Props {
   actions: Action[]
   downtimes: Downtime[]
   timelineStart: number
+  bossSkills: { name: string; start: number }[]
 }
 
-export default function Timeline({ actions, downtimes, timelineStart }: Props) {
+export default function Timeline({
+  actions,
+  downtimes,
+  timelineStart,
+  bossSkills
+}: Props) {
   const maxTime = Math.max(
     4,
     ...actions.map((a) => a.start + a.cast),
-    ...downtimes.map((d) => d.start + d.duration)
+    ...downtimes.map((d) => d.start + d.duration),
+    ...bossSkills.map((bs) => bs.start)
   )
 
   const timelineMaxTime = maxTime - timelineStart
@@ -103,6 +110,20 @@ export default function Timeline({ actions, downtimes, timelineStart }: Props) {
                   </S.Action>
                 )
               })}
+            {bossSkills.map((bs) => {
+              if (bs.start < rowStart || bs.start > rowEnd) return null
+
+              const left = OFFSET + (bs.start - rowStart) * PIXELS_PER_SECOND
+              return (
+                <S.BossSkillWrapper
+                  key={bs.name + '-' + row}
+                  style={{ left, height: ROW_HEIGHT }}
+                >
+                  <S.BossSkillLine title={bs.name} />
+                  <S.BossSkillName>{bs.name}</S.BossSkillName>
+                </S.BossSkillWrapper>
+              )
+            })}
           </S.Row>
         )
       })}

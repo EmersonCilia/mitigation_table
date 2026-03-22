@@ -30,7 +30,8 @@ export default function Foul({ addSpell, playerState, calculateGCD }: Foul) {
             recast: recast * leylinesModifier,
             requiresTarget: true,
             cooldown: 0,
-            manacost: 0
+            manacost: 0,
+            job: 'BLM'
           })
         }
       >

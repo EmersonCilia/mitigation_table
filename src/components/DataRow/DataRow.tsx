@@ -97,19 +97,10 @@ const DataRow = ({
     Object.entries(jobSkills).forEach(([jobName, skills], jobIndex) => {
       // Skip jobs that are not active or visible
       if (!activeJobs.includes(jobName)) return
-
       const jobIndexStr = String(jobIndex)
 
       skills.forEach((skill) => {
         // Respect UI visibility filters
-        if (
-          (skill.type === 'singleMitigation' &&
-            !skillVisibility.singleMitigation) ||
-          (skill.type === 'healing' && !skillVisibility.healing)
-        ) {
-          return
-        }
-
         const activationTimes = activations?.[jobIndexStr]?.[skill.alt] ?? []
 
         const mitInfo =
@@ -125,7 +116,7 @@ const DataRow = ({
     })
 
     return map
-  }, [activeJobs, activations, currentTime, skillVisibility])
+  }, [activeJobs, activations, currentTime])
 
   /**
    * Build the activeMitigations structure used by
@@ -246,11 +237,6 @@ const DataRow = ({
                   if (skill.type === 'healing' && !skillVisibility.healing) {
                     return false
                   }
-                  console.log({
-                    rowTimer: row.timer,
-                    activeMitigations
-                  })
-                  console.log('activations', activations)
                   return true
                 })
                 .map((skill) => {

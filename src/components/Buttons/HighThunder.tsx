@@ -39,7 +39,8 @@ export default function HighThunder({
             manacost: 0,
             dotPotency: dotPotency,
             dotDuration: 30,
-            dotInterval: 3
+            dotInterval: 3,
+            job: 'BLM'
           })
         }
       >

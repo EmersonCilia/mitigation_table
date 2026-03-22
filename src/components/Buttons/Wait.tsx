@@ -31,7 +31,8 @@ export default function Wait({ addSpell }: AddSpell) {
             recast: 0,
             requiresTarget: false,
             cooldown: 0,
-            manacost: 0
+            manacost: 0,
+            job: 'BLM'
           })
         }}
       >

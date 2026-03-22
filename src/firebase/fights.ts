@@ -1,5 +1,5 @@
 import { toSeconds } from '../Utils/ToSeconds'
-import { RowData } from '../Utils/types'
+import { Action, Downtime, RowData } from '../Utils/types'
 import { db } from './index'
 import { ref, set, get, push, onValue, remove, update } from 'firebase/database'
 
@@ -20,19 +20,6 @@ async function authorizedWrite<T>(
   }
 
   return await callback()
-}
-
-export type CheckboxMap = {
-  [key: string]: boolean
-}
-
-export type FightSkill = {
-  timer: string
-  skill: string
-  damagetotal: number
-  type: string
-  mechanicType: string
-  checkbox: CheckboxMap
 }
 
 /* ---------------- CREATE FIGHT ---------------- */
@@ -56,7 +43,7 @@ export async function saveRow(
   groupId: string,
   fightId: string,
   id: string,
-  data: FightSkill
+  data: Omit<RowData, 'id'>
 ) {
   return authorizedWrite(groupId, async () => {
     const skillRef = ref(db, `groups/${groupId}/fights/${fightId}/skills/${id}`)
@@ -126,6 +113,30 @@ export function listenForRows(
 
     callback(rows)
   })
+}
+export function listenForBossSkills(
+  groupId: string,
+  fightId: string,
+  callback: (skills: { name: string; start: number }[]) => void
+) {
+  const rowsRef = ref(db, `groups/${groupId}/fights/${fightId}/skills`)
+
+  const unsubscribe = onValue(rowsRef, (snapshot) => {
+    const data = snapshot.val() as Record<string, RowData> | null
+    if (!data) {
+      callback([])
+      return
+    }
+
+    const skills = Object.values(data).map((row: RowData) => ({
+      name: row.skill,
+      start: toSeconds(row.timer)
+    }))
+
+    callback(skills)
+  })
+
+  return unsubscribe
 }
 
 /* ---------------- UPDATES ---------------- */
@@ -216,4 +227,79 @@ export async function getGroup(groupId: string) {
 
   if (!snapshot.exists()) return null
   return snapshot.val()
+}
+
+/* ---------------- ROTATION ---------------- */
+
+export async function saveRotation(
+  groupId: string,
+  fightId: string,
+  jobId: string,
+  rotation: {
+    spellSpeed: number
+    timelineStart: number
+    actions: Action[]
+    downtimes: Downtime[]
+  }
+) {
+  return authorizedWrite(groupId, async () => {
+    const rotationRef = ref(
+      db,
+      `groups/${groupId}/fights/${fightId}/rotation/${jobId}`
+    )
+
+    await set(rotationRef, rotation)
+  })
+}
+
+export async function getRotation(
+  groupId: string,
+  fightId: string,
+  jobId: string
+) {
+  const rotationRef = ref(
+    db,
+    `groups/${groupId}/fights/${fightId}/rotation/${jobId}`
+  )
+
+  const snap = await get(rotationRef)
+  return snap.exists() ? snap.val() : null
+}
+
+// fetch boss skills for a fight
+export async function getBossSkills(groupId: string, fightId: string) {
+  const fight = await getOneFight(groupId, fightId)
+  if (!fight || !fight.skills) return []
+
+  const skillsObj = fight.skills as Record<string, Omit<RowData, 'id'>>
+
+  // fight.skills is an object keyed by skillId
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  return Object.entries(skillsObj).map(([id, skill]) => ({
+    name: skill.skill,
+    start: toSeconds(skill.timer) // convert timer string like '00:15' to seconds
+  }))
+}
+
+export function listenForRotation(
+  groupId: string,
+  fightId: string,
+  jobId: string,
+  callback: (actions: Action[]) => void
+) {
+  const rotationRef = ref(
+    db,
+    `groups/${groupId}/fights/${fightId}/rotation/${jobId}`
+  )
+
+  const unsubscribe = onValue(rotationRef, (snapshot) => {
+    const data = snapshot.val()
+    if (!data) {
+      callback([])
+      return
+    }
+    callback(data.actions || [])
+  })
+
+  return unsubscribe
 }

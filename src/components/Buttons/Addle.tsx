@@ -28,10 +28,11 @@ export default function Addle({ addSpell, rotationDuration, action }: Addle) {
             cast: 0.64,
             type: 'ogcd',
             potency: 0,
-            requiresTarget: false,
+            requiresTarget: true,
             recast: 0,
             cooldown: cooldown,
-            manacost: 0
+            manacost: 0,
+            job: 'BLM'
           })
         }}
       >

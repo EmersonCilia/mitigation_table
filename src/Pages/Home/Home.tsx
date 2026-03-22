@@ -36,7 +36,7 @@ const Home = () => {
       JSON.stringify({
         name: key,
         loggedAt: Date.now(),
-        token: Math.random().toString(36).substr(2) // random token
+        token: Math.random().toString(36) // random token
       })
     )
 
