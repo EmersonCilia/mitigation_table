@@ -138,6 +138,28 @@ export function listenForBossSkills(
 
   return unsubscribe
 }
+export function listenForRotation(
+  groupId: string,
+  fightId: string,
+  jobId: string,
+  callback: (actions: Action[]) => void
+) {
+  const rotationRef = ref(
+    db,
+    `groups/${groupId}/fights/${fightId}/rotation/${jobId}`
+  )
+
+  const unsubscribe = onValue(rotationRef, (snapshot) => {
+    const data = snapshot.val()
+    if (!data) {
+      callback([])
+      return
+    }
+    callback(data.actions || [])
+  })
+
+  return unsubscribe
+}
 
 /* ---------------- UPDATES ---------------- */
 
@@ -279,27 +301,4 @@ export async function getBossSkills(groupId: string, fightId: string) {
     name: skill.skill,
     start: toSeconds(skill.timer) // convert timer string like '00:15' to seconds
   }))
-}
-
-export function listenForRotation(
-  groupId: string,
-  fightId: string,
-  jobId: string,
-  callback: (actions: Action[]) => void
-) {
-  const rotationRef = ref(
-    db,
-    `groups/${groupId}/fights/${fightId}/rotation/${jobId}`
-  )
-
-  const unsubscribe = onValue(rotationRef, (snapshot) => {
-    const data = snapshot.val()
-    if (!data) {
-      callback([])
-      return
-    }
-    callback(data.actions || [])
-  })
-
-  return unsubscribe
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import Timeline from '../../../components/Timeline/Timeline'
 import {
   type Action,
@@ -13,6 +13,7 @@ import {
   getBossSkills,
   getRotation,
   listenForBossSkills,
+  listenForRotation,
   saveRotation
 } from '../../../firebase/fights'
 import { Link, useParams } from 'react-router-dom'
@@ -22,8 +23,10 @@ export default function RotationTimeline() {
   const [downtimes, setDowntimes] = useState<Downtime[]>([])
   const [timelineStart, setTimelineStart] = useState(-3.5)
   const [spellSpeed, setSpellSpeed] = useState(420)
-  const [isLoaded, setIsLoaded] = useState(false)
-
+  const lastSavedActions = useRef<Action[]>([])
+  const lastSavedDowntimes = useRef<Downtime[]>([])
+  const lastSavedSpellSpeed = useRef<number>(spellSpeed)
+  const lastSavedTimelineStart = useRef<number>(timelineStart)
   const [bossSkills, setBossSkills] = useState<
     { name: string; start: number }[]
   >([])
@@ -42,52 +45,62 @@ export default function RotationTimeline() {
     return () => unsubscribe && unsubscribe()
   }, [groupId, fightId])
   useEffect(() => {
-    async function loadRotation() {
-      if (!groupId || !fightId || !jobId) return
+    if (!groupId || !fightId || !jobId) return
 
-      const data = await getRotation(groupId, fightId, jobId)
-
-      if (data) {
-        setActions(data.actions || [])
-        setDowntimes(data.downtimes || [])
-        setSpellSpeed(data.spellSpeed || 420)
-        setTimelineStart(data.timelineStart || -3.5)
+    const unsubscribe = listenForRotation(
+      groupId,
+      fightId,
+      jobId,
+      (actionsFromDB) => {
+        setActions(actionsFromDB)
+        lastSavedActions.current = actionsFromDB // sync lastSavedActions
       }
+    )
 
-      setIsLoaded(true)
-    }
-
-    loadRotation()
+    return () => unsubscribe && unsubscribe()
   }, [groupId, fightId, jobId])
   useEffect(() => {
-    if (!isLoaded) return
+    if (!groupId || !fightId || !jobId) return
 
-    const timeout = setTimeout(() => {
-      async function autoSave() {
-        if (!groupId || !fightId || !jobId) return
-
-        await saveRotation(groupId, fightId, jobId, {
-          spellSpeed,
-          timelineStart,
-          actions,
-          downtimes
-        })
+    const unsubscribe = listenForRotation(
+      groupId,
+      fightId,
+      jobId,
+      (actionsFromDB) => {
+        setActions(actionsFromDB)
       }
+    )
 
-      autoSave()
-    }, 250)
+    return () => unsubscribe && unsubscribe()
+  }, [groupId, fightId, jobId])
+  useEffect(() => {
+    if (!groupId || !fightId || !jobId) return
 
-    return () => clearTimeout(timeout)
-  }, [
-    groupId,
-    fightId,
-    jobId,
-    actions,
-    downtimes,
-    spellSpeed,
-    timelineStart,
-    isLoaded
-  ])
+    const save = async () => {
+      // only save if something actually changed
+      const hasChanged =
+        actions !== lastSavedActions.current ||
+        downtimes !== lastSavedDowntimes.current ||
+        spellSpeed !== lastSavedSpellSpeed.current ||
+        timelineStart !== lastSavedTimelineStart.current
+
+      if (!hasChanged) return
+
+      await saveRotation(groupId, fightId, jobId, {
+        actions,
+        downtimes,
+        spellSpeed,
+        timelineStart
+      })
+
+      lastSavedActions.current = actions
+      lastSavedDowntimes.current = downtimes
+      lastSavedSpellSpeed.current = spellSpeed
+      lastSavedTimelineStart.current = timelineStart
+    }
+
+    save()
+  }, [actions, downtimes, spellSpeed, timelineStart, groupId, fightId, jobId])
   useEffect(() => {
     if (!groupId || !fightId) return
 
@@ -140,20 +153,29 @@ export default function RotationTimeline() {
 
     return isDuringDowntime(start) || isDuringDowntime(end)
   }
-  function addSpell(spell: Omit<Action, 'id' | 'start'> & { job: string }) {
+  async function addSpell(
+    spell: Omit<Action, 'id' | 'start'> & { job: string }
+  ) {
     const start = getNextStart(spell.type)
 
-    if (isCastInvalid(start, spell.cast, spell.requiresTarget)) {
-      return
-    }
+    if (isCastInvalid(start, spell.cast, spell.requiresTarget)) return
 
-    const action: Action = {
-      ...spell,
-      id: crypto.randomUUID(),
-      start
-    }
+    const action: Action = { ...spell, id: crypto.randomUUID(), start }
 
     setActions((prev) => [...prev, action])
+
+    // save immediately
+    if (groupId && fightId && jobId) {
+      await saveRotation(groupId, fightId, jobId, {
+        actions: [...actions, action], // include the new action
+        downtimes,
+        spellSpeed,
+        timelineStart
+      })
+
+      // update refs if you use them
+      lastSavedActions.current = [...actions, action]
+    }
   }
   function deleteLastAction() {
     setActions((prev) => prev.slice(0, -1))
