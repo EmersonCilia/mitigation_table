@@ -1,6 +1,6 @@
-import umbralsoul from '../../assets/BLM/Umbral_Soul.png'
-import { Action, PlayerState } from '../../Utils/types'
-import * as S from './styles'
+import umbralsoul from '../../../assets/BLM/Umbral_Soul.png'
+import { Action, PlayerState } from '../../../Utils/types'
+import * as S from '../styles'
 
 type UmbralSoul = {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void

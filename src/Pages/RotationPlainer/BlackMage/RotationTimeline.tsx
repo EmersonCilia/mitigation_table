@@ -18,26 +18,41 @@ import {
 } from '../../../firebase/fights'
 import { Link, useParams } from 'react-router-dom'
 
+/**
+ * Component to display and manage a rotation timeline for a job in a fight.
+ * Handles actions, downtimes, boss skills, and real-time updates from Firebase.
+ */
 export default function RotationTimeline() {
+  /** List of actions in the current rotation */
   const [actions, setActions] = useState<Action[]>([])
+  /** List of downtimes (periods without valid target) */
   const [downtimes, setDowntimes] = useState<Downtime[]>([])
+  /** Timeline start offset in seconds */
   const [timelineStart, setTimelineStart] = useState(-3.5)
+  /** Spell speed used for GCD calculations */
   const [spellSpeed, setSpellSpeed] = useState(420)
+  /** References to last saved data to prevent unnecessary DB writes */
   const lastSavedActions = useRef<Action[]>([])
   const lastSavedDowntimes = useRef<Downtime[]>([])
   const lastSavedSpellSpeed = useRef<number>(spellSpeed)
   const lastSavedTimelineStart = useRef<number>(timelineStart)
+  /** Flag for whether data is loaded from DB */
   const [isLoaded, setIsLoaded] = useState(false)
+  /** Boss skills for the fight */
   const [bossSkills, setBossSkills] = useState<
     { name: string; start: number }[]
   >([])
 
+  /** Params from route: group, fight, and job IDs */
   const { groupId, fightId, jobId } = useParams<{
     groupId: string
     fightId: string
     jobId: string
   }>()
 
+  /**
+   * Subscribe to boss skill updates
+   */
   useEffect(() => {
     if (!groupId || !fightId) return
 
@@ -45,6 +60,10 @@ export default function RotationTimeline() {
 
     return () => unsubscribe && unsubscribe()
   }, [groupId, fightId])
+
+  /**
+   * Load rotation from DB and subscribe to updates
+   */
   useEffect(() => {
     if (!groupId || !fightId || !jobId) return
 
@@ -79,28 +98,19 @@ export default function RotationTimeline() {
 
     return () => unsubscribe && unsubscribe()
   }, [groupId, fightId, jobId])
-  useEffect(() => {
-    if (!groupId || !fightId || !jobId) return
 
-    const unsubscribe = listenForRotation(
-      groupId,
-      fightId,
-      jobId,
-      (actionsFromDB) => {
-        setActions(actionsFromDB)
-      }
-    )
-
-    return () => unsubscribe && unsubscribe()
-  }, [groupId, fightId, jobId])
+  /**
+   * Save rotation whenever actions, downtimes, spellSpeed, or timelineStart change
+   */
   useEffect(() => {
     if (!isLoaded || !groupId || !fightId || !jobId) return
 
     const save = async () => {
       // only save if something actually changed
       const hasChanged =
-        actions !== lastSavedActions.current ||
-        downtimes !== lastSavedDowntimes.current ||
+        JSON.stringify(actions) !== JSON.stringify(lastSavedActions.current) ||
+        JSON.stringify(downtimes) !==
+          JSON.stringify(lastSavedDowntimes.current) ||
         spellSpeed !== lastSavedSpellSpeed.current ||
         timelineStart !== lastSavedTimelineStart.current
 
@@ -130,6 +140,7 @@ export default function RotationTimeline() {
     jobId,
     isLoaded
   ])
+
   useEffect(() => {
     if (!groupId || !fightId) return
 
@@ -140,17 +151,33 @@ export default function RotationTimeline() {
 
     fetchBossSkills()
   }, [groupId, fightId])
+
   useEffect(() => {
     window.addAction = addAction
     window.addDowntime = addDowntime
   }, [])
 
+  /**
+   * Add a new action to the rotation
+   * @param action Action to add
+   */
   function addAction(action: Action) {
     setActions((prev) => [...prev, action])
   }
+
+  /**
+   * Add a new downtime
+   * @param downtime Downtime period to add
+   */
   function addDowntime(downtime: Downtime) {
     setDowntimes((prev) => [...prev, downtime])
   }
+
+  /**
+   * Calculate the next available start time for a new action
+   * @param type Action type ("gcd" or "ogcd")
+   * @returns Next start time in seconds
+   */
   function getNextStart(type: ActionType) {
     if (actions.length === 0) return timelineStart
 
@@ -170,11 +197,23 @@ export default function RotationTimeline() {
 
     return Math.max(gcdReady, animationLockEnd)
   }
+
+  /**
+   * Check if a time falls during any downtime
+   * @param time Time in seconds
+   */
   function isDuringDowntime(time: number) {
     return downtimes.some(
       (dt) => time >= dt.start && time < dt.start + dt.duration
     )
   }
+
+  /**
+   * Check if a cast is invalid (requires target but falls during downtime)
+   * @param start Cast start time
+   * @param cast Cast duration
+   * @param requiresTarget Whether the action requires a target
+   */
   function isCastInvalid(start: number, cast: number, requiresTarget: boolean) {
     if (!requiresTarget) return false
 
@@ -182,9 +221,12 @@ export default function RotationTimeline() {
 
     return isDuringDowntime(start) || isDuringDowntime(end)
   }
-  async function addSpell(
-    spell: Omit<Action, 'id' | 'start'> & { job: string }
-  ) {
+
+  /**
+   * Add a spell action for a job
+   * @param spell Spell data without id/start
+   */
+  function addSpell(spell: Omit<Action, 'id' | 'start'> & { job: string }) {
     const start = getNextStart(spell.type)
 
     if (isCastInvalid(start, spell.cast, spell.requiresTarget)) return
@@ -192,50 +234,52 @@ export default function RotationTimeline() {
     const action: Action = { ...spell, id: crypto.randomUUID(), start }
 
     setActions((prev) => [...prev, action])
-
-    // save immediately
-    if (groupId && fightId && jobId) {
-      await saveRotation(groupId, fightId, jobId, {
-        actions: [...actions, action], // include the new action
-        downtimes,
-        spellSpeed,
-        timelineStart
-      })
-
-      // update refs if you use them
-      lastSavedActions.current = [...actions, action]
-    }
   }
+
+  /** Delete the last action in the rotation */
   function deleteLastAction() {
     setActions((prev) => prev.slice(0, -1))
   }
+
+  /** Undo the last downtime added */
   function undoLastDowntime() {
     setDowntimes((prev) => {
       if (prev.length === 0) return prev
       return prev.slice(0, -1)
     })
   }
+
+  /**
+   * Calculate GCD for given base and spell speed
+   * @param baseGCD Base gcd in seconds
+   * @param spellSpeed Spell speed value
+   */
   function calculateGCD(baseGCD: number, spellSpeed: number) {
     const levelSub = 420
     const levelDiv = 2780
 
     const speedModifier = Math.ceil((130 * (levelSub - spellSpeed)) / levelDiv)
-
     const gcd = Math.floor((baseGCD * (1000 + speedModifier)) / 10000) / 100
-
     return gcd
   }
 
+  /** GCD function bound to current spellSpeed */
   const getGCD = (baseGCD: number) => calculateGCD(baseGCD, spellSpeed)
+
+  /** Current simulation result from actions */
   const simulation = useMemo(() => simulate(actions), [actions])
   const playerState = simulation.state
   const totalPotency = simulation.totalPotency
+
+  /** Rotation duration in seconds */
   const rotationDuration = useMemo(() => {
     if (actions.length === 0) return 0
     const lastAction = actions[actions.length - 1]
     const endTime = lastAction.start + lastAction.cast
     return Math.max(endTime, 0)
   }, [actions])
+
+  /** Potency per second */
   const pps = useMemo(() => {
     if (rotationDuration <= 0) return 0
     return totalPotency / rotationDuration

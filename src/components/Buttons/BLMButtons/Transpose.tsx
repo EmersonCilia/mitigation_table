@@ -1,28 +1,25 @@
-import aetherialManipulation from '../../assets/BLM/Aetherial_Manipulation.png'
-import { Action } from '../../Utils/types'
-import * as S from './styles'
+import transpose from '../../../assets/BLM/Transpose.png'
+import { Action } from '../../../Utils/types'
+import * as S from '../styles'
 
-type AetherialManipulation = {
+type Transpose = {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
   rotationDuration: number
   action: Action[]
 }
 
-export default function Manafont({
+export default function Transpose({
   addSpell,
   rotationDuration,
   action
-}: AetherialManipulation) {
-  const cooldown = 3
-  const lastAetherialManipulation = [...action]
+}: Transpose) {
+  const cooldown = 6
+  const lastTranspose = [...action]
     .reverse()
-    .find((a) => a.name === 'Aetherial Manipulation')
+    .find((a) => a.name === 'Transpose')
 
-  const remainingCooldown = lastAetherialManipulation
-    ? Math.max(
-        0,
-        cooldown - (rotationDuration - lastAetherialManipulation.start)
-      )
+  const remainingCooldown = lastTranspose
+    ? Math.max(0, cooldown - (rotationDuration - lastTranspose.start))
     : 0
   return (
     <S.ButtonDiv>
@@ -32,8 +29,8 @@ export default function Manafont({
           if (remainingCooldown > 0) return
 
           addSpell({
-            name: 'Aetherial Manipulation',
-            icon: aetherialManipulation,
+            name: 'Transpose',
+            icon: transpose,
             cast: 0.64,
             type: 'ogcd',
             potency: 0,
@@ -45,7 +42,7 @@ export default function Manafont({
           })
         }}
       >
-        <img src={aetherialManipulation} width={40} />
+        <img src={transpose} width={40} />
       </S.SpellButton>
       {remainingCooldown > 0 && <span>{remainingCooldown.toFixed(1)}</span>}
     </S.ButtonDiv>

@@ -1,22 +1,22 @@
-import leylines from '../../assets/BLM/Ley_Lines.png'
-import { Action } from '../../Utils/types'
-import * as S from './styles'
+import triplecast from '../../../assets/BLM/Triplecast.png'
+import { Action } from '../../../Utils/types'
+import * as S from '../styles'
 
-type LeyLinesProps = {
+type TriplecastProps = {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
   rotationDuration: number
   action: Action[]
 }
 
-export default function LeyLines({
+export default function Triplecast({
   addSpell,
   rotationDuration,
   action
-}: LeyLinesProps) {
-  const cooldown = 120
+}: TriplecastProps) {
+  const cooldown = 60
   const maxCharges = 2
 
-  const uses = action.filter((a) => a.name === 'Ley Lines').map((a) => a.start)
+  const uses = action.filter((a) => a.name === 'Triplecast').map((a) => a.start)
 
   let charges = maxCharges
   let remainingCooldown = 0
@@ -42,8 +42,8 @@ export default function LeyLines({
           if (charges <= 0) return
 
           addSpell({
-            name: 'Ley Lines',
-            icon: leylines,
+            name: 'Triplecast',
+            icon: triplecast,
             cast: 0.64,
             type: 'ogcd',
             potency: 0,
@@ -55,7 +55,7 @@ export default function LeyLines({
           })
         }}
       >
-        <img src={leylines} width={40} />
+        <img src={triplecast} width={40} />
       </S.SpellButton>
 
       {charges < maxCharges && <span>{remainingCooldown.toFixed(1)}</span>}

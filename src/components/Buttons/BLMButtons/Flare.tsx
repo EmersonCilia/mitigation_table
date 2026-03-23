@@ -1,64 +1,61 @@
-import blizardIII from '../../assets/BLM/Blizzard_III.png'
-import { Action, PlayerState } from '../../Utils/types'
-import * as S from './styles'
+import flare from '../../../assets/BLM/Flare.png'
+import { Action, PlayerState } from '../../../Utils/types'
+import * as S from '../styles'
 
-type BlizardIII = {
+type Flare = {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
   playerState: PlayerState
   calculateGCD: (baseGCD: number) => number
 }
 
-export default function BlizardIII({
-  addSpell,
-  playerState,
-  calculateGCD
-}: BlizardIII) {
-  const cast = calculateGCD(3500)
+export default function Flare({ addSpell, playerState, calculateGCD }: Flare) {
   const recast = calculateGCD(2500)
+  const cast = calculateGCD(2000)
 
   let finalCast = cast
-
   if (playerState.swiftcast || playerState.triplecast > 0) {
     finalCast = 0.64
-  } else if (playerState.astralFire === 3) {
-    finalCast = cast / 2
   }
-  const leylinesModifier = playerState.leylines > 0 ? 0.85 : 1
-  let potency = 290
+  let potency = 240
 
   if (playerState.astralFire === 1) {
-    potency *= 0.9
+    potency *= 1.4
   } else if (playerState.astralFire === 2) {
-    potency *= 0.8
+    potency *= 1.6
   } else if (playerState.astralFire === 3) {
+    potency *= 1.8
+  } else if (playerState.umbralIce === 1) {
+    potency *= 0.9
+  } else if (playerState.umbralIce === 2) {
+    potency *= 0.8
+  } else if (playerState.umbralIce === 3) {
     potency *= 0.7
   }
 
   if (playerState.astralFire > 0 || playerState.umbralIce > 0) {
     potency *= 1.27
   }
+  const leylinesModifier = playerState.leylines > 0 ? 0.85 : 1
   return (
     <div>
       <S.SpellButton
+        disabled={playerState.astralFire === 0 || playerState.mana < 800}
         onClick={() =>
           addSpell({
-            name: 'Blizzard III',
-            icon: blizardIII,
+            name: 'Flare',
+            icon: flare,
             cast: finalCast * leylinesModifier,
             type: 'gcd',
             potency: potency,
             recast: recast * leylinesModifier,
             requiresTarget: true,
             cooldown: 0,
-            manacost:
-              playerState.astralFire === 0 && playerState.umbralIce === 0
-                ? 0
-                : 800,
+            manacost: playerState.mana,
             job: 'BLM'
           })
         }
       >
-        <img src={blizardIII} width={40} />
+        <img src={flare} width={40} />
       </S.SpellButton>
     </div>
   )

@@ -1,25 +1,23 @@
-import transpose from '../../assets/BLM/Transpose.png'
-import { Action } from '../../Utils/types'
-import * as S from './styles'
+import manaward from '../../../assets/BLM/Manaward.png'
+import { Action } from '../../../Utils/types'
+import * as S from '../styles'
 
-type Transpose = {
+type Manaward = {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
   rotationDuration: number
   action: Action[]
 }
 
-export default function Transpose({
+export default function Manaward({
   addSpell,
   rotationDuration,
   action
-}: Transpose) {
-  const cooldown = 6
-  const lastTranspose = [...action]
-    .reverse()
-    .find((a) => a.name === 'Transpose')
+}: Manaward) {
+  const cooldown = 120
+  const lastManaward = [...action].reverse().find((a) => a.name === 'Manaward')
 
-  const remainingCooldown = lastTranspose
-    ? Math.max(0, cooldown - (rotationDuration - lastTranspose.start))
+  const remainingCooldown = lastManaward
+    ? Math.max(0, cooldown - (rotationDuration - lastManaward.start))
     : 0
   return (
     <S.ButtonDiv>
@@ -29,8 +27,8 @@ export default function Transpose({
           if (remainingCooldown > 0) return
 
           addSpell({
-            name: 'Transpose',
-            icon: transpose,
+            name: 'Manaward',
+            icon: manaward,
             cast: 0.64,
             type: 'ogcd',
             potency: 0,
@@ -42,7 +40,7 @@ export default function Transpose({
           })
         }}
       >
-        <img src={transpose} width={40} />
+        <img src={manaward} width={40} />
       </S.SpellButton>
       {remainingCooldown > 0 && <span>{remainingCooldown.toFixed(1)}</span>}
     </S.ButtonDiv>

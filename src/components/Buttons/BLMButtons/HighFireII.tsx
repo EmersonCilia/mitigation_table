@@ -1,37 +1,34 @@
-import fireIII from '../../assets/BLM/Fire_III.png'
-import { Action, PlayerState } from '../../Utils/types'
-import * as S from './styles'
+import highFireII from '../../../assets/BLM/High_Fire_II.png'
+import { Action, PlayerState } from '../../../Utils/types'
+import * as S from '../styles'
 
-type FireIII = {
+type HighFireII = {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
   playerState: PlayerState
   calculateGCD: (baseGCD: number) => number
 }
 
-export default function FireIII({
+export default function HighFireII({
   addSpell,
   playerState,
   calculateGCD
-}: FireIII) {
-  const cast = calculateGCD(3500)
+}: HighFireII) {
+  const cast = calculateGCD(3000)
   const recast = calculateGCD(2500)
-  const manaCostOnFire = playerState.astralFire === 0 ? 2000 : 4000
+
+  const manaCostOnFire = playerState.astralFire === 0 ? 1500 : 3000
   const manaCost =
     playerState.umbralHearts === 0 ? manaCostOnFire : manaCostOnFire / 2
 
-  const disabled = !playerState.fireStarter && playerState.mana < manaCost
+  const disabled = playerState.mana < manaCost
   const castTime =
-    playerState.fireStarter ||
-    playerState.swiftcast ||
-    playerState.triplecast > 0
+    playerState.triplecast > 0 || playerState.swiftcast
       ? 0.64
       : playerState.umbralIce === 3
         ? cast / 2
         : cast
-
-  const cost = playerState.fireStarter ? 0 : manaCost
   const leylinesModifier = playerState.leylines > 0 ? 0.85 : 1
-  let potency = 290
+  let potency = 100
 
   if (playerState.astralFire === 1) {
     potency *= 1.4
@@ -55,20 +52,20 @@ export default function FireIII({
       disabled={disabled}
       onClick={() =>
         addSpell({
-          name: 'Fire III',
-          icon: fireIII,
+          name: 'High Fire II',
+          icon: highFireII,
           cast: castTime * leylinesModifier,
           type: 'gcd',
           potency: potency,
           recast: recast * leylinesModifier,
           requiresTarget: true,
           cooldown: 0,
-          manacost: cost,
+          manacost: manaCost,
           job: 'BLM'
         })
       }
     >
-      <img src={fireIII} width={40} />
+      <img src={highFireII} width={40} />
     </S.SpellButton>
   )
 }

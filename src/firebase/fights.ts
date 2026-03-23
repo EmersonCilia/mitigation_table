@@ -252,7 +252,19 @@ export async function getGroup(groupId: string) {
 }
 
 /* ---------------- ROTATION ---------------- */
-
+/**
+ * Saves a rotation to the database.
+ *
+ * Only updates changed fields to avoid overwriting the DB unnecessarily.
+ * For the original simpler implementation, see note [1] below.
+ *
+ * @param groupId - The group ID
+ * @param fightId - The fight ID
+ * @param jobId - The job ID
+ * @param rotation - The rotation object to save
+ *
+ * @see [1] Original saveRotation implementation
+ */
 export async function saveRotation(
   groupId: string,
   fightId: string,
@@ -270,7 +282,41 @@ export async function saveRotation(
       `groups/${groupId}/fights/${fightId}/rotation/${jobId}`
     )
 
-    await set(rotationRef, rotation)
+    const snap = await get(rotationRef)
+
+    if (!snap.exists()) {
+      // no rotation yet, create everything
+      await set(rotationRef, rotation)
+      return
+    }
+    type RotationUpdates = {
+      spellSpeed?: number
+      timelineStart?: number
+      actions?: Action[]
+      downtimes?: Downtime[]
+    }
+    // rotation exists, only update changed fields
+    const current = snap.val()
+
+    const updates: RotationUpdates = {}
+
+    if (JSON.stringify(rotation.actions) !== JSON.stringify(current.actions)) {
+      updates.actions = rotation.actions
+    }
+    if (
+      JSON.stringify(rotation.downtimes) !== JSON.stringify(current.downtimes)
+    ) {
+      updates.downtimes = rotation.downtimes
+    }
+    if (rotation.spellSpeed !== current.spellSpeed) {
+      updates.spellSpeed = rotation.spellSpeed
+    }
+    if (rotation.timelineStart !== current.timelineStart) {
+      updates.timelineStart = rotation.timelineStart
+    }
+    if (Object.keys(updates).length > 0) {
+      await update(rotationRef, updates)
+    }
   })
 }
 
@@ -302,3 +348,22 @@ export async function getBossSkills(groupId: string, fightId: string) {
     start: toSeconds(skill.timer) // convert timer string like '00:15' to seconds
   }))
 }
+
+/**
+ * [1] Original saveRotation function:
+ *
+ * ```
+ * export async function saveRotation(
+ *   groupId: string,
+ *   fightId: string,
+ *   jobId: string,
+ *   rotation: { spellSpeed: number, timelineStart: number, actions: Action[], downtimes: Downtime[] }
+ * ) {
+ *   return authorizedWrite(groupId, async () => {
+ *     const rotationRef = ref(db, `groups/${groupId}/fights/${fightId}/rotation/${jobId}`)
+ *     await set(rotationRef, rotation)
+ *   })
+ * }
+ *
+ * This version was O(k) on writes because it overwrote the entire rotation.
+ */

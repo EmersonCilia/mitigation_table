@@ -1,6 +1,6 @@
-import amplifier from '../../assets/BLM/Amplifier.png'
-import { Action } from '../../Utils/types'
-import * as S from './styles'
+import amplifier from '../../../assets/BLM/Amplifier.png'
+import { Action } from '../../../Utils/types'
+import * as S from '../styles'
 
 type Amplifier = {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void

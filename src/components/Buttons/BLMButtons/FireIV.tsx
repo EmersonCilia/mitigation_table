@@ -1,22 +1,26 @@
-import flare from '../../assets/BLM/Flare.png'
-import { Action, PlayerState } from '../../Utils/types'
-import * as S from './styles'
+import fireIV from '../../../assets/BLM/Fire_IV.png'
+import { Action, PlayerState } from '../../../Utils/types'
+import * as S from '../styles'
 
-type Flare = {
+type FireIV = {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
   playerState: PlayerState
   calculateGCD: (baseGCD: number) => number
 }
 
-export default function Flare({ addSpell, playerState, calculateGCD }: Flare) {
-  const recast = calculateGCD(2500)
+export default function FireIV({
+  addSpell,
+  playerState,
+  calculateGCD
+}: FireIV) {
   const cast = calculateGCD(2000)
-
+  const recast = calculateGCD(2500)
   let finalCast = cast
   if (playerState.swiftcast || playerState.triplecast > 0) {
     finalCast = 0.64
   }
-  let potency = 240
+  const leylinesModifier = playerState.leylines > 0 ? 0.85 : 1
+  let potency = 300
 
   if (playerState.astralFire === 1) {
     potency *= 1.4
@@ -35,27 +39,26 @@ export default function Flare({ addSpell, playerState, calculateGCD }: Flare) {
   if (playerState.astralFire > 0 || playerState.umbralIce > 0) {
     potency *= 1.27
   }
-  const leylinesModifier = playerState.leylines > 0 ? 0.85 : 1
   return (
     <div>
       <S.SpellButton
-        disabled={playerState.astralFire === 0 || playerState.mana < 800}
+        disabled={playerState.astralFire === 0 || playerState.mana < 1600}
         onClick={() =>
           addSpell({
-            name: 'Flare',
-            icon: flare,
+            name: 'Fire IV',
+            icon: fireIV,
             cast: finalCast * leylinesModifier,
             type: 'gcd',
             potency: potency,
             recast: recast * leylinesModifier,
             requiresTarget: true,
             cooldown: 0,
-            manacost: playerState.mana,
+            manacost: 0,
             job: 'BLM'
           })
         }
       >
-        <img src={flare} width={40} />
+        <img src={fireIV} width={40} />
       </S.SpellButton>
     </div>
   )

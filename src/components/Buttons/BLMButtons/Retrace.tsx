@@ -1,23 +1,23 @@
-import manaward from '../../assets/BLM/Manaward.png'
-import { Action } from '../../Utils/types'
-import * as S from './styles'
+import retrace from '../../../assets/BLM/Retrace.png'
+import { Action } from '../../../Utils/types'
+import * as S from '../styles'
 
-type Manaward = {
+type Retrace = {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
   rotationDuration: number
   action: Action[]
 }
 
-export default function Manaward({
+export default function Retrace({
   addSpell,
   rotationDuration,
   action
-}: Manaward) {
-  const cooldown = 120
-  const lastManaward = [...action].reverse().find((a) => a.name === 'Manaward')
+}: Retrace) {
+  const cooldown = 40
+  const lastRetrace = [...action].reverse().find((a) => a.name === 'Retrace')
 
-  const remainingCooldown = lastManaward
-    ? Math.max(0, cooldown - (rotationDuration - lastManaward.start))
+  const remainingCooldown = lastRetrace
+    ? Math.max(0, cooldown - (rotationDuration - lastRetrace.start))
     : 0
   return (
     <S.ButtonDiv>
@@ -27,8 +27,8 @@ export default function Manaward({
           if (remainingCooldown > 0) return
 
           addSpell({
-            name: 'Manaward',
-            icon: manaward,
+            name: 'Retrace',
+            icon: retrace,
             cast: 0.64,
             type: 'ogcd',
             potency: 0,
@@ -40,7 +40,7 @@ export default function Manaward({
           })
         }}
       >
-        <img src={manaward} width={40} />
+        <img src={retrace} width={40} />
       </S.SpellButton>
       {remainingCooldown > 0 && <span>{remainingCooldown.toFixed(1)}</span>}
     </S.ButtonDiv>

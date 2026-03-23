@@ -1,21 +1,27 @@
-import despair from '../../assets/BLM/Despair.png'
-import { Action, PlayerState } from '../../Utils/types'
-import * as S from './styles'
+import flareStar from '../../../assets/BLM/Flare_Star.png'
+import { Action, PlayerState } from '../../../Utils/types'
+import * as S from '../styles'
 
-type Despair = {
+type FlareStar = {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
   playerState: PlayerState
   calculateGCD: (baseGCD: number) => number
 }
 
-export default function Despair({
+export default function FlareStar({
   addSpell,
   playerState,
   calculateGCD
-}: Despair) {
+}: FlareStar) {
+  const cast = calculateGCD(2000)
   const recast = calculateGCD(2500)
+
+  let finalCast = cast
+  if (playerState.swiftcast || playerState.triplecast > 0) {
+    finalCast = 0.64
+  }
   const leylinesModifier = playerState.leylines > 0 ? 0.85 : 1
-  let potency = 350
+  let potency = 500
 
   if (playerState.astralFire === 1) {
     potency *= 1.4
@@ -37,23 +43,23 @@ export default function Despair({
   return (
     <div>
       <S.SpellButton
-        disabled={playerState.astralFire === 0 || playerState.mana < 800}
+        disabled={playerState.astralGauge < 6}
         onClick={() =>
           addSpell({
-            name: 'Despair',
-            icon: despair,
-            cast: 0.64,
+            name: 'Flare Star',
+            icon: flareStar,
+            cast: finalCast * leylinesModifier,
             type: 'gcd',
             potency: potency,
             recast: recast * leylinesModifier,
             requiresTarget: true,
             cooldown: 0,
-            manacost: playerState.mana,
+            manacost: 0,
             job: 'BLM'
           })
         }
       >
-        <img src={despair} width={40} />
+        <img src={flareStar} width={40} />
       </S.SpellButton>
     </div>
   )

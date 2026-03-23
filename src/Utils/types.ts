@@ -144,9 +144,6 @@ export interface Downtime {
   start: number
   duration: number
 }
-export const actions: Action[] = []
-
-export const downtimes: Downtime[] = []
 
 export const PIXELS_PER_SECOND = 50
 export const ROW_DURATION = 15

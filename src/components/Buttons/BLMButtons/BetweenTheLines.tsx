@@ -1,23 +1,25 @@
-import retrace from '../../assets/BLM/Retrace.png'
-import { Action } from '../../Utils/types'
-import * as S from './styles'
+import betweenTheLines from '../../../assets/BLM/Between_the_Lines.png'
+import { Action } from '../../../Utils/types'
+import * as S from '../styles'
 
-type Retrace = {
+type BetweenTheLines = {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
   rotationDuration: number
   action: Action[]
 }
 
-export default function Retrace({
+export default function Manafont({
   addSpell,
   rotationDuration,
   action
-}: Retrace) {
-  const cooldown = 40
-  const lastRetrace = [...action].reverse().find((a) => a.name === 'Retrace')
+}: BetweenTheLines) {
+  const cooldown = 3
+  const lastBetweenTheLines = [...action]
+    .reverse()
+    .find((a) => a.name === 'Between The Lines')
 
-  const remainingCooldown = lastRetrace
-    ? Math.max(0, cooldown - (rotationDuration - lastRetrace.start))
+  const remainingCooldown = lastBetweenTheLines
+    ? Math.max(0, cooldown - (rotationDuration - lastBetweenTheLines.start))
     : 0
   return (
     <S.ButtonDiv>
@@ -27,8 +29,8 @@ export default function Retrace({
           if (remainingCooldown > 0) return
 
           addSpell({
-            name: 'Retrace',
-            icon: retrace,
+            name: 'Between The Lines',
+            icon: betweenTheLines,
             cast: 0.64,
             type: 'ogcd',
             potency: 0,
@@ -40,7 +42,7 @@ export default function Retrace({
           })
         }}
       >
-        <img src={retrace} width={40} />
+        <img src={betweenTheLines} width={40} />
       </S.SpellButton>
       {remainingCooldown > 0 && <span>{remainingCooldown.toFixed(1)}</span>}
     </S.ButtonDiv>

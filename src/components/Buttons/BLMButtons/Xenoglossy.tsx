@@ -1,6 +1,6 @@
-import xenoglossy from '../../assets/BLM/Xenoglossy.png'
-import { Action, PlayerState } from '../../Utils/types'
-import * as S from './styles'
+import xenoglossy from '../../../assets/BLM/Xenoglossy.png'
+import { Action, PlayerState } from '../../../Utils/types'
+import * as S from '../styles'
 
 type Xenoglossy = {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
