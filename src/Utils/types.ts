@@ -36,13 +36,20 @@ export type MitigationKey =
   | 'Troubadour'
   | 'Tactician'
   | 'Plenary_Indulgence'
+  | 'Divine_Veil'
+  | 'Knights_Resolve'
 
-export type MitigationMap = {
-  [playerName: string]: PlayerMitigations
+export type MitigationState = {
+  active: boolean
+  expiresAt: number
 }
 
 export type PlayerMitigations = {
-  [key in MitigationKey]?: boolean
+  [key in MitigationKey]?: MitigationState
+}
+
+export type MitigationMap = {
+  [jobName: string]: PlayerMitigations
 }
 
 export type RowData = {
@@ -54,7 +61,12 @@ export type RowData = {
   mechanicType: MechanicType
   checkbox?: Record<string, boolean>
 }
-export type MechanicType = 'raidwide' | 'debuff' | 'tankbuster' | 'mechanic'
+export type MechanicType =
+  | 'raidwide'
+  | 'debuff'
+  | 'tankbusterMT'
+  | 'tankbusterOT'
+  | 'mechanic'
 export type DamageType = 'magical' | 'physical'
 
 export type SkillVisibility = {
@@ -65,10 +77,12 @@ export type SkillVisibility = {
 
 export type RowStructure = {
   row: RowData
+  rows: RowData[]
   activeJobs: string[]
   activations: Record<string, Record<string, number[]>>
   skillVisibility: SkillVisibility
   visibleJobs: string[]
+  mainTank: string | null
 }
 
 export type SkillsMap = Record<string, RowData>
@@ -94,14 +108,14 @@ export type ColorState = 'green' | 'red' | 'default'
 
 export type ActionType = 'gcd' | 'ogcd' | 'bossSkill'
 
-export interface AddSpell {
+export type AddSpell = {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
 }
-export interface addDowntime {
+export type addDowntime = {
   addDowntime: (Downtime: Omit<Downtime, 'id' | 'start'>) => void
 }
 
-export interface PlayerState {
+export type BlackMageState = {
   astralFire: number
   umbralIce: number
   umbralHearts: number
@@ -120,8 +134,21 @@ export interface PlayerState {
   triplecastDuration: number
   leylines: number
 }
+export type PaladinState = {
+  mana: number
+  oath: number
+  confliteorReady: number
+  requiescat: number
+  divineMight: number
+  atonementReady: number
+  supplicationReady: number
+  sepulchreReady: number
+  bladeOfHonorReady: number
+  goringBladeReady: number
+  fightOrFlight: number
+}
 
-export interface Action {
+export type Action = {
   id: string
   name: string
   icon: string | null
@@ -137,12 +164,18 @@ export interface Action {
   dotDuration?: number
   dotInterval?: number
   job: string
+  oathcost?: number
 }
 
-export interface Downtime {
+export type Downtime = {
   id: string
   start: number
   duration: number
+}
+
+export type SimulationResult<TState> = {
+  state: TState
+  totalPotency: number
 }
 
 export const PIXELS_PER_SECOND = 50

@@ -207,24 +207,39 @@ export async function updateActiveJobs(
   activeJobs: string[]
 ) {
   return authorizedWrite(groupId, async () => {
-    await update(ref(db, `groups/${groupId}/fights/${fightId}`), {
+    await update(ref(db, `groups/${groupId}/fights/${fightId}/config`), {
       activeJobs
     })
   })
 }
 
-export function listenForActiveJobs(
+/* ---------------- MAIN TANK ---------------- */
+
+export async function updateMainTank(
   groupId: string,
   fightId: string,
-  callback: (jobs: string[]) => void
+  mainTank: string | null
 ) {
-  const activeRef = ref(db, `groups/${groupId}/fights/${fightId}/activeJobs`)
-
-  onValue(activeRef, (snap) => {
-    callback(snap.exists() ? snap.val() : [])
+  return authorizedWrite(groupId, async () => {
+    await update(ref(db, `groups/${groupId}/fights/${fightId}/config`), {
+      mainTank
+    })
   })
 }
 
+export function listenForFightConfig(
+  groupId: string,
+  fightId: string,
+  callback: (config: { activeJobs?: string[]; mainTank?: string }) => void
+) {
+  const configRef = ref(db, `groups/${groupId}/fights/${fightId}/config`)
+
+  const unsubscribe = onValue(configRef, (snap) => {
+    callback(snap.exists() ? snap.val() : {})
+  })
+
+  return unsubscribe
+}
 /* ---------------- GROUPS ---------------- */
 
 export async function createGroup(name: string, password: string) {
@@ -287,6 +302,7 @@ export async function saveRotation(
     if (!snap.exists()) {
       // no rotation yet, create everything
       await set(rotationRef, rotation)
+
       return
     }
     type RotationUpdates = {

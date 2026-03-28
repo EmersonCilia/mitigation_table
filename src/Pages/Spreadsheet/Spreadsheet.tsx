@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import {
-  listenForActiveJobs,
+  listenForFightConfig,
   listenForRotation,
   listenForRows,
   saveRow,
-  updateActiveJobs
+  updateActiveJobs,
+  updateMainTank
 } from '../../firebase/fights'
 
 import DataRow from '../../components/DataRow/DataRow'
@@ -33,6 +34,7 @@ const Spreadsheet = () => {
   const [asideOpen, setAsideOpen] = useState(!isMobile)
   const [mechanicType, setMechanicType] = useState<MechanicType>('mechanic')
   const [dbRotationActions, setDbRotationActions] = useState<Action[]>([])
+  const [mainTank, setMainTank] = useState<string | null>(null)
   const [visibleJobs, setVisibleJobs] = useState<string[]>(() => {
     const stored = localStorage.getItem('visibleJobs')
     return stored ? JSON.parse(stored) : []
@@ -75,8 +77,9 @@ const Spreadsheet = () => {
   useEffect(() => {
     if (!groupId || !fightId) return
 
-    const unsubscribe = listenForActiveJobs(groupId, fightId, (jobsFromDB) => {
-      setActiveJobs(jobsFromDB || [])
+    const unsubscribe = listenForFightConfig(groupId, fightId, (config) => {
+      setActiveJobs(config.activeJobs || [])
+      setMainTank(config.mainTank || null)
     })
 
     return unsubscribe
@@ -118,12 +121,12 @@ const Spreadsheet = () => {
     setSkill('')
     setDamageTotal(0)
   }
-
   const toggleActiveJob = async (jobId: string) => {
     if (!groupId || !fightId) return
+
     const isActive = activeJobs.includes(jobId)
 
-    const updated = activeJobs.includes(jobId)
+    const updated = isActive
       ? activeJobs.filter((j) => j !== jobId)
       : [...activeJobs, jobId]
 
@@ -132,7 +135,26 @@ const Spreadsheet = () => {
     if (!isActive) {
       setVisibleJobs((prev) => (prev.includes(jobId) ? prev : [...prev, jobId]))
     }
+
+    if (mainTank === jobId && !updated.includes(jobId)) {
+      setMainTank(null)
+      await updateMainTank(groupId, fightId, null)
+    }
+
     await updateActiveJobs(groupId, fightId, updated)
+  }
+  const toggleMainTank = async (jobId: string) => {
+    if (!groupId || !fightId) return
+
+    // only tanks allowed
+    const job = allJobs.find((j) => j.job === jobId)
+    if (job?.role !== 'tank') return
+
+    const newMainTank = mainTank === jobId ? null : jobId
+
+    setMainTank(newMainTank)
+
+    await updateMainTank(groupId, fightId, newMainTank)
   }
 
   // timer input mask
@@ -237,6 +259,7 @@ const Spreadsheet = () => {
             jobs={allJobs}
             activeJobs={activeJobs}
             toggleJob={toggleActiveJob}
+            toggleMt={toggleMainTank}
             skillVisibility={skillVisibility}
             setSkillVisibility={setSkillVisibility}
             visibleJobs={visibleJobs}
@@ -289,10 +312,12 @@ const Spreadsheet = () => {
             <DataRow
               key={row.id}
               row={row}
+              rows={rows}
               activeJobs={activeJobs}
               activations={activations}
               skillVisibility={skillVisibility}
               visibleJobs={visibleJobs}
+              mainTank={mainTank}
             />
           ))}
         </S.Table>
@@ -353,7 +378,8 @@ const Spreadsheet = () => {
                   >
                     <option value="raidwide">raidwide</option>
                     <option value="debuff">debuff</option>
-                    <option value="tankbuster">tankbuster</option>
+                    <option value="tankbusterMT">mt tankbuster</option>
+                    <option value="tankbusterOT">ot tankbuster</option>
                     <option value="mechanic">mechanic</option>
                   </select>
                 </S.LabelGroups>

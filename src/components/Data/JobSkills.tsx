@@ -188,7 +188,7 @@ export const jobSkills = {
   PLD: [
     { src: reprisal, alt: 'Reprisal', type: 'partyMitigation' },
     { src: passageOfArms, alt: 'Passage_of_Arms', type: 'partyMitigation' },
-    { src: divineVeil, alt: 'Divine_Veil', type: 'partyMitigation' },
+    { src: divineVeil, alt: 'Divine_Veil', type: 'partyShield' },
     { src: rampart, alt: 'Rampart', type: 'singleMitigation' },
     { src: guardian, alt: 'Guardian', type: 'singleMitigation' },
     { src: bulwark, alt: 'Bulwark', type: 'singleMitigation' },
@@ -199,7 +199,7 @@ export const jobSkills = {
   ],
   WAR: [
     { src: reprisal, alt: 'Reprisal', type: 'partyMitigation' },
-    { src: shakeItOff, alt: 'Shake_It_Off', type: 'partyMitigation' },
+    { src: shakeItOff, alt: 'Shake_It_Off', type: 'partyShield' },
     { src: rampart, alt: 'Rampart', type: 'singleMitigation' },
     { src: damnation, alt: 'Damnation', type: 'singleMitigation' },
     { src: equilibrium, alt: 'Equilibrium', type: 'singleMitigation' },
@@ -211,7 +211,7 @@ export const jobSkills = {
   SGE: [
     { src: kerachole, alt: 'Kerachole', type: 'partyMitigation' },
     { src: holos, alt: 'Holos', type: 'partyMitigation' },
-    { src: panhaima, alt: 'Panhaima', type: 'partyMitigation' },
+    { src: panhaima, alt: 'Panhaima', type: 'partyShield' },
     { src: taurochole, alt: 'Taurochole', type: 'singleMitigation' },
     { src: krasis, alt: 'Krasis', type: 'singleMitigation' },
     { src: druochole, alt: 'Druochole', type: 'healing' },
@@ -224,7 +224,7 @@ export const jobSkills = {
     {
       src: eukrasianPrognosis,
       alt: 'Eukrasian_Prognosis_II',
-      type: 'partyMitigation'
+      type: 'partyShield'
     }
   ],
   SCH: [
@@ -238,7 +238,7 @@ export const jobSkills = {
     {
       src: deploymentTactics,
       alt: 'Deployment_Tactics',
-      type: 'partyMitigation'
+      type: 'partyShield'
     },
     { src: excogitation, alt: 'Excogitation', type: 'singleMitigation' },
     { src: protraction, alt: 'Protraction', type: 'singleMitigation' },
@@ -249,9 +249,9 @@ export const jobSkills = {
     { src: seraphism, alt: 'Seraphism', type: 'healing' },
     { src: recitation, alt: 'Recitation', type: 'healing' },
     { src: dissipation, alt: 'Dissipation', type: 'healing' },
-    { src: consolation, alt: 'Consolation', type: 'partyMitigation' },
+    { src: consolation, alt: 'Consolation', type: 'partyShield' },
     { src: summonSeraph, alt: 'Summon_Seraph', type: 'partyMitigation' },
-    { src: succor, alt: 'Succor', type: 'partyMitigation' }
+    { src: succor, alt: 'Succor', type: 'partyShield' }
   ],
   AST: [
     {
@@ -274,7 +274,7 @@ export const jobSkills = {
   ],
   WHM: [
     { src: temperance, alt: 'Temperance', type: 'partyMitigation' },
-    { src: divineCaress, alt: 'Divine_Caress', type: 'partyMitigation' },
+    { src: divineCaress, alt: 'Divine_Caress', type: 'partyShield' },
     { src: lotb, alt: 'Liturgy_of_the_Bell', type: 'healing' },
     {
       src: plenaryIndulgence,
@@ -301,7 +301,7 @@ export const jobSkills = {
   PCM: [
     { src: addle, alt: 'Addle', type: 'partyMitigation' },
     { src: temperaCoat, alt: 'Tempera_Coat', type: 'singleMitigation' },
-    { src: temperaGrassa, alt: 'Tempera_Grassa', type: 'partyMitigation' }
+    { src: temperaGrassa, alt: 'Tempera_Grassa', type: 'partyShield' }
   ],
   BLM: [{ src: addle, alt: 'Addle', type: 'partyMitigation' }],
   SMN: [{ src: addle, alt: 'Addle', type: 'partyMitigation' }],

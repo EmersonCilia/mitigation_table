@@ -8,7 +8,8 @@ export const colors = {
   text: '#d6d6cbff',
   asideColor: '#15161fff',
   red: '#ff5555',
-  blue: '#58bbd1ff'
+  blueOT: '#58bbd1ff',
+  blueMT: 'rgb(46, 100, 235)'
 }
 
 export const GlobalCss = createGlobalStyle`
@@ -89,7 +90,7 @@ export const Button = styled.button<{ $variant?: 'red' | 'green' | 'blue' }>`
       case 'red':
         return colors.red
       case 'blue':
-        return colors.blue
+        return colors.blueOT
       case 'green':
       default:
         return colors.green

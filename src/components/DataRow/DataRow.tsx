@@ -23,10 +23,12 @@ import trashCan from '../../assets/trash_can.svg'
 
 const DataRow = ({
   row,
+  rows,
   activeJobs,
   activations,
   skillVisibility,
-  visibleJobs
+  visibleJobs,
+  mainTank
 }: RowStructure): JSX.Element | null => {
   /**
    * Route params (can be undefined on first render)
@@ -35,7 +37,6 @@ const DataRow = ({
     groupId?: string
     fightId?: string
   }>()
-
   /**
    * Always work with safe values.
    * This avoids conditional hooks and hook-order violations.
@@ -67,8 +68,10 @@ const DataRow = ({
    */
   const getMechanicColor = useCallback((type?: string) => {
     switch (type) {
-      case 'tankbuster':
-        return colors.blue
+      case 'tankbusterMT':
+        return colors.blueMT
+      case 'tankbusterOT':
+        return colors.blueOT
       case 'raidwide':
         return colors.red
       case 'debuff':
@@ -93,30 +96,39 @@ const DataRow = ({
    */
   const mitigationStateMap = useMemo(() => {
     const map: Record<string, ColorState> = {}
-
     Object.entries(jobSkills).forEach(([jobName, skills], jobIndex) => {
-      // Skip jobs that are not active or visible
       if (!activeJobs.includes(jobName)) return
       const jobIndexStr = String(jobIndex)
 
       skills.forEach((skill) => {
-        // Respect UI visibility filters
         const activationTimes = activations?.[jobIndexStr]?.[skill.alt] ?? []
-
         const mitInfo =
           mitigationsData[skill.alt as keyof typeof mitigationsData]
-        // Compute the color state ONCE
+        if (skill.alt === 'Holy_Sheltron') {
+          // add Knight's Resolve as a linked mitigation
+          map[`${jobName}-Knights_Resolve`] = resolveMitigationState(
+            currentTime,
+            activationTimes,
+            4,
+            mitInfo?.cooldown ?? 0,
+            rows,
+            'Knights_Resolve',
+            mitInfo?.type
+          ) as ColorState
+        }
         map[`${jobName}-${skill.alt}`] = resolveMitigationState(
           currentTime,
           activationTimes,
           mitInfo?.duration ?? 0,
-          mitInfo?.cooldown ?? 0
+          mitInfo?.cooldown ?? 0,
+          rows,
+          skill.alt,
+          mitInfo?.type
         ) as ColorState
       })
     })
-
     return map
-  }, [activeJobs, activations, currentTime])
+  }, [activeJobs, activations, currentTime, rows])
 
   /**
    * Build the activeMitigations structure used by
@@ -128,16 +140,13 @@ const DataRow = ({
    */
   const activeMitigations = useMemo(() => {
     const result: Record<string, Record<string, boolean>> = {}
-
     Object.entries(mitigationStateMap).forEach(([key, state]) => {
       if (state !== 'green') return
 
       const [jobName, skillAlt] = key.split('-')
-
       result[jobName] ??= {}
       result[jobName][skillAlt] = true
     })
-
     return result
   }, [mitigationStateMap])
 
@@ -198,7 +207,8 @@ const DataRow = ({
                 row.type || 'magical',
                 row.mechanicType || 'mechanic',
                 activeMitigations,
-                activeJobs
+                activeJobs,
+                mainTank
               )}
               readOnly
             />
