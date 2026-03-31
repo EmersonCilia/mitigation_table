@@ -1,17 +1,19 @@
 import intervene from '../../../../assets/paladin/Intervene.png'
-import { Action } from '../../../../Utils/types'
+import { Action, PaladinState } from '../../../../Utils/types'
 import * as S from '../../Buttons/styles'
 
 type Intervene = {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
   rotationDuration: number
   action: Action[]
+  playerState: PaladinState
 }
 
 export default function Intervene({
   addSpell,
   rotationDuration,
-  action
+  action,
+  playerState
 }: Intervene) {
   const cooldown = 30
   const maxCharges = 2
@@ -46,8 +48,8 @@ export default function Intervene({
             icon: intervene,
             cast: 0.64,
             type: 'ogcd',
-            potency: 0,
-            requiresTarget: false,
+            potency: playerState.fightOrFlight > 0 ? 150 * 1.2 : 150,
+            requiresTarget: true,
             recast: 0,
             cooldown: cooldown,
             manacost: 0,

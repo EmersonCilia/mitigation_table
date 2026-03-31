@@ -26,6 +26,7 @@ export function resolveMitigationState(
   // STILL ON DURATION
   if (timeDiff <= duration) {
     // Party shield logic (breaks on damage)
+
     if (type === 'partyShield') {
       const damageCount = rows.reduce((count, r) => {
         const t = toSeconds(r.timer)
@@ -38,7 +39,6 @@ export function resolveMitigationState(
       if (damageCount >= 2) {
         return timeDiff <= cooldown ? 'red' : 'default'
       }
-
       return 'green'
     }
     return 'green'

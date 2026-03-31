@@ -13,6 +13,8 @@ export const colors = {
 }
 
 export const GlobalCss = createGlobalStyle`
+@import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
+
   * {
     margin: 0;
     padding: 0;

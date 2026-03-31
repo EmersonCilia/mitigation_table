@@ -15,7 +15,10 @@ import { SimulationResult } from '../../Utils/types'
 type RotationTimelineBaseProps<TState> = {
   SpellBarComponent: React.ComponentType<any>
   GaugeComponent: React.ComponentType<any>
-  simulate: (actions: Action[]) => SimulationResult<TState>
+  simulate: (
+    actions: Action[],
+    isDuringDowntime: (time: number) => boolean
+  ) => SimulationResult<TState>
   job: string
 }
 
@@ -272,7 +275,7 @@ export default function RotationTimeline<TState>({
   const getGCD = (baseGCD: number) => calculateGCD(baseGCD, spellSpeed)
 
   /** Current simulation result from actions */
-  const simulation = simulate(actions)
+  const simulation = simulate(actions, isDuringDowntime)
   const playerState = simulation.state
   const totalPotency = simulation.totalPotency
 

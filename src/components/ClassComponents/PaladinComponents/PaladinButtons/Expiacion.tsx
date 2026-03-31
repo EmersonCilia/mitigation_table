@@ -1,17 +1,19 @@
 import expiacion from '../../../../assets/paladin/Expiacion.png'
-import { Action } from '../../../../Utils/types'
+import { Action, PaladinState } from '../../../../Utils/types'
 import * as S from '../../Buttons/styles'
 
 type Expiacion = {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
   rotationDuration: number
   action: Action[]
+  playerState: PaladinState
 }
 
 export default function Expiacion({
   addSpell,
   rotationDuration,
-  action
+  action,
+  playerState
 }: Expiacion) {
   const cooldown = 30
   const lastExpiacion = [...action]
@@ -33,8 +35,8 @@ export default function Expiacion({
             icon: expiacion,
             cast: 0.64,
             type: 'ogcd',
-            potency: 450,
-            requiresTarget: false,
+            potency: playerState.fightOrFlight > 0 ? 450 * 1.2 : 450,
+            requiresTarget: true,
             recast: 0,
             cooldown: cooldown,
             manacost: 0,

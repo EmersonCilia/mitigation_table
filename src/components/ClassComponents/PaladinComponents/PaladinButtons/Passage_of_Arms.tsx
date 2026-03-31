@@ -13,7 +13,7 @@ export default function PassageofArms({
   rotationDuration,
   action
 }: PassageofArms) {
-  const cooldown = 90
+  const cooldown = 120
   const lastPassageofArms = [...action]
     .reverse()
     .find((a) => a.name === 'Passage_of_Arms')

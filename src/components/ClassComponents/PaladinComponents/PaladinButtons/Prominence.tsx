@@ -14,17 +14,18 @@ export default function Prominence({
   calculateGCD
 }: Prominence) {
   const recast = calculateGCD(2500)
-
+  const potency = playerState.prominenceReady > 0 ? 220 : 100
   return (
     <S.ButtonDiv>
       <S.SpellButton
+        $glow={playerState.prominenceReady > 0}
         onClick={() => {
           addSpell({
             name: 'Prominence',
             icon: prominence,
             cast: 0.64,
             type: 'gcd',
-            potency: 500,
+            potency: playerState.fightOrFlight > 0 ? potency * 1.2 : potency,
             requiresTarget: false,
             recast: recast,
             cooldown: 0,
@@ -34,6 +35,11 @@ export default function Prominence({
         }}
       >
         <img src={prominence} width={40} />
+        {playerState.prominenceReady > 0 && (
+          <svg>
+            <rect x="1" y="1" width="42" height="42" />
+          </svg>
+        )}
       </S.SpellButton>
     </S.ButtonDiv>
   )

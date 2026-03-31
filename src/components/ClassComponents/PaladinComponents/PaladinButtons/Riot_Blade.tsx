@@ -18,14 +18,15 @@ export default function RiotBlade({
   return (
     <S.ButtonDiv>
       <S.SpellButton
+        $glow={playerState.riotBladeReady > 0}
         onClick={() => {
           addSpell({
             name: 'Riot_Blade',
             icon: riotBlade,
             cast: 0.64,
             type: 'gcd',
-            potency: 0,
-            requiresTarget: false,
+            potency: playerState.riotBladeReady > 0 ? 330 : 170,
+            requiresTarget: true,
             recast: recast,
             cooldown: 0,
             manacost: 0,
@@ -34,6 +35,11 @@ export default function RiotBlade({
         }}
       >
         <img src={riotBlade} width={40} />
+        {playerState.riotBladeReady > 0 && (
+          <svg>
+            <rect x="1" y="1" width="42" height="42" />
+          </svg>
+        )}
       </S.SpellButton>
     </S.ButtonDiv>
   )

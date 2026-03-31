@@ -25,7 +25,7 @@ export default function FastBlade({
             cast: 0.64,
             type: 'gcd',
             potency: 220,
-            requiresTarget: false,
+            requiresTarget: true,
             recast: recast,
             cooldown: 0,
             manacost: 0,

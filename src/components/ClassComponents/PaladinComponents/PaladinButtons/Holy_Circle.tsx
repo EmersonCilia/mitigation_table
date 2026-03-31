@@ -5,28 +5,28 @@ import * as S from '../../Buttons/styles'
 type HolyCircle = {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
   playerState: PaladinState
-  calculateGCD: (baseGCD: number) => number
 }
 
-export default function HolyCircle({
-  addSpell,
-  playerState,
-  calculateGCD
-}: HolyCircle) {
-  const recast = calculateGCD(2500)
+export default function HolyCircle({ addSpell, playerState }: HolyCircle) {
+  const potency =
+    playerState.requiescat > 0 || playerState.divineMight > 0 ? 250 : 350
 
   return (
     <S.ButtonDiv>
       <S.SpellButton
+        $glow={playerState.divineMight > 0}
         onClick={() => {
           addSpell({
-            name: 'HolyCircle',
+            name: 'Holy_Circle',
             icon: holyCircle,
-            cast: 0.64,
+            cast:
+              playerState.requiescat > 0 || playerState.divineMight > 0
+                ? 0.64
+                : 1.5,
             type: 'gcd',
-            potency: 500,
+            potency: playerState.fightOrFlight > 0 ? potency * 1.2 : potency,
             requiresTarget: false,
-            recast: recast,
+            recast: 2.5,
             cooldown: 0,
             manacost: 0,
             job: 'PLD'
@@ -34,6 +34,11 @@ export default function HolyCircle({
         }}
       >
         <img src={holyCircle} width={40} />
+        {playerState.divineMight > 0 && (
+          <svg>
+            <rect x="1" y="1" width="42" height="42" />
+          </svg>
+        )}
       </S.SpellButton>
     </S.ButtonDiv>
   )

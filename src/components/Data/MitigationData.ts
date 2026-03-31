@@ -296,8 +296,8 @@ export const mitigationsData = {
     }
   },
   Stem_the_Flow: {
-    duration: 8,
-    cooldown: 25,
+    duration: 4,
+    cooldown: 0,
     type: 'healing',
     multiplier: (
       damageType: DamageType,
@@ -344,6 +344,11 @@ export const mitigationsData = {
     cooldown: 0,
     type: 'partyShield',
     multiplier: 1
+  },
+  Holosakos: {
+    duration: 30,
+    cooldown: 0,
+    type: 'partyShield'
   },
 
   // SCH

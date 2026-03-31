@@ -1,7 +1,6 @@
 import { Action, Downtime, PaladinState } from '../../../../Utils/types'
 import AddDowntime from '../../Buttons/Downtime'
 import Wait from '../../Buttons/Wait'
-import Atonement from '../PaladinButtons/Atonement'
 import Bulwark from '../PaladinButtons/Bulwark'
 import Cover from '../PaladinButtons/Cover'
 import DivineVeil from '../PaladinButtons/DivineVeil'
@@ -14,14 +13,8 @@ import Rampart from '../PaladinButtons/Rampart'
 import Reprisal from '../PaladinButtons/Reprisal'
 import RiotBlade from '../PaladinButtons/Riot_Blade'
 import RoyalAuthority from '../PaladinButtons/Royal_Authority'
-import Sepulchre from '../PaladinButtons/Sepulchre'
-import Supplication from '../PaladinButtons/Supplication'
 import * as S from '../../Buttons/styles'
 import HolySpirit from '../PaladinButtons/Holy_Spirit'
-import BladeOfFaith from '../PaladinButtons/Blade_of_Faith'
-import BladeOfTruth from '../PaladinButtons/Blade_of_Truth'
-import BladeOfHonor from '../PaladinButtons/Blade_of_Honor'
-import BladeOfValor from '../PaladinButtons/Blade_of_Valor'
 import Confliteor from '../PaladinButtons/Confliteor'
 import Intervene from '../PaladinButtons/Intervene'
 import TotalEclipse from '../PaladinButtons/Total_Eclipse'
@@ -36,14 +29,14 @@ import Imperator from '../PaladinButtons/Imperator'
 import Intervention from '../PaladinButtons/Intervention'
 import Clemency from '../PaladinButtons/Clemency'
 import IronWill from '../PaladinButtons/Iron_Will'
-import ReleaseIronWill from '../PaladinButtons/Release_Iron_Will'
 import Provoke from '../PaladinButtons/Provoke'
 import Shirk from '../PaladinButtons/Shirk'
 import Interject from '../PaladinButtons/Interject'
 import LowBlow from '../PaladinButtons/Low_Blow'
 import ArmsLenght from '../PaladinButtons/Arms_Lenght'
 import Sprint from '../PaladinButtons/Sprint'
-import FightorFlight from '../PaladinButtons/FightOrFlight'
+import FightorFlight from '../PaladinButtons/Fight_Or_Flight'
+import AtonementCombo from '../PaladinButtons/AtonementCombo'
 
 interface Props {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
@@ -67,17 +60,84 @@ export default function PldSpellBar({
       <Wait addSpell={addSpell} />
       <AddDowntime addDowntime={addDowntime} />
       <S.Spells>
-        <DivineVeil
+        <FastBlade
+          addSpell={addSpell}
+          playerState={playerState}
+          calculateGCD={calculateGCD}
+        />
+        <RiotBlade
+          addSpell={addSpell}
+          playerState={playerState}
+          calculateGCD={calculateGCD}
+        />
+        <RoyalAuthority
+          addSpell={addSpell}
+          playerState={playerState}
+          calculateGCD={calculateGCD}
+        />
+        <HolySpirit addSpell={addSpell} playerState={playerState} />
+        <TotalEclipse
+          addSpell={addSpell}
+          playerState={playerState}
+          calculateGCD={calculateGCD}
+        />
+        <Prominence
+          addSpell={addSpell}
+          playerState={playerState}
+          calculateGCD={calculateGCD}
+        />
+        <HolyCircle addSpell={addSpell} playerState={playerState} />
+        <AtonementCombo
+          addSpell={addSpell}
+          playerState={playerState}
+          calculateGCD={calculateGCD}
+        />
+        <FightorFlight
+          addSpell={addSpell}
+          rotationDuration={rotationDuration}
+          action={action}
+        />
+        <GoringBlade
+          addSpell={addSpell}
+          playerState={playerState}
+          calculateGCD={calculateGCD}
+        />
+        <Imperator
+          addSpell={addSpell}
+          rotationDuration={rotationDuration}
+          action={action}
+          playerState={playerState}
+        />
+        <Confliteor addSpell={addSpell} playerState={playerState} />
+        <CircleOfScorn
+          addSpell={addSpell}
+          rotationDuration={rotationDuration}
+          action={action}
+          playerState={playerState}
+        />
+        <Expiacion
+          addSpell={addSpell}
+          rotationDuration={rotationDuration}
+          action={action}
+          playerState={playerState}
+        />
+        <Intervene
+          addSpell={addSpell}
+          rotationDuration={rotationDuration}
+          action={action}
+          playerState={playerState}
+        />
+        <ShieldLob
+          addSpell={addSpell}
+          playerState={playerState}
+          calculateGCD={calculateGCD}
+        />
+        <HolySheltron
           addSpell={addSpell}
           rotationDuration={rotationDuration}
           action={action}
         />
         <Rampart
-          addSpell={addSpell}
-          rotationDuration={rotationDuration}
-          action={action}
-        />
-        <Cover
           addSpell={addSpell}
           rotationDuration={rotationDuration}
           action={action}
@@ -97,7 +157,12 @@ export default function PldSpellBar({
           rotationDuration={rotationDuration}
           action={action}
         />
-        <HolySheltron
+        <Reprisal
+          addSpell={addSpell}
+          rotationDuration={rotationDuration}
+          action={action}
+        />
+        <DivineVeil
           addSpell={addSpell}
           rotationDuration={rotationDuration}
           action={action}
@@ -107,118 +172,7 @@ export default function PldSpellBar({
           rotationDuration={rotationDuration}
           action={action}
         />
-        <Reprisal
-          addSpell={addSpell}
-          rotationDuration={rotationDuration}
-          action={action}
-        />
-        <FastBlade
-          addSpell={addSpell}
-          playerState={playerState}
-          calculateGCD={calculateGCD}
-        />
-        <RiotBlade
-          addSpell={addSpell}
-          playerState={playerState}
-          calculateGCD={calculateGCD}
-        />
-        <RoyalAuthority
-          addSpell={addSpell}
-          playerState={playerState}
-          calculateGCD={calculateGCD}
-        />
-        <Atonement
-          addSpell={addSpell}
-          playerState={playerState}
-          calculateGCD={calculateGCD}
-        />
-        <Supplication
-          addSpell={addSpell}
-          playerState={playerState}
-          calculateGCD={calculateGCD}
-        />
-        <Sepulchre
-          addSpell={addSpell}
-          playerState={playerState}
-          calculateGCD={calculateGCD}
-        />
-        <HolySpirit
-          addSpell={addSpell}
-          playerState={playerState}
-          calculateGCD={calculateGCD}
-        />
-        <Confliteor
-          addSpell={addSpell}
-          playerState={playerState}
-          calculateGCD={calculateGCD}
-        />
-        <BladeOfFaith
-          addSpell={addSpell}
-          playerState={playerState}
-          calculateGCD={calculateGCD}
-        />
-        <BladeOfTruth
-          addSpell={addSpell}
-          playerState={playerState}
-          calculateGCD={calculateGCD}
-        />
-
-        <BladeOfValor
-          addSpell={addSpell}
-          playerState={playerState}
-          calculateGCD={calculateGCD}
-        />
-        <BladeOfHonor
-          addSpell={addSpell}
-          playerState={playerState}
-          calculateGCD={calculateGCD}
-        />
-        <Intervene
-          addSpell={addSpell}
-          rotationDuration={rotationDuration}
-          action={action}
-        />
-        <TotalEclipse
-          addSpell={addSpell}
-          playerState={playerState}
-          calculateGCD={calculateGCD}
-        />
-        <Prominence
-          addSpell={addSpell}
-          playerState={playerState}
-          calculateGCD={calculateGCD}
-        />
-        <GoringBlade
-          addSpell={addSpell}
-          playerState={playerState}
-          calculateGCD={calculateGCD}
-        />
-        <HolyCircle
-          addSpell={addSpell}
-          playerState={playerState}
-          calculateGCD={calculateGCD}
-        />
-        <ShieldBash
-          addSpell={addSpell}
-          playerState={playerState}
-          calculateGCD={calculateGCD}
-        />
-        <ShieldLob
-          addSpell={addSpell}
-          playerState={playerState}
-          calculateGCD={calculateGCD}
-        />
-        <CircleOfScorn
-          addSpell={addSpell}
-          rotationDuration={rotationDuration}
-          action={action}
-        />
-        <Expiacion
-          addSpell={addSpell}
-          rotationDuration={rotationDuration}
-          action={action}
-        />
-        <Imperator
+        <Cover
           addSpell={addSpell}
           rotationDuration={rotationDuration}
           action={action}
@@ -228,7 +182,9 @@ export default function PldSpellBar({
           rotationDuration={rotationDuration}
           action={action}
         />
-        <Clemency
+        <Clemency addSpell={addSpell} playerState={playerState} />
+
+        <ShieldBash
           addSpell={addSpell}
           playerState={playerState}
           calculateGCD={calculateGCD}
@@ -237,18 +193,20 @@ export default function PldSpellBar({
           addSpell={addSpell}
           rotationDuration={rotationDuration}
           action={action}
+          playerState={playerState}
         />
-        <ReleaseIronWill
-          addSpell={addSpell}
-          rotationDuration={rotationDuration}
-          action={action}
-        />
+
         <Provoke
           addSpell={addSpell}
           rotationDuration={rotationDuration}
           action={action}
         />
         <Shirk
+          addSpell={addSpell}
+          rotationDuration={rotationDuration}
+          action={action}
+        />
+        <Sprint
           addSpell={addSpell}
           rotationDuration={rotationDuration}
           action={action}
@@ -264,16 +222,6 @@ export default function PldSpellBar({
           action={action}
         />
         <ArmsLenght
-          addSpell={addSpell}
-          rotationDuration={rotationDuration}
-          action={action}
-        />
-        <Sprint
-          addSpell={addSpell}
-          rotationDuration={rotationDuration}
-          action={action}
-        />
-        <FightorFlight
           addSpell={addSpell}
           rotationDuration={rotationDuration}
           action={action}

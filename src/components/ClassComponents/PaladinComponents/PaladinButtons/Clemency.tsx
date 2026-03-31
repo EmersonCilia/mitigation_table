@@ -5,14 +5,9 @@ import * as S from '../../Buttons/styles'
 type Clemency = {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
   playerState: PaladinState
-  calculateGCD: (baseGCD: number) => number
 }
 
-export default function Clemency({
-  addSpell,
-  playerState,
-  calculateGCD
-}: Clemency) {
+export default function Clemency({ addSpell, playerState }: Clemency) {
   return (
     <S.ButtonDiv>
       <S.SpellButton
@@ -20,9 +15,9 @@ export default function Clemency({
           addSpell({
             name: 'Clemency',
             icon: clemency,
-            cast: 1.5,
+            cast: playerState.requiescat > 0 ? 0.64 : 1.5,
             type: 'gcd',
-            potency: 500,
+            potency: 0,
             requiresTarget: false,
             recast: 2.5,
             cooldown: 0,

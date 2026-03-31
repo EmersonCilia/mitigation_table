@@ -26,7 +26,7 @@ const Job = ({ job, skillVisibility, visibleJobs }: Props) => {
   return (
     <Jobs>
       <p>
-        {job}{' '}
+        {job}
         <img src={linkArrow} alt="" style={{ width: '12px', height: '12px' }} />
       </p>
       <SkillsRow>

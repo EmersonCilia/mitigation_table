@@ -146,6 +146,17 @@ export type PaladinState = {
   bladeOfHonorReady: number
   goringBladeReady: number
   fightOrFlight: number
+  riotBladeReady: number
+  royalAuthrityReady: number
+  bladeOfValorReady: number
+  bladeOfFaithReady: number
+  bladeOfTruthReady: number
+  prominenceReady: number
+  ironWill: boolean
+  oathTimer: number
+  circleOfScornDuration: number
+  circleOfScornDotPotency: number
+  circleOfScornTIckTimer: number
 }
 
 export type Action = {

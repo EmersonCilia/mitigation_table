@@ -94,8 +94,18 @@ const DataRow = ({
    * Mutating objects during render
    * Nested loops during every re-render
    */
+
   const mitigationStateMap = useMemo(() => {
+    const linkedMitigations: Record<string, string[]> = {
+      Holy_Sheltron: ['Knights_Resolve'],
+      Holos: ['Holosakos'],
+      Heart_of_Corundum: ['Clarity_of_Corundum'],
+      Bloodwhetting: ['Stem_the_Flow'],
+      Nascent_Flash: ['Stem_the_Flow']
+      // add more special cases here
+    }
     const map: Record<string, ColorState> = {}
+
     Object.entries(jobSkills).forEach(([jobName, skills], jobIndex) => {
       if (!activeJobs.includes(jobName)) return
       const jobIndexStr = String(jobIndex)
@@ -104,18 +114,25 @@ const DataRow = ({
         const activationTimes = activations?.[jobIndexStr]?.[skill.alt] ?? []
         const mitInfo =
           mitigationsData[skill.alt as keyof typeof mitigationsData]
-        if (skill.alt === 'Holy_Sheltron') {
-          // add Knight's Resolve as a linked mitigation
-          map[`${jobName}-Knights_Resolve`] = resolveMitigationState(
-            currentTime,
-            activationTimes,
-            4,
-            mitInfo?.cooldown ?? 0,
-            rows,
-            'Knights_Resolve',
-            mitInfo?.type
-          ) as ColorState
+
+        // handle linked skills
+        if (linkedMitigations[skill.alt]) {
+          linkedMitigations[skill.alt].forEach((linkedSkill) => {
+            const linkedMitInfo =
+              mitigationsData[linkedSkill as keyof typeof mitigationsData]
+
+            map[`${jobName}-${linkedSkill}`] = resolveMitigationState(
+              currentTime,
+              activationTimes,
+              linkedMitInfo.duration ?? 0,
+              mitInfo?.cooldown ?? 0,
+              rows,
+              linkedSkill,
+              linkedMitInfo.type
+            ) as ColorState
+          })
         }
+
         map[`${jobName}-${skill.alt}`] = resolveMitigationState(
           currentTime,
           activationTimes,
@@ -127,9 +144,9 @@ const DataRow = ({
         ) as ColorState
       })
     })
-    return map
-  }, [activeJobs, activations, currentTime, rows])
 
+    return map
+  }, [activeJobs, activations, rows, currentTime])
   /**
    * Build the activeMitigations structure used by
    * calculateMitigation().

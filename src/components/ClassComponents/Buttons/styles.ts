@@ -1,11 +1,40 @@
-import { styled } from 'styled-components'
+import { css, keyframes, styled } from 'styled-components'
 
-export const SpellButton = styled.button`
+const march = keyframes`
+  to {
+    stroke-dashoffset: 15;
+  }
+`
+
+export const SpellButton = styled.button<{ $glow?: boolean }>`
   border: none;
   background: transparent;
   cursor: pointer;
-  height: 40px;
-  width: 40px;
+  height: 44px;
+  width: 44px;
+  position: relative;
+  ${({ $glow }) =>
+    $glow &&
+    css`
+      svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+
+        rect {
+          stroke: #ffd000;
+          stroke-width: 2;
+          fill: none;
+          rx: 6; // match button border-radius
+          ry: 6;
+          stroke-dasharray: 4 4;
+          animation: ${march} 0.5s linear infinite;
+        }
+      }
+    `}
   &:disabled {
     opacity: 0.35;
     cursor: not-allowed;
@@ -19,6 +48,10 @@ export const SpellButton = styled.button`
   }
   &:active {
     transform: scale(0.9);
+  }
+  img {
+    height: 40px;
+    width: 40px;
   }
 `
 export const ButtonDiv = styled.div`

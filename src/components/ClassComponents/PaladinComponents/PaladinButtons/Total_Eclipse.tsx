@@ -20,11 +20,11 @@ export default function TotalEclipse({
       <S.SpellButton
         onClick={() => {
           addSpell({
-            name: 'TotalEclipse',
+            name: 'Total_Eclipse',
             icon: totalEclipse,
             cast: 0.64,
             type: 'gcd',
-            potency: 500,
+            potency: playerState.fightOrFlight > 0 ? 120 * 1.2 : 120,
             requiresTarget: false,
             recast: recast,
             cooldown: 0,

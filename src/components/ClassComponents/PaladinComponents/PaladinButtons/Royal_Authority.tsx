@@ -18,14 +18,15 @@ export default function RoyalAuthority({
   return (
     <S.ButtonDiv>
       <S.SpellButton
+        $glow={playerState.royalAuthrityReady > 0}
         onClick={() => {
           addSpell({
             name: 'Royal_Authority',
             icon: royalAuthority,
             cast: 0.64,
             type: 'gcd',
-            potency: 0,
-            requiresTarget: false,
+            potency: playerState.royalAuthrityReady > 0 ? 460 : 200,
+            requiresTarget: true,
             recast: recast,
             cooldown: 0,
             manacost: 0,
@@ -34,6 +35,11 @@ export default function RoyalAuthority({
         }}
       >
         <img src={royalAuthority} width={40} />
+        {playerState.royalAuthrityReady > 0 && (
+          <svg>
+            <rect x="1" y="1" width="42" height="42" />
+          </svg>
+        )}
       </S.SpellButton>
     </S.ButtonDiv>
   )
