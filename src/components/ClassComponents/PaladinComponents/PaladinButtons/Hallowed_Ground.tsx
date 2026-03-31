@@ -16,7 +16,7 @@ export default function HallowedGround({
   const cooldown = 420
   const lastHallowedGround = [...action]
     .reverse()
-    .find((a) => a.name === 'HallowedGround')
+    .find((a) => a.name === 'Hallowed_Ground')
 
   const remainingCooldown = lastHallowedGround
     ? Math.max(0, cooldown - (rotationDuration - lastHallowedGround.start))
@@ -29,7 +29,7 @@ export default function HallowedGround({
           if (remainingCooldown > 0) return
 
           addSpell({
-            name: 'HallowedGround',
+            name: 'Hallowed_Ground',
             icon: hallowedGround,
             cast: 0.64,
             type: 'ogcd',

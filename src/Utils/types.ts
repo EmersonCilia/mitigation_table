@@ -157,6 +157,7 @@ export type PaladinState = {
   circleOfScornDuration: number
   circleOfScornDotPotency: number
   circleOfScornTIckTimer: number
+  manaTickTimer: number
 }
 
 export type Action = {

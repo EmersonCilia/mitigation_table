@@ -11,6 +11,7 @@ export default function Clemency({ addSpell, playerState }: Clemency) {
   return (
     <S.ButtonDiv>
       <S.SpellButton
+        disabled={playerState.mana < 2000}
         onClick={() => {
           addSpell({
             name: 'Clemency',
@@ -21,7 +22,7 @@ export default function Clemency({ addSpell, playerState }: Clemency) {
             requiresTarget: false,
             recast: 2.5,
             cooldown: 0,
-            manacost: 0,
+            manacost: 2000,
             job: 'PLD'
           })
         }}

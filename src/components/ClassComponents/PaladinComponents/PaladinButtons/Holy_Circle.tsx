@@ -14,6 +14,7 @@ export default function HolyCircle({ addSpell, playerState }: HolyCircle) {
   return (
     <S.ButtonDiv>
       <S.SpellButton
+        disabled={playerState.mana < 1000}
         $glow={playerState.divineMight > 0}
         onClick={() => {
           addSpell({

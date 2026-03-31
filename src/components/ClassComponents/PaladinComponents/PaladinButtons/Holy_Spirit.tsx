@@ -13,6 +13,7 @@ export default function HolySpirit({ addSpell, playerState }: HolySpirit) {
   return (
     <S.ButtonDiv>
       <S.SpellButton
+        disabled={playerState.mana < 1000}
         $glow={playerState.divineMight > 0}
         onClick={() => {
           addSpell({

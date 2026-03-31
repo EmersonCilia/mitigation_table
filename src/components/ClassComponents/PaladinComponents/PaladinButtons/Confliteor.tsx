@@ -46,6 +46,9 @@ export default function ConfiteorCombo({ addSpell, playerState }: Confliteor) {
       enabled: true
     }
   }
+  const manaCost = 1000
+
+  spell.enabled = spell.enabled && playerState.mana >= manaCost
 
   return (
     <S.ButtonDiv>
@@ -67,7 +70,7 @@ export default function ConfiteorCombo({ addSpell, playerState }: Confliteor) {
             requiresTarget: true,
             recast: 2.5,
             cooldown: 0,
-            manacost: 1000,
+            manacost: manaCost,
             job: 'PLD'
           })
         }}

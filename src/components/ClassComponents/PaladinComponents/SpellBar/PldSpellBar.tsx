@@ -136,6 +136,7 @@ export default function PldSpellBar({
           addSpell={addSpell}
           rotationDuration={rotationDuration}
           action={action}
+          playerState={playerState}
         />
         <Rampart
           addSpell={addSpell}
@@ -176,11 +177,13 @@ export default function PldSpellBar({
           addSpell={addSpell}
           rotationDuration={rotationDuration}
           action={action}
+          playerState={playerState}
         />
         <Intervention
           addSpell={addSpell}
           rotationDuration={rotationDuration}
           action={action}
+          playerState={playerState}
         />
         <Clemency addSpell={addSpell} playerState={playerState} />
 

@@ -1,17 +1,19 @@
 import holySheltron from '../../../../assets/paladin/Holy_Sheltron.png'
-import { Action } from '../../../../Utils/types'
+import { Action, PaladinState } from '../../../../Utils/types'
 import * as S from '../../Buttons/styles'
 
 type HolySheltron = {
   addSpell: (spell: Omit<Action, 'id' | 'start'>) => void
   rotationDuration: number
   action: Action[]
+  playerState: PaladinState
 }
 
 export default function HolySheltron({
   addSpell,
   rotationDuration,
-  action
+  action,
+  playerState
 }: HolySheltron) {
   const cooldown = 5
   const lastHolySheltron = [...action]
@@ -24,7 +26,8 @@ export default function HolySheltron({
   return (
     <S.ButtonDiv>
       <S.SpellButton
-        disabled={remainingCooldown > 0}
+        $glow={playerState.oath >= 50}
+        disabled={remainingCooldown > 0 || playerState.oath < 50}
         onClick={() => {
           if (remainingCooldown > 0) return
 
@@ -44,6 +47,11 @@ export default function HolySheltron({
         }}
       >
         <img src={holySheltron} width={40} />
+        {playerState.oath >= 50 && (
+          <svg>
+            <rect x="1" y="1" width="42" height="42" />
+          </svg>
+        )}
       </S.SpellButton>
       {remainingCooldown > 0 && <span>{remainingCooldown.toFixed(1)}</span>}
     </S.ButtonDiv>

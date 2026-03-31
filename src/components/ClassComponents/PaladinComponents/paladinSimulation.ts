@@ -22,7 +22,8 @@ const initialState: PaladinState = {
   oathTimer: 2.23,
   circleOfScornDuration: 0,
   circleOfScornDotPotency: 0,
-  circleOfScornTIckTimer: 0
+  circleOfScornTIckTimer: 0,
+  manaTickTimer: 3
 }
 
 function updateOath(
@@ -74,9 +75,13 @@ function applySpell(state: PaladinState, spell: Action): PaladinState {
     case 'Riot_Blade': {
       if (newState.riotBladeReady > 0) {
         newState.royalAuthrityReady = 30
+        newState.mana += 1000
       }
       if (newState.riotBladeReady <= 0) {
         newState.royalAuthrityReady = 0
+      }
+      if (newState.mana >= 10000) {
+        newState.mana = 10000
       }
       newState.riotBladeReady = 0
       newState.bladeOfFaithReady = 0
@@ -102,20 +107,33 @@ function applySpell(state: PaladinState, spell: Action): PaladinState {
     case 'Atonement': {
       newState.supplicationReady = 30
       newState.atonementReady = 0
+      newState.mana += 400
+      if (newState.mana >= 10000) {
+        newState.mana = 10000
+      }
       break
     }
     case 'Supplication': {
       newState.supplicationReady = 0
       newState.sepulchreReady = 30
+      newState.mana += 400
+      if (newState.mana >= 10000) {
+        newState.mana = 10000
+      }
       break
     }
     case 'Sepulchre': {
       newState.sepulchreReady = 0
+      newState.mana += 400
+      if (newState.mana >= 10000) {
+        newState.mana = 10000
+      }
       break
     }
     case 'Confliteor': {
       newState.bladeOfFaithReady = 30
       newState.confliteorReady = 0
+      newState.mana -= 1000
       if (newState.requiescat > 0) {
         newState.requiescat--
       }
@@ -124,6 +142,7 @@ function applySpell(state: PaladinState, spell: Action): PaladinState {
     case 'Blade_of_Faith': {
       newState.bladeOfTruthReady = 30
       newState.bladeOfFaithReady = 0
+      newState.mana -= 1000
       if (newState.requiescat > 0) {
         newState.requiescat--
       }
@@ -132,6 +151,8 @@ function applySpell(state: PaladinState, spell: Action): PaladinState {
     case 'Blade_of_Truth': {
       newState.bladeOfTruthReady = 0
       newState.bladeOfValorReady = 30
+      newState.mana -= 1000
+
       if (newState.requiescat > 0) {
         newState.requiescat--
       }
@@ -140,6 +161,8 @@ function applySpell(state: PaladinState, spell: Action): PaladinState {
     case 'Blade_of_Valor': {
       newState.bladeOfValorReady = 0
       newState.bladeOfHonorReady = 30
+      newState.mana -= 1000
+
       if (newState.requiescat > 0) {
         newState.requiescat--
       }
@@ -160,6 +183,8 @@ function applySpell(state: PaladinState, spell: Action): PaladinState {
       if (newState.divineMight <= 0 && newState.requiescat <= 0) {
         newState.oathTimer -= 1
       }
+      newState.mana -= 1000
+
       break
     }
     case 'Goring_Blade': {
@@ -199,6 +224,18 @@ function applySpell(state: PaladinState, spell: Action): PaladinState {
       newState.circleOfScornDuration = spell.dotDuration ?? 0
       newState.circleOfScornTIckTimer = spell.dotInterval ?? 0
       newState.circleOfScornDotPotency = spell.dotPotency ?? 0
+      break
+    }
+    case 'Cover': {
+      newState.oath -= 50
+      break
+    }
+    case 'Holy_Sheltron': {
+      newState.oath -= 50
+      break
+    }
+    case 'Intervention': {
+      newState.oath -= 50
       break
     }
   }
@@ -268,8 +305,15 @@ function updateDots(state: PaladinState, deltaTime: number): number {
 
   state.circleOfScornDuration -= deltaTime
   state.circleOfScornDuration = Math.max(0, state.circleOfScornDuration)
-  console.log(potency)
   return potency
+}
+function updateMana(state: PaladinState, deltaTime: number) {
+  state.manaTickTimer -= deltaTime
+
+  while (state.manaTickTimer <= 0) {
+    state.mana = Math.min(10000, state.mana + 200)
+    state.manaTickTimer += 3
+  }
 }
 export function Pldsimulate(
   actions: Action[],
@@ -285,11 +329,13 @@ export function Pldsimulate(
 
     totalPotency += updateDots(state, deltaTime)
     updateBuffs(state, deltaTime, action)
+    updateMana(state, deltaTime)
 
     state = applySpell(state, action)
     totalPotency += action.potency
     const autos = updateOath(state, deltaTime, lastTime, isDuringDowntime)
     totalPotency += autos * 70
+    console.log(state.mana)
     lastTime = actionEnd
   }
   return { state, totalPotency }
