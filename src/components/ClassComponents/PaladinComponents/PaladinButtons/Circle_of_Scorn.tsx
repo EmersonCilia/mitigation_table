@@ -36,7 +36,7 @@ export default function CircleOfScorn({
             cast: 0.64,
             type: 'ogcd',
             potency: playerState.fightOrFlight > 0 ? 140 * 1.2 : 140,
-            requiresTarget: false,
+            requiresTarget: true,
             recast: 0,
             cooldown: cooldown,
             dotDuration: 15,

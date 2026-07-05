@@ -32,7 +32,12 @@ export function resolveMitigationState(
         const t = toSeconds(r.timer)
 
         if (t < activationTime! || t >= currentTime) return count
-        if (r.damagetotal > 0) return count + 2
+        if (
+          r.damagetotal > 0 &&
+          r.mechanicType != 'tankbusterMT' &&
+          r.mechanicType != 'tankbusterOT'
+        )
+          return count + 2
 
         return count
       }, 0)
@@ -41,6 +46,7 @@ export function resolveMitigationState(
       }
       return 'green'
     }
+
     return 'green'
   }
   // COOLDOWN

@@ -286,6 +286,8 @@ export async function saveRotation(
   jobId: string,
   rotation: {
     spellSpeed: number
+    determination: number
+    mainStat: number
     timelineStart: number
     actions: Action[]
     downtimes: Downtime[]
@@ -307,6 +309,8 @@ export async function saveRotation(
     }
     type RotationUpdates = {
       spellSpeed?: number
+      determination?: number
+      mainStat?: number
       timelineStart?: number
       actions?: Action[]
       downtimes?: Downtime[]
@@ -326,6 +330,12 @@ export async function saveRotation(
     }
     if (rotation.spellSpeed !== current.spellSpeed) {
       updates.spellSpeed = rotation.spellSpeed
+    }
+    if (rotation.determination !== current.determination) {
+      updates.determination = rotation.determination
+    }
+    if (rotation.mainStat !== current.mainStat) {
+      updates.mainStat = rotation.mainStat
     }
     if (rotation.timelineStart !== current.timelineStart) {
       updates.timelineStart = rotation.timelineStart

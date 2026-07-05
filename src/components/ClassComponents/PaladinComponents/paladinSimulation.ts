@@ -335,7 +335,6 @@ export function Pldsimulate(
     totalPotency += action.potency
     const autos = updateOath(state, deltaTime, lastTime, isDuringDowntime)
     totalPotency += autos * 70
-    console.log(state.mana)
     lastTime = actionEnd
   }
   return { state, totalPotency }

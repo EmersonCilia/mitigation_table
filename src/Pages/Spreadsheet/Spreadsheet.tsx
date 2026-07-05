@@ -260,6 +260,7 @@ const Spreadsheet = () => {
             activeJobs={activeJobs}
             toggleJob={toggleActiveJob}
             toggleMt={toggleMainTank}
+            mainTank={mainTank}
             skillVisibility={skillVisibility}
             setSkillVisibility={setSkillVisibility}
             visibleJobs={visibleJobs}

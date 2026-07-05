@@ -9,6 +9,12 @@ import PldGauge from '../../components/ClassComponents/PaladinComponents/Gauge/P
 import PldSpellBar from '../../components/ClassComponents/PaladinComponents/SpellBar/PldSpellBar'
 import { Pldsimulate } from '../../components/ClassComponents/PaladinComponents/paladinSimulation'
 import { PaladinState } from '../../Utils/types'
+
+//SCH
+import SchSPellBar from '../../components/ClassComponents/ScholarComponents/SpellBar/SchSpellBar'
+import { Schsimulate } from '../../components/ClassComponents/ScholarComponents/scholarSimulation'
+import { ScholarState } from '../../Utils/types'
+
 export const jobRegistry = {
   BLM: {
     SpellBarComponent: BlmSpellBar,
@@ -21,6 +27,12 @@ export const jobRegistry = {
     GaugeComponent: PldGauge,
     simulate: Pldsimulate,
     stateType: {} as PaladinState
+  },
+  SCH: {
+    SpellBarComponent: SchSPellBar,
+    GaugeComponent: PldGauge,
+    simulate: Schsimulate,
+    stateType: {} as ScholarState
   }
 }
 

@@ -40,10 +40,16 @@ export default function RotationTimeline<TState>({
   const [timelineStart, setTimelineStart] = useState(-3.5)
   /** Spell speed used for GCD calculations */
   const [spellSpeed, setSpellSpeed] = useState(420)
+  const [determination, setDetermination] = useState(440)
+  const [mainStat, setMind] = useState(440)
+
   /** References to last saved data to prevent unnecessary DB writes */
   const lastSavedActions = useRef<Action[]>([])
   const lastSavedDowntimes = useRef<Downtime[]>([])
   const lastSavedSpellSpeed = useRef<number>(spellSpeed)
+  const lastSavedDetermination = useRef<number>(determination)
+  const lastSavedMainStat = useRef<number>(mainStat)
+
   const lastSavedTimelineStart = useRef<number>(timelineStart)
   /** Flag for whether data is loaded from DB */
   const [isLoaded, setIsLoaded] = useState(false)
@@ -108,7 +114,7 @@ export default function RotationTimeline<TState>({
   }, [groupId, fightId, job])
 
   /**
-   * Save rotation whenever actions, downtimes, spellSpeed, or timelineStart change
+   * Save rotation whenever actions, downtimes, stats, or timelineStart change
    */
   useEffect(() => {
     if (!isLoaded || !groupId || !fightId || !job) return
@@ -120,6 +126,8 @@ export default function RotationTimeline<TState>({
         JSON.stringify(downtimes) !==
           JSON.stringify(lastSavedDowntimes.current) ||
         spellSpeed !== lastSavedSpellSpeed.current ||
+        determination !== lastSavedDetermination.current ||
+        mainStat !== lastSavedMainStat.current ||
         timelineStart !== lastSavedTimelineStart.current
 
       if (!hasChanged) return
@@ -128,12 +136,16 @@ export default function RotationTimeline<TState>({
         actions,
         downtimes,
         spellSpeed,
+        determination,
+        mainStat,
         timelineStart
       })
 
       lastSavedActions.current = actions
       lastSavedDowntimes.current = downtimes
       lastSavedSpellSpeed.current = spellSpeed
+      lastSavedDetermination.current = determination
+      lastSavedMainStat.current = mainStat
       lastSavedTimelineStart.current = timelineStart
     }
 
@@ -142,6 +154,8 @@ export default function RotationTimeline<TState>({
     actions,
     downtimes,
     spellSpeed,
+    determination,
+    mainStat,
     timelineStart,
     groupId,
     fightId,
@@ -339,6 +353,60 @@ export default function RotationTimeline<TState>({
             }}
           >
             Set Spell Speed
+          </button>
+        </div>
+        <div>
+          <input
+            id="determinationInput"
+            type="text"
+            placeholder="440"
+            style={{ width: '120px' }}
+          />
+
+          <button
+            onClick={() => {
+              const value = (
+                document.getElementById(
+                  'determinationInput'
+                ) as HTMLInputElement
+              ).value
+
+              const determination = Number(value)
+
+              if (isNaN(determination)) {
+                return
+              }
+
+              setDetermination(determination)
+            }}
+          >
+            Set Determination
+          </button>
+        </div>
+        <div>
+          <input
+            id="mind"
+            type="text"
+            placeholder="440"
+            style={{ width: '120px' }}
+          />
+
+          <button
+            onClick={() => {
+              const value = (
+                document.getElementById('mind') as HTMLInputElement
+              ).value
+
+              const mind = Number(value)
+
+              if (isNaN(mind)) {
+                return
+              }
+
+              setMind(mind)
+            }}
+          >
+            Set Main Stat
           </button>
         </div>
 

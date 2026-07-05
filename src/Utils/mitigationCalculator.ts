@@ -30,7 +30,7 @@ export default function calculateMitigation(
     if (!mit) return
 
     if (mit.type === 'partyShield') {
-      flatReduction += 32500
+      flatReduction += mit.reduction ?? 0
       return
     }
 

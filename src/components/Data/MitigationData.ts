@@ -1,3 +1,4 @@
+import shield from '../../Utils/healFunc'
 import { DamageType, MechanicType } from '../../Utils/types'
 
 export const mitigationsData = {
@@ -254,7 +255,8 @@ export const mitigationsData = {
   Divine_Veil: {
     duration: 30,
     cooldown: 90,
-    type: 'partyShield'
+    type: 'partyShield',
+    reduction: 32500
   },
 
   // WAR
@@ -321,7 +323,8 @@ export const mitigationsData = {
     duration: 30,
     cooldown: 90,
     type: 'partyShield',
-    multiplier: 1
+    multiplier: 1,
+    reduction: 49000
   },
 
   // SGE
@@ -335,7 +338,13 @@ export const mitigationsData = {
   Kerachole: { duration: 15, cooldown: 30, type: 'healing', multiplier: 0.9 },
   Holos: { duration: 20, cooldown: 120, type: 'healing', multiplier: 0.9 },
   Phisis_II: { duration: 15, cooldown: 60, type: 'healing', multiplier: 1 },
-  Panhaima: { duration: 15, cooldown: 120, type: 'partyShield', multiplier: 1 },
+  Panhaima: {
+    duration: 15,
+    cooldown: 120,
+    type: 'partyShield',
+    multiplier: 1,
+    reduction: shield(200, 6496, 3283)
+  },
   Philosophia: { duration: 20, cooldown: 180, type: 'healing', multiplier: 1 },
   Zoe: { duration: 30, cooldown: 90, type: 'healing', multiplier: 1 },
   Pneuma: { duration: 0, cooldown: 120, type: 'healing', multiplier: 1 },
@@ -343,28 +352,61 @@ export const mitigationsData = {
     duration: 30,
     cooldown: 0,
     type: 'partyShield',
-    multiplier: 1
+    multiplier: 1,
+    reduction: shield(100 * 3.6, 6496, 3283)
   },
   Holosakos: {
     duration: 30,
     cooldown: 0,
-    type: 'partyShield'
+    type: 'partyShield',
+    reduction: shield(300, 6496, 3283)
   },
 
   // SCH
   Protraction: { duration: 10, cooldown: 60, type: 'healing', multiplier: 1 },
   Sacred_Soil: { duration: 15, cooldown: 30, type: 'healing', multiplier: 0.9 },
   Expedient: { duration: 20, cooldown: 120, type: 'healing', multiplier: 0.9 },
-  Fey_Illumination_sch: {
+  Fey_Illumination: {
     duration: 20,
     cooldown: 120,
     type: 'healing',
-    multiplier: 0.95
+    multiplier: (damageType: DamageType) =>
+      damageType === 'magical' ? 0.95 : 1
+  },
+  Whispering_Dawn: {
+    duration: 21,
+    cooldown: 60,
+    type: 'healing',
+    multiplier: 1
+  },
+  Excogitation: {
+    duration: 45,
+    cooldown: 45,
+    type: 'healing',
+    multiplier: 1
+  },
+  Fey_Blessing: {
+    duration: 0,
+    cooldown: 60,
+    type: 'healing',
+    multiplier: 1
+  },
+  Indomitability: {
+    duration: 0,
+    cooldown: 30,
+    type: 'healing',
+    multiplier: 1
   },
   Deployment_Tactics: {
     duration: 30,
     cooldown: 90,
     type: 'partyShield',
+    multiplier: 1
+  },
+  Recitation: {
+    duration: 15,
+    cooldown: 60,
+    type: 'healing',
     multiplier: 1
   },
   Seraphism: { duration: 20, cooldown: 180, type: 'healing', multiplier: 1 },
@@ -381,7 +423,13 @@ export const mitigationsData = {
     type: 'healing',
     multiplier: 1
   },
-  Succor: { duration: 30, cooldown: 0, type: 'partyShield', multiplier: 1 },
+  Succor: {
+    duration: 30,
+    cooldown: 0,
+    type: 'partyShield',
+    multiplier: 1,
+    reduction: shield(200 * 1.8, 6496, 3283)
+  },
 
   // AST
   Celestial_Intersection: {
@@ -434,7 +482,8 @@ export const mitigationsData = {
     duration: 30,
     cooldown: 1,
     type: 'partyShield',
-    multiplier: 1
+    multiplier: 1,
+    reduction: shield(400, 6496, 3283)
   },
   Plenary_Indulgence: {
     duration: 10,

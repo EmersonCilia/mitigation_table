@@ -13,6 +13,7 @@ type Props = {
   activeJobs: string[]
   toggleJob: (id: string) => void
   toggleMt: (id: string) => void
+  mainTank: string | null
   skillVisibility: SkillVisibility
   setSkillVisibility: React.Dispatch<React.SetStateAction<SkillVisibility>>
   visibleJobs: string[]
@@ -24,6 +25,7 @@ const Aside = ({
   activeJobs,
   toggleJob,
   toggleMt,
+  mainTank,
   skillVisibility,
   setSkillVisibility,
   visibleJobs,
@@ -67,7 +69,9 @@ const Aside = ({
           </JobsAside>
         </div>
       ))}
-      <h3 style={{ marginTop: '24px' }}>Main Tank:</h3>
+      <SelectJobsTitle style={{ marginTop: '24px' }}>
+        Main Tank:
+      </SelectJobsTitle>
       <JobsAside>
         {jobsByRole.tank
           .filter((job) => activeJobs.includes(job.job))
@@ -76,6 +80,7 @@ const Aside = ({
               <input
                 type="radio"
                 name="mainTank"
+                checked={mainTank === job.job}
                 onChange={() => toggleMt(job.job)}
               />
               <img src={job.img} alt={job.job} height={20} />
@@ -129,7 +134,6 @@ const Aside = ({
           .filter((job) => activeJobs.includes(job.job))
           .map((job) => (
             <label key={job.job}>
-              {' '}
               <input
                 type="checkbox"
                 checked={visibleJobs.includes(job.job)}

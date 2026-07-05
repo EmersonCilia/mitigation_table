@@ -9,7 +9,7 @@ export type MitigationKey =
   | 'Shadowed_Vigil'
   | 'Dark_Missionary'
   | 'Shield_Samba'
-  | 'Fey_Illumination_sch'
+  | 'Fey_Illumination'
   | 'Sacred_Soil'
   | 'Expedient'
   | 'Addle'
@@ -159,7 +159,23 @@ export type PaladinState = {
   circleOfScornTIckTimer: number
   manaTickTimer: number
 }
-
+export type ScholarState = {
+  mana: number
+  recitation: number
+  biolysisDuration: number
+  biolysisDotPotency: number
+  biolysisTIckTimer: number
+  manaTickTimer: number
+  seraphism: number
+  swiftcast: number
+  summonSeraphStack: number
+  SummonSeraphDuration: number
+  dissipation: number
+  Aetherflow: number
+  chainStatagem: number
+  impactImminent: number
+  lucidDream: number
+}
 export type Action = {
   id: string
   name: string
@@ -177,6 +193,7 @@ export type Action = {
   dotInterval?: number
   job: string
   oathcost?: number
+  healingpotency?: number
 }
 
 export type Downtime = {

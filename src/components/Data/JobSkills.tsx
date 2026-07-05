@@ -232,7 +232,7 @@ export const jobSkills = {
     { src: expedient, alt: 'Expedient', type: 'partyMitigation' },
     {
       src: feyIllumination,
-      alt: 'Fey_Illumination_sch',
+      alt: 'Fey_Illumination',
       type: 'partyMitigation'
     },
     {
