@@ -415,7 +415,8 @@ export const mitigationsData = {
     duration: 20,
     cooldown: 1,
     type: 'partyShield',
-    multiplier: 1
+    multiplier: 1,
+    reduction: shield(250, 6496, 3283)
   },
   Summon_Seraph: {
     duration: 22,
@@ -504,7 +505,8 @@ export const mitigationsData = {
     duration: 15,
     cooldown: 90,
     type: 'partyShield',
-    multiplier: 1
+    multiplier: 1,
+    reduction: 20000
   },
 
   //RDM
